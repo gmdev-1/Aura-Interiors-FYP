@@ -2,15 +2,15 @@ import React from 'react'
 import { useForm } from "react-hook-form"
 
 export default function ForgotPassword() {
-  const {register, handleSubmit, formState: { errors }} = useForm();
+  const {register, handleSubmit, formState: { errors }, reset} = useForm();
 
   const onSubmit = (data) => {
     console.log(data);
+    reset();
   };
-
   return (
     <>
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
         Forgot password?
