@@ -1,5 +1,6 @@
 import React from 'react'
 import Dashboard from './Dashboard';
+import Spinner from '../components/Spinner';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router';
@@ -164,10 +165,10 @@ export default function AddCategory() {
             <div className="mt-6">
               <button
                 type="submit"
-                className="w-full bg-purple-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full flex justify-center items-center bg-purple-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Submitting...' : (isEditMode ? 'Update Category' : 'Add Category')}
+                {isSubmitting ? <Spinner /> : (isEditMode ? 'Update Category' : 'Add Category')}
               </button>
             </div>
           </form>
