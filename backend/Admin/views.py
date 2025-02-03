@@ -11,19 +11,29 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from Admin.models import Category
 from Admin.serializers import CategorySerializer
 from rest_framework.permissions import IsAuthenticated
+import cloudinary.uploader
 
 
-def upload_image(request):
-    
-    image_file = request.FILES.get('image')
-    if image_file:
-        fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'categories'))
-        sanitized_filename = image_file.name.replace(" ", "_")
-        filename = fs.save(sanitized_filename, image_file)
-        image_url = os.path.join(settings.MEDIA_URL, 'categories', filename)
+def cloudinary_upload_image(file):
+    if file:
+        try:
+            result = cloudinary.uploader.upload(
+                file,
+                folder="categories/",
+                resource_type="image"
+            )
+            return result['secure_url']
+        except Exception as e:
+            return None
+        return None
 
-        return image_url
-    return None
+def delete_cloudinary_image(image_url):
+    try:
+        if image_url:
+            public_id = image_url.split('/')[-1].split('.')[0]
+            cloudinary.uploader.destroy(f"categories/{public_id}")
+    except Exception as e:
+        return None
 
 class AddCategoryView(APIView):
     # permission_classes = [IsAuthenticated]
@@ -32,12 +42,14 @@ class AddCategoryView(APIView):
     def post(self, request):
         name = request.data.get('name')
         description = request.data.get('description', "")
-        image_file = upload_image(request)
+        image_file = request.FILES.get('image')
+        
+        image_url = cloudinary_upload_image(image_file) if image_file else None
         
         category = Category(
             name=name,
             description=description,
-            image=image_file
+            image=image_url
         )
 
         category.save()
@@ -55,7 +67,7 @@ class GetCategoriesView(APIView):
                     "id": str(category.get("_id")), 
                     "name": category.get("name", ""),
                     "description": category.get("description", ""),
-                     "image": f"{category.get('image')}" if category.get("image") else None,
+                     "image": category.get('image'),
                 }
                 for category in categories
             ]
@@ -74,7 +86,7 @@ class GetOneCategoryView(APIView):
                     "id": str(category.get("_id")), 
                     "name": category.get("name", ""),
                     "description": category.get("description", ""),
-                    "image": f"{category.get('image')}" if category.get("image") else None,
+                    "image": category.get('image'),
                 }
 
             ]
@@ -86,6 +98,10 @@ class GetOneCategoryView(APIView):
 class DeleteCategoryView(APIView):
     def delete(self, request, category_id):
         try:
+            category = Category.get_one(category_id)
+            if category.get('image'):
+                delete_cloudinary_image(category['image'])
+                
             deleted_count = Category.delete_one(category_id)
             if deleted_count > 0:
               return Response({"message": "Category deleted successfully"}, status=status.HTTP_200_OK)
@@ -99,25 +115,20 @@ class EditCategoryView(APIView):
 
     def put(self, request, category_id):
         try:
+            category = Category.get_one(category_id)
             update_data = {
                 'name': request.data.get('name'),
                 'description': request.data.get('description'),
             }
 
             # Handle image update
-            if 'image' in request.data:
-                # Delete old image first
-                category = Category.get_one(category_id)
-                if category and category.get('image'):
-                    image_path = category['image'].split('media/')[-1]
-                    full_path = os.path.join(settings.MEDIA_ROOT, image_path)
-                    if default_storage.exists(full_path):
-                        default_storage.delete(full_path)
-                
-                # Upload new image
-                image_url = upload_image(request)
+            new_image = request.FILES.get('image')
+            if new_image:
+                if category.get('image'):                               # Delete old image first
+                    delete_cloudinary_image(category['image'])
+                image_url = cloudinary_upload_image(new_image)          # Upload new image
                 if image_url:
-                    update_data['image'] = image_url
+                    update_data['image'] = image_url 
 
             modified_count = Category.update_one(category_id, update_data)
             

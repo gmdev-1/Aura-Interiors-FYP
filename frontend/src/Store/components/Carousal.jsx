@@ -35,7 +35,7 @@ export default function Carousal() {
     if (!isHovered) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
-      }, 6000);
+      }, 4000);
       return () => clearInterval(interval);
     }
   }, [slides.length, isHovered]);

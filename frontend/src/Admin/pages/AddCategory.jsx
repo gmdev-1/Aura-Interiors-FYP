@@ -150,7 +150,7 @@ export default function AddCategory() {
               <div className="mt-2">
                 <span className="text-sm text-gray-600">Current Image: </span>
                 <img 
-                  src={`${BASE_URL}${existingImage}`} 
+                  src={existingImage} 
                   alt="Current category" 
                   className="w-16 h-16 mt-1 rounded-full"
                 />

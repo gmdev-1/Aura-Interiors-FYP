@@ -57,7 +57,7 @@ export default function Category() {
       <Dashboard >
       <div className="flex flex-col">
         <div className="flex items-center justify-between mb-4 mt-4">
-        <h1 className="text-3xl font-bold mb-6 text-gray-700">Category</h1>
+          <h1 className="text-3xl font-bold mb-6 text-gray-700">Category</h1>
           <Link to="/admin/dashboard/add-category"
             className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out"
           >
@@ -106,7 +106,7 @@ export default function Category() {
                         <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                           {category.image ? (
                             <img
-                              src={`${BASE_URL}${category.image?.replace(/\\/g, '/')}`} 
+                              src={category.image} 
                               alt={category.name}
                               className="w-16 h-16 rounded-full"
                             />

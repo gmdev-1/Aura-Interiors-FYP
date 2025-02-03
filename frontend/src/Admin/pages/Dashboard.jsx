@@ -9,7 +9,7 @@ export default function Dashboard({children}) {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const [isDropDown, setIsDropDown] = useState(false);
   const location = useLocation();
-  const showAnalytics = location.pathname === "/admin/dashboard/";
+  const showAnalytics = location.pathname === '/admin/dashboard' || location.pathname === '/admin/dashboard/';
 
   const toggleSidebar = () => {
     setIsOpenSidebar((prev) => !prev);

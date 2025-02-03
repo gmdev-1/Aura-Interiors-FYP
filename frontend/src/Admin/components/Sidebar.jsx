@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
 import { BiSidebar, BiCarousel } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
-import { FiShoppingCart, FiFilePlus, FiUser, FiBox, FiLayers, FiLogOut  } from "react-icons/fi";
+import { FiFilePlus, FiUser, FiBox, FiLayers, FiLogOut  } from "react-icons/fi";
 
 export default function Sidebar({isOpenSidebar, toggleSidebar, toggleDropDown}) {
   return (

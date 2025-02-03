@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from decouple import config
 import os
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -43,6 +46,15 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+# Cloudinary Credentials
+
+CLOUDINARY_CONFIG = {
+    'cloud_name': config('CLOUD_NAME'),
+    'api_key': config('API_KEY'),
+    'api_secret': config('API_SECRET') 
+}
+cloudinary.config(**CLOUDINARY_CONFIG)
 
 # Application definition
 
@@ -96,11 +108,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# MONGO_URI = config("DB_URI")
-# MONGO_DB_NAME = config("DB_NAME")
-
-# mongo_client = MongoClient(MONGO_URI)
-# mongo_db = mongo_client[MONGO_DB_NAME]
 
 DATABASES = {
     'default': {

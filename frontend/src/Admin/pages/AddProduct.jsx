@@ -65,21 +65,6 @@ export default function AddProduct() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="subcategory" className="block text-sm font-medium text-gray-700">
-            Subcategory
-          </label>
-          <select
-            id="subcategory"
-            name="subcategory"
-            className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option value="">Select a subcategory</option>
-            <option value="sub1">Subcategory 1</option>
-            <option value="sub2">Subcategory 2</option>
-          </select>
-        </div>
-
-        <div className="mb-4">
           <label htmlFor="price" className="block text-sm font-medium text-gray-700">
             Price
           </label>
@@ -194,31 +179,6 @@ export default function AddProduct() {
           </label>
         </div>
 
-        <div className="mb-4 flex items-center">
-          <input
-            type="checkbox"
-            id="activeStatus"
-            name="activeStatus"
-            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-          />
-          <label htmlFor="activeStatus" className="ml-2 text-sm font-medium text-gray-700">
-            Active Status
-          </label>
-        </div>
-
-        <div className="mb-4">
-          <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
-            Tags
-          </label>
-          <input
-            type="text"
-            id="tags"
-            name="tags"
-            className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            placeholder="Enter tags"
-          />
-        </div>
-
         <div className="mb-4">
           <label htmlFor="ratings" className="block text-sm font-medium text-gray-700">
             Ratings
@@ -229,20 +189,6 @@ export default function AddProduct() {
             name="ratings"
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="Enter ratings"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label htmlFor="views" className="block text-sm font-medium text-gray-700">
-            Views
-          </label>
-          <input
-            type="text"
-            id="views"
-            name="views"
-            className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            placeholder="Auto-calculated views"
-            disabled
           />
         </div>
 

@@ -58,12 +58,6 @@ export default function Product() {
                 scope="col"
                 className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"
               >
-                Sub Category
-              </th>
-              <th
-                scope="col"
-                className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"
-              >
                 Price
               </th>
               <th
@@ -90,9 +84,6 @@ export default function Product() {
               </td>
               <td className="p-4 whitespace-nowrap text-sm text-gray-800">
                 Customer
-              </td>
-              <td className="p-4 whitespace-nowrap text-sm text-gray-800">
-                Accessories
               </td>
               <td className="p-4 whitespace-nowrap text-sm text-gray-800">
                 Accessories
