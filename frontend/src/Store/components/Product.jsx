@@ -63,7 +63,7 @@ export default function Product() {
           name: "Contemporary-Wall-Clock",
           description: "Elegant and modern wall clock to match any interior style.",
           price: 39.99,
-          image: "https://media.istockphoto.com/id/1368342833/photo/end-table-round-coffee-table-isolated-on-white.jpg?s=612x612&w=0&k=20&c=pOOmk6eyEfiv1x8toQkPWjDmTfBYJ9y5y2RTIaEBeGU=",
+          image: "vase.png",
           reviews: 4.9,
           quantity: 7,
         },

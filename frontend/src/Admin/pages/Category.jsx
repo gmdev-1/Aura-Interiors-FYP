@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { RiDeleteBin6Fill  } from "react-icons/ri";
 import { AiFillEdit, AiOutlinePlus } from "react-icons/ai";
-import { Link, replace, useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import Dashboard from './Dashboard';
+import Spinner from '../components/Spinner';
 
 export default function Category() {
   const [categories, setCategories] = useState([]);
@@ -58,11 +59,12 @@ export default function Category() {
       <div className="flex flex-col">
         <div className="flex items-center justify-between mb-4 mt-4">
           <h1 className="text-3xl font-bold mb-6 text-gray-700">Category</h1>
+            {loading && <Spinner /> }
           <Link to="/admin/dashboard/add-category"
             className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out"
           >
             <AiOutlinePlus className="mr-2 text-lg" />
-            Add Category
+                Add Category
           </Link>
         </div>
         <div className="overflow-x-auto shadow-lg rounded-lg">
@@ -93,7 +95,7 @@ export default function Category() {
                     <tr>
                       <td colSpan="7" className="p-4 text-center">
                        <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                        Loading categories...
+                           Loading categories...
                         </svg>
                       </td>
                     </tr>

@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 
 export default function AddCategory() {
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const { register, handleSubmit, SetError, formState: { errors }, reset } = useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [existingImage, setExistingImage] = useState(null);
   const { categoryId } = useParams();
@@ -45,6 +45,7 @@ export default function AddCategory() {
       navigate('/admin/dashboard/categories');
     } catch (error) {
       console.error(error.message);
+      SetError(error.message)
     }
     setIsSubmitting(false);
   };

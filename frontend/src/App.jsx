@@ -24,6 +24,8 @@ function App() {
           <Route exact path="/admin/dashboard" element={<Dashboard />} />
           <Route exact path="/admin/dashboard/products" element={<Product />} />
           <Route exact path="/admin/dashboard/add-product" element={<AddProduct />} />
+          <Route exact path="/admin/dashboard/edit-product/:productId" element={<AddProduct />} />
+
           <Route exact path="/admin/dashboard/categories" element={<Category/>} />
           <Route exact path="/admin/dashboard/add-category" element={<AddCategory/>} />
           <Route exact path="/admin/dashboard/edit-category/:categoryId" element={<AddCategory />} />

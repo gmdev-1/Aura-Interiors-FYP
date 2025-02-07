@@ -16,6 +16,8 @@ class User:
         self.password = password  # Hashed password
         self.role = role
         self._id = id
+        self.created_at = datetime.utcnow()
+        self.updated_at = datetime.utcnow()
 
     @property
     def id(self):
@@ -42,6 +44,8 @@ class User:
             "phone": self.phone,
             "password": self.hash_password(self.password),
             "role": self.role,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
         }
         result = user_collection.insert_one(user_document)
         self._id = result.inserted_id

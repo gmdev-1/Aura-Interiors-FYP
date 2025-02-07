@@ -30,25 +30,24 @@ class Category:
 
     
     @staticmethod
-    def get_all():
-        
+    def get_all_categories():
         categories = category_collection.find()  
         categories = list(categories)  
         return categories
 
     @staticmethod
-    def delete_one(category_id):
-        
+    def delete_one_category(category_id):
         result = category_collection.delete_one({"_id": ObjectId(category_id)})
         return result.deleted_count
     
     @staticmethod
-    def get_one(category_id):
+    def get_one_category(category_id):
         result = category_collection.find_one({"_id": ObjectId(category_id)})
         return result
     
     @staticmethod
-    def update_one(category_id, update_data):
+    def update_one_category(category_id, update_data):
+        update_product_data["updated_at"] = datetime.utcnow()
         result = category_collection.update_one(
             {"_id": ObjectId(category_id)},
             {"$set": update_data}

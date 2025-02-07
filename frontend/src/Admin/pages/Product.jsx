@@ -1,17 +1,64 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Dashboard from './Dashboard';
-import { AiFillDelete } from "react-icons/ai";
+import { RiDeleteBin6Fill  } from "react-icons/ri";
 import { AiFillEdit, AiOutlinePlus } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Spinner from '../components/Spinner';
 
 export default function Product() {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const BASE_URL = "http://localhost:8000";
+
+    useEffect(() => {
+      fetchProducts();
+    }, []);
+  
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${BASE_URL}/api/dashboard/get-products/`);
+        setProducts(response.data);
+  
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+    
+    const DeleteProduct = async (productId) => {
+      const isConfirmed = window. confirm("Are you sure you want to delete this product?");
+       if (!isConfirmed) {
+         return; 
+       }
+       const originalProducts = [...products];
+       setProducts((prevProducts) => 
+         prevProducts.filter((product) => product.id !== productId)
+       );
+     try {
+       const response = await axios.delete(`${BASE_URL}/api/dashboard/delete-product/${productId}/`)
+       alert('Successfully Deleted');
+      } 
+     catch (error) {
+       setProducts(originalProducts);
+       console.error(error);
+     }
+   }
+
+     const navigate = useNavigate()
+     const EditProduct = (productId) => {
+       navigate(`/admin/dashboard/edit-product/${productId}`);
+     }
+
   return (
     <>
-    <Dashboard >
-    <div className="flex flex-col">
-  <div className="flex items-center justify-between mb-4 mt-4">
+  <Dashboard >
+      <div className="flex flex-col">
+        <div className="flex items-center justify-between mb-4 mt-4">
           <h1 className="text-3xl font-bold mb-6 text-gray-700">Product</h1>
-            <Link to="/admin/dashboard-unique/add-product"
+              {loading && <Spinner /> }
+            <Link to="/admin/dashboard/add-product"
               className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out"
             >
               <AiOutlinePlus className="mr-2 text-lg" />
@@ -24,108 +71,102 @@ export default function Product() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th
-                scope="col"
-                className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"
-              >
-                Product Name
+              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  #
               </th>
-              <th
-                scope="col"
-                className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"
-              >
-                Description
+              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Image
               </th>
-              <th
-                scope="col"
-                className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"
-              >
-                Image
+              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Product Name
               </th>
-              <th
-                scope="col"
-                className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"
-              >
-                SKU
+              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Category
               </th>
-              <th
-                scope="col"
-                className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"
-              >
-                Category
+              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Price
               </th>
-              <th
-                scope="col"
-                className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"
-              >
-                Price
+              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Stock Quantity
               </th>
-              <th
-                scope="col"
-                className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"
-              >
-                Stock Quantity
+              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Rating
               </th>
-              <th
-                scope="col"
-                className="p-4 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider"
-              >
-                Action
+              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Is Featured
+              </th>
+              <th className="p-4 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Action
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            <tr className="hover:bg-gray-50">
-              <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
-                Louis Vuitton
-              </td>
-              <td className="p-4 whitespace-nowrap text-sm text-gray-800">
-                20010510
-              </td>
-              <td className="p-4 whitespace-nowrap text-sm text-gray-800">
-                Customer
-              </td>
-              <td className="p-4 whitespace-nowrap text-sm text-gray-800">
-                Accessories
-              </td>
-              <td className="p-4 whitespace-nowrap text-sm text-gray-800">
-                Accessories
-              </td>
-              <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
-                          <span
-                            className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-                              category.is_active === 'true' || category.is_active === true
-                                ? 'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20'
-                                : 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20'
-                            }`}
-                          >
-                            {category.is_active === 'true' || category.is_active === true ? 'Active' : 'Inactive'}
-
-                          </span>
-                        </td>
+          {loading ? (
+              <tr>
+                <td colSpan="7" className="p-4 text-center">
+                  <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                      Loading products...
+                  </svg>
+                </td>
+              </tr>
+              ) : products.length > 0 ? (
+                products.map((product, index) => (
+              <tr key={product.id} className="hover:bg-gray-50">
+                <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
+                    {index+1}
+                </td>
+                <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
+                    <img
+                      src={product.image} 
+                      alt={product.name}
+                      className="w-16 h-16 rounded-full"/>
+                </td>
+                <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
+                    {product.name}
+                </td>
+                <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
+                    {product.category}
+                </td>
+                <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
+                    <span className='text-purple-700'>$</span>{product.price}
+                </td>
+                <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
+                    {product.quantity}
+                </td>
+                <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
+                    {product.rating}
+                </td>
                         <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                           <span
                             className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
-                              category.is_featured === 'true' || category.is_featured === true
+                              product.is_featured === 'true' || product.is_featured === true
                                 ? 'bg-green-50 text-purple-700 ring-1 ring-inset ring-green-600/20'
                                 : 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20'
                             }`}
                           >
-                            {category.is_featured === 'true' || category.is_featured === true ? 'Yes' : 'No'}
+                            {product.is_featured === 'true' || product.is_featured === true ? 'Yes' : 'No'}
 
                           </span>
                         </td>
               <td className="p-4 whitespace-nowrap text-center text-sm">
-                <button className="inline-flex items-center mr-1 bg-blue-500 rounded-md text-white hover:bg-blue-600 px-2 py-1">
+                <button onClick={() => EditProduct(product.id)} className="inline-flex items-center mr-1 bg-blue-500 rounded-md text-white hover:bg-blue-600 px-2 py-1">
                   <AiFillEdit size={20} />
                   <span className="ml-1">Edit</span>
                 </button>
-                <button className="inline-flex items-center ml-1 bg-red-500 text-white rounded-md hover:bg-red-600 px-2 py-1">
-                  <AiFillDelete  size={20} />
+                <button onClick={()=> DeleteProduct(product.id)} className="inline-flex items-center ml-1 bg-red-500 text-white rounded-md hover:bg-red-600 px-2 py-1">
+                  <RiDeleteBin6Fill  size={20} />
                   <span className="ml-1">Delete</span>
                 </button>
               </td> 
             </tr>
+                ))
+            ) : (
+                <tr>
+                  <td colSpan="7" className="p-4 text-center">
+                    No products found.
+                  </td>
+                </tr>
+            )}
           </tbody>
         </table>
       </div>
