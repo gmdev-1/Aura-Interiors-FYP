@@ -9,7 +9,9 @@ import Spinner from '../components/Spinner';
 export default function Product() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
-    const BASE_URL = "http://localhost:8000";
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+    const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
     useEffect(() => {
       fetchProducts();
@@ -50,6 +52,17 @@ export default function Product() {
      const EditProduct = (productId) => {
        navigate(`/admin/dashboard/edit-product/${productId}`);
      }
+
+  //  Pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+
+  // Function to change pages
+  const goToPage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <>
@@ -109,17 +122,17 @@ export default function Product() {
                   </svg>
                 </td>
               </tr>
-              ) : products.length > 0 ? (
-                products.map((product, index) => (
+              ) : currentProducts.length > 0 ? (
+                currentProducts.map((product, index) => (
               <tr key={product.id} className="hover:bg-gray-50">
                 <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
-                    {index+1}
+                    {index + 1 + (currentPage - 1) * itemsPerPage}
                 </td>
                 <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                     <img
                       src={product.image} 
                       alt={product.name}
-                      className="w-16 h-16 rounded-full"/>
+                      className="w-12 h-12 rounded-full"/>
                 </td>
                 <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                     {product.name}
@@ -171,8 +184,31 @@ export default function Product() {
         </table>
       </div>
     </div>
+    
   </div>
 </div>
+          {/* Pagination Controls */}
+          {products.length > itemsPerPage && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 border rounded-l-md"
+              >
+                Previous
+              </button>
+              <div className="px-4 py-2 border-t border-b">
+                Page {currentPage} of {totalPages}
+              </div>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 border rounded-r-md"
+              >
+                Next
+              </button>
+            </div>
+          )}
 
     </Dashboard>
     </>

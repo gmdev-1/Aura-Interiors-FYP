@@ -13,7 +13,7 @@ export default function AddCategory() {
   const [existingImage, setExistingImage] = useState(null);
   const { categoryId } = useParams();
   const isEditMode = Boolean(categoryId);
-  const BASE_URL = "http://localhost:8000";
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   const onSubmit = (data) => {
     if (isSubmitting) return;

@@ -9,7 +9,7 @@ import Spinner from '../components/Spinner';
 export default function Category() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const BASE_URL = "http://localhost:8000";
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   useEffect(() => {
     fetchCategories();
@@ -110,7 +110,7 @@ export default function Category() {
                             <img
                               src={category.image} 
                               alt={category.name}
-                              className="w-16 h-16 rounded-full"
+                              className="w-12 h-12 rounded-full"
                             />
                           ) : (
                             'No Image'
