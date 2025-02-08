@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from Admin.models.category import Category
 from Admin.models.product import Product
+from Admin.models.carousal import Carousal
 from Admin.serializers import CategorySerializer
 from rest_framework.permissions import IsAuthenticated
 import cloudinary.uploader
@@ -299,4 +300,57 @@ class ProductUpdateView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+         
+# Carousal Views
+
+class CarousalCreateView(APIView):
+    # permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request):
+        image_file = request.FILES.get('image')
+        
+        image_url = cloudinary_upload_image(image_file, folder_name="carousals") if image_file else None
+        
+        carousal = Carousal(
+            image=image_url
+        )
+
+        carousal.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+    
+
+class CarousalsListView(APIView):
+    def get(self, request):
+        try:
+            carousals = Carousal.get_all_carousals() 
             
+            carousal_list = [
+                {
+                    "id": str(carousal.get("_id")), 
+                     "image": carousal.get('image'),
+                }
+                for carousal in carousals
+            ]
+            
+            return Response(carousal_list, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class CarousalDeleteView(APIView):
+    def delete(self, request, carousal_id):
+        try:
+            carousal = Carousal.get_one_carousal(carousal_id)
+            if carousal.get('image'):
+                delete_cloudinary_image(carousal['image'], folder_name="carousals")
+                
+            deleted_count = Carousal.delete_one_carousal(carousal_id)
+            if deleted_count > 0:
+              return Response({"message": "Carousal deleted successfully"}, status=status.HTTP_200_OK)
+            else:
+              return Response({"error": "Carousal not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        

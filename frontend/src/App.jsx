@@ -9,6 +9,7 @@ import Product from './Admin/pages/Product';
 import AddProduct from './Admin/pages/AddProduct';
 import Category from './Admin/pages/Category';
 import AddCategory from './Admin/pages/AddCategory';
+import Carousal from './Admin/pages/Carousal';
 
 function App() {
 
@@ -29,6 +30,8 @@ function App() {
           <Route exact path="/admin/dashboard/categories" element={<Category/>} />
           <Route exact path="/admin/dashboard/add-category" element={<AddCategory/>} />
           <Route exact path="/admin/dashboard/edit-category/:categoryId" element={<AddCategory />} />
+
+          <Route exact path="/admin/dashboard/carousal" element={<Carousal />} />
           
         </Routes>
       </Router>

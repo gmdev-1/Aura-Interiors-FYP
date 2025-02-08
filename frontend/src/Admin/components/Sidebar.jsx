@@ -46,10 +46,10 @@ export default function Sidebar({isOpenSidebar, toggleSidebar, toggleDropDown}) 
             </li>
         
           <li>
-            <a href="#" className="flex px-4 py-2 hover:bg-gray-700 rounded">
+            <Link to="/admin/dashboard/carousal" className="flex px-4 py-2 hover:bg-gray-700 rounded">
             <BiCarousel  className="size-5 mb-1 mr-3"/>
               Carousal/Banner
-            </a>
+            </Link>
           </li>
           <li>
             <a href="#" className="flex px-4 py-2 hover:bg-gray-700 rounded">

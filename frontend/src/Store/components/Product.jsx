@@ -36,7 +36,7 @@ export default function Product() {
           name: "Modern-Ceramic-Vase",
           description: "Minimalist ceramic vase ideal for fresh or artificial flowers.",
           price: 29.99,
-          image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb",
+          image: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738955606/products/ie34sqkoikxx8xjr4l5k.png",
           reviews: 4.6,
           quantity: 6,
         },
@@ -54,7 +54,7 @@ export default function Product() {
           name: "Contemporary-Wall-Clock",
           description: "Elegant and modern wall clock to match any interior style.",
           price: 39.99,
-          image: "https://media.istockphoto.com/id/1278906674/photo/monstera-in-a-pot-isolated-on-white-background-close-up-of-tropical-leaves-or-houseplant-that.jpg?s=612x612&w=0&k=20&c=_s8SHj6gP3oA0zx4jH2SvRJGvcLMnnHwMY_FvANDFiU=",
+          image: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738952932/products/dk2b30wa26yhngwtcmrg.jpg",
           reviews: 4.9,
           quantity: 7,
         },
@@ -63,7 +63,7 @@ export default function Product() {
           name: "Contemporary-Wall-Clock",
           description: "Elegant and modern wall clock to match any interior style.",
           price: 39.99,
-          image: "vase.png",
+          image: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738955146/products/ktojjjvidpazp5pcprpj.png",
           reviews: 4.9,
           quantity: 7,
         },
@@ -112,12 +112,14 @@ export default function Product() {
                 >
                   <Link to={`/product/${product.name}`}>
                     <div className="h-48 overflow-hidden group">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
-                      />
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                        />
                     </div>
+
+
 
                     <div className="p-5 flex flex-col flex-grow">
                       <h3 className="text-lg font-semibold text-gray-800 hover:text-purple-600 transition-colors">
