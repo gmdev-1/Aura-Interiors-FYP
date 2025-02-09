@@ -7,13 +7,7 @@ import { RiDeleteBin6Fill } from "react-icons/ri";
 import { useState, useEffect } from "react";
 
 export default function Carousal() {
-  const {
-    register,
-    handleSubmit,
-    SetError,
-    formState: { errors },
-    reset,
-  } = useForm();
+  const { register, handleSubmit, setError, formState: { errors }, reset, } = useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [carousals, setCarousals] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,8 +24,8 @@ export default function Carousal() {
     try {
       const token = localStorage.getItem("token"); // Make sure to get the token
       const formData = new FormData();
-      if (data.carousalImage && data.carousalImage[0]) {
-        formData.append("image", data.carousalImage[0]);
+      if (data.image && data.image[0]) {
+        formData.append("image", data.image[0]);
       }
 
       const response = await axios.post(
@@ -45,8 +39,11 @@ export default function Carousal() {
           fetchCarousal();
           reset();
     } catch (error) {
-      console.error(error.message);
-      SetError(error.message);
+      if (error.response?.data){
+        Object.entries(error.response.data).forEach(([field, messages]) => {
+          setError(field, {message: messages[0]});
+        });
+      }
     }
     setIsSubmitting(false);
   };
@@ -65,7 +62,7 @@ export default function Carousal() {
 
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching carousals:", error);
+      alert("Error fetching carousals")
     }
   };
 
@@ -87,7 +84,7 @@ export default function Carousal() {
       alert("Successfully Deleted");
     } catch (error) {
       setCarousals(originalCarousals);
-      console.error(error);
+      alert("Error deleting carousal");
     }
   };
 
@@ -102,23 +99,24 @@ export default function Carousal() {
             <div className="flex items-start space-x-4">
               <div className="w-80">
                 <label
-                  htmlFor="carousalImage"
+                  htmlFor="image"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Carousal Image
                 </label>
                 <input
                   type="file"
-                  id="carousalImage"
-                  name="carousalImage"
-                  {...register("carousalImage", {
+                  accept="image/jpeg, image/png"
+                  id="image"
+                  name="image"
+                  {...register("image", {
                     required: "Carousal Image is required",
                   })}
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 />
-                {errors.carousalImage && (
+                {errors.image && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors.carousalImage.message}
+                    {errors.image.message}
                   </p>
                 )}
               </div>
@@ -129,7 +127,7 @@ export default function Carousal() {
                   className="w-full flex justify-center items-center bg-purple-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? <Spinner /> : "Add Carousal"}
+                  {isSubmitting ? <Spinner /> : "Upload"}
                 </button>
               </div>
             </div>

@@ -6,7 +6,7 @@ import { Link, useNavigate, useParams } from 'react-router';
 import Spinner from '../components/Spinner';
 
 export default function AddProduct() {
-  const { register, handleSubmit, formState: { errors }, reset} = useForm();
+  const { register, handleSubmit, setError, formState: { errors }, reset} = useForm();
   const [categories, setCategories] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -68,8 +68,34 @@ export default function AddProduct() {
       );
       navigate('/admin/dashboard/products');
     } catch (error) {
-      console.error(error.message);
-      // SetError(error.message)
+      if (error.response && error.response.data) {
+        const backendErrors = error.response.data;
+        // Map backend field names to your react-hook-form field names
+        const fieldMapping = {
+          name: 'productName',
+          description: 'productDescription',
+          image: 'categoryImage',
+          price: 'price',
+          category: 'category',
+          quantity: 'stockQuantity',
+          review: 'reviews',
+          rating: 'ratings',
+          is_featured: 'featuredProduct',
+          color: 'colors',
+          material: 'material',
+          size: 'sizes',
+          discount: 'discountPrice',
+        };
+      
+        Object.entries(backendErrors).forEach(([key, messages]) => {
+          // Use the mapped key if available, otherwise default to the original key.
+          const formField = fieldMapping[key] || key;
+          setError(formField, {
+            type: 'server',
+            message: messages[0],
+          });
+        });
+      }
     }
     setIsSubmitting(false);
   };
@@ -200,7 +226,6 @@ export default function AddProduct() {
           </label>
           <input
             type="number"
-            step="0.1"
             min={0}
             id="price"
             name="price"
@@ -217,7 +242,6 @@ export default function AddProduct() {
           </label>
           <input
             type="number"
-            step="0.1"
             min={0}
             id="discountPrice"
             name="discountPrice"
@@ -233,6 +257,7 @@ export default function AddProduct() {
           </label>
           <input
             type="number"
+            min={0}
             id="stockQuantity"
             name="stockQuantity"
             {...register('stockQuantity', { required: 'Stock quantity is required' })}
@@ -334,6 +359,7 @@ export default function AddProduct() {
           </label>
           <input
             type="number"
+            min={0}
             id="reviews"
             name="reviews"
             {...register('reviews', { required: 'Review is required' })}

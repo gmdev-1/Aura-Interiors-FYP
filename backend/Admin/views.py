@@ -8,7 +8,9 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from Admin.models.category import Category
 from Admin.models.product import Product
 from Admin.models.carousal import Carousal
-from Admin.serializers import CategorySerializer
+from Admin.serializers.category_serializer import CategorySerializer
+from Admin.serializers.carousal_serializer import CarousalSerializer
+from Admin.serializers.product_serializer import ProductSerializer
 from rest_framework.permissions import IsAuthenticated
 import cloudinary.uploader
 import os
@@ -42,21 +44,14 @@ class CategoryCreateView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request):
-        name = request.data.get('name')
-        description = request.data.get('description', "")
-        image_file = request.FILES.get('image')
-        
-        image_url = cloudinary_upload_image(image_file, folder_name="categories") if image_file else None
-        
-        category = Category(
-            name=name,
-            description=description,
-            image=image_url
-        )
-
-        category.save()
-
-        return Response(status=status.HTTP_201_CREATED)
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            image_file = request.FILES.get('image')
+            image_url = cloudinary_upload_image(image_file, folder_name="categories")
+            category = serializer.save(image=image_url)       
+            return Response(status=status.HTTP_201_CREATED)
+            
+        return Response(serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
 
 
 class CategoriesListView(APIView):
@@ -144,48 +139,14 @@ class CategoryUpdateView(APIView):
 class ProductCreateView(APIView):
      parser_classes = (MultiPartParser, FormParser)
      def post(self, request):
-        name = request.data.get('name')
-        description = request.data.get('description', "")
-        price = request.data.get('price')
-        category_id = request.data.get('category')
-        quantity = request.data.get('quantity')
-        color = request.data.get('color')
-        size = request.data.get('size')
-        material = request.data.get('material')
-        review = request.data.get('review')
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            image_file = request.FILES.get('image')
+            image_url = cloudinary_upload_image(image_file, folder_name="products")
+            product = serializer.save(image=image_url)
+            return Response(status=status.HTTP_201_CREATED)
         
-        is_featured = request.data.get('is_featured', False)
-        is_featured = is_featured.lower() == 'true'
-        
-        discount = request.data.get('discount')
-        discount = float(discount) if discount else None
-        
-        rating = request.data.get('rating')
-        rating = float(rating) if rating else None
-        
-        image_file = request.FILES.get('image')
-        
-        image_url = cloudinary_upload_image(image_file, folder_name="products") if image_file else None
-        
-        product = Product(
-            name=name,
-            description=description,
-            price=price,
-            category_id=category_id,
-            quantity=quantity,
-            discount=discount,
-            color=color,
-            size=size,
-            material=material,
-            rating=rating,
-            review=review,
-            is_featured=is_featured,
-            image=image_url
-        )
-
-        product.save()
-
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     
 class ProductsListView(APIView):
@@ -308,17 +269,15 @@ class CarousalCreateView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request):
-        image_file = request.FILES.get('image')
-        
-        image_url = cloudinary_upload_image(image_file, folder_name="carousals") if image_file else None
-        
-        carousal = Carousal(
-            image=image_url
-        )
+        serializer = CarousalSerializer(data=request.data)
+        if serializer.is_valid():
+            image_file = request.FILES.get('image')
+            image_url = cloudinary_upload_image(image_file, folder_name="carousals")
+            carousal = serializer.save(image=image_url)
+            return Response(status=status.HTTP_201_CREATED)
+            
+        return Response(serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
 
-        carousal.save()
-
-        return Response(status=status.HTTP_201_CREATED)
     
 
 class CarousalsListView(APIView):

@@ -8,19 +8,19 @@ export default function Carousal() {
 
   const slides = [
     {
-      src: "https://images.unsplash.com/photo-1505691938895-1758d7feb511",
+      src: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1739018346/carousals/dropjidby7pzxyhymfar.jpg",
       title: "Modern Kitchen Designs",
       description: "Transform your kitchen with our latest collection",
       btnText: "Explore Now"
     },
     {
-      src: "https://images.unsplash.com/photo-1524758631624-e2822e304c36",
+      src: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1739018378/carousals/koyxdbyfhp5iuuzphotf.jpg",
       title: "Elegant Wall Decor",
       description: "Discover unique wall pieces for your home",
       btnText: "Shop Decor"
     },
     {
-      src: "https://images.unsplash.com/photo-1572048572872-2394404cf1f3",
+      src: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1739018412/carousals/xpxngsad20lumbgelu92.jpg",
       title: "Living Room Essentials",
       description: "Create your perfect living space",
       btnText: "View Collection"

@@ -104,7 +104,7 @@ export default function Product() {
 
         <div className="bg-gradient-to-b from-indigo-50 via-purple-50 to-pink-50 p-8 py-16 pb-20">
           <section className="py-10 px-4 bg-transparent backdrop-blur-sm">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 px-4 max-w-screen-xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 px-4 max-w-screen-xl mx-auto">
               {products.map((product) => (
                 <div
                   key={product.id}
@@ -115,11 +115,9 @@ export default function Product() {
                         <img
                           src={product.image}
                           alt={product.name}
-                          className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                          className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                         />
                     </div>
-
-
 
                     <div className="p-5 flex flex-col flex-grow">
                       <h3 className="text-lg font-semibold text-gray-800 hover:text-purple-600 transition-colors">
@@ -127,30 +125,31 @@ export default function Product() {
                       </h3>
                       <div className="mt-2">
                         <span className="text-sm flex items-center">
-                          {[...Array(5)].map((_, index) => (
-                            <AiFillStar
-                              key={index}
-                              className={`${
-                                index < Math.floor(product.reviews)
-                                  ? 'text-yellow-400'
-                                  : 'text-gray-300'
-                              } mr-1`} 
+                          {/* {[...Array(5)].map((_, index) => ( */}
+                            <AiFillStar className='text-yellow-400'
+                              // key={index}
+                              // className={`${
+                              //   index < Math.floor(product.reviews)
+                                  // ? 'text-yellow-400'
+                              //     : 'text-gray-300'
+                              // } mr-1`} 
                             />
-                          ))}
-                          <span className='text-yellow-900'>{product.reviews}</span>
-                          <span className="ml-2 text-gray-600">({product.quantity})</span>
+                          {/* // ))} */}
+                          <span className='text-yellow-900 font-medium'>{product.reviews}</span>
+                          <span className="ml-2 text-purple-600 font-semibold text-xs bg-purple-50 rounded-xl p-1">({product.quantity}) Reviews</span>
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 mt-3 line-clamp-2">{product.description}</p>
+                      {/* <p className="text-sm text-gray-600 mt-3 line-clamp-2">{product.description}</p> */}
                       <div className="mt-4">
                         <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-purple-500 bg-clip-text text-transparent">
                           ${product.price.toFixed(2)}
+                          <span className='ml-5 text-lg font-medium bg-gradient-to-r from-emerald-500 to-purple-600 bg-clip-text text-transparent"'>$29</span>
                         </span>
                       </div>
                     </div>
                   </Link>
 
-                  <div className="px-5 py-3 flex justify-between items-center">
+                  <div className="px-5 pb-3 flex justify-between items-center">
                     <button className="px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
                       Add to Cart
                     </button>

@@ -190,7 +190,7 @@ const Navbar = () => {
             <Link
               to={`/category/${cat.title}`}
               key={cat.id}
-              className="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-medium hover:bg-purple-600/20 hover:text-purple-700 transition-all duration-300"
+              className="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-semibold hover:bg-purple-50 hover:text-purple-600 transition-all duration-300"
             >
               {cat.title}
             </Link>

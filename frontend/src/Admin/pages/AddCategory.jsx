@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 
 export default function AddCategory() {
   const navigate = useNavigate();
-  const { register, handleSubmit, SetError, formState: { errors }, reset } = useForm();
+  const { register, handleSubmit, setError, formState: { errors }, reset } = useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [existingImage, setExistingImage] = useState(null);
   const { categoryId } = useParams();
@@ -44,8 +44,28 @@ export default function AddCategory() {
       );
       navigate('/admin/dashboard/categories');
     } catch (error) {
-      console.error(error.message);
-      SetError(error.message)
+      if (error.response && error.response.data) {
+        const backendErrors = error.response.data;
+        if (backendErrors.name) {
+          setError('categoryName', {
+            type: 'server',
+            message: backendErrors.name[0],
+          });
+        }
+        if (backendErrors.description) {
+          setError('categoryDescription', {
+            type: 'server',
+            message: backendErrors.description[0],
+          });
+        }
+        if (backendErrors.image) {
+          setError('categoryImage', {
+            type: 'server',
+            message: backendErrors.image[0],
+          });
+        }
+      }
+      
     }
     setIsSubmitting(false);
   };
@@ -88,10 +108,12 @@ export default function AddCategory() {
       );
       navigate('/admin/dashboard/categories');
     } catch (error) {
-      console.error(error.message);
+      // console.error(error.message);
     }
     setIsSubmitting(false);
   };
+
+
 
 
   return (
