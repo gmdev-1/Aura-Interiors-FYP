@@ -18,12 +18,14 @@ export default function Category() {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/api/dashboard/get-categories/`);
+      const response = await axios.get(`${BASE_URL}/api/dashboard/get-categories/`, {
+        withCredentials: true,
+      });
       setCategories(response.data);
 
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching categories:', error);
+      alert('Error fetching categories');
     }
   };
 
@@ -38,13 +40,15 @@ export default function Category() {
         prevCategories.filter((category) => category.id !== categoryId)
       );
     try {
-      const response = await axios.delete(`${BASE_URL}/api/dashboard/delete-category/${categoryId}/`)
+      const response = await axios.delete(`${BASE_URL}/api/dashboard/delete-category/${categoryId}/`, 
+        { withCredentials: true }
+      )
       alert('Successfully Deleted');
       
     } 
     catch (error) {
       setCategories(originalCategories);
-      console.error(error);
+      alert('Error deleting');
     }
   }
 

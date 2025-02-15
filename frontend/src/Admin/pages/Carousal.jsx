@@ -30,11 +30,11 @@ export default function Carousal() {
 
       const response = await axios.post(
         `${BASE_URL}/api/dashboard/add-carousal/`,
+        { withCredentials: true },
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            // 'Authorization': `Bearer ${token}`
           },});
           fetchCarousal();
           reset();
@@ -56,7 +56,8 @@ export default function Carousal() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/dashboard/get-carousals/`
+        `${BASE_URL}/api/dashboard/get-carousals/`,
+        { withCredentials: true}
       );
       setCarousals(response.data);
 
@@ -79,7 +80,8 @@ export default function Carousal() {
     );
     try {
       const response = await axios.delete(
-        `${BASE_URL}/api/dashboard/delete-carousal/${carousalId}/`
+        `${BASE_URL}/api/dashboard/delete-carousal/${carousalId}/`,
+        { withCredentials: true }
       );
       alert("Successfully Deleted");
     } catch (error) {

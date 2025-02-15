@@ -102,10 +102,11 @@ const Navbar = () => {
     };
 
   return (
+    
     <>
       {/* Desktop Navbar */}
-      <div className="hidden sm:flex flex-col">
-        <div className="bg-white text-gray-800 h-20 flex items-center justify-between px-4 sm:px-6 shadow-lg">
+      <div className="hidden sm:flex flex-col mb-5">
+        <div className="bg-gradient-to-t from-purple-200 to-purple-500 text-gray-800 h-20 flex items-center justify-between px-4 sm:px-6 shadow-lg">
           {/* Logo */}
           <div className="flex flex-col items-center group cursor-pointer ml-10">
             <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider text-purple-600">
@@ -136,7 +137,7 @@ const Navbar = () => {
 
           {/* Desktop Icons */}
           <div className="flex items-center space-x-6">
-            <Link to="/" className="relative group">
+            <Link to="/cart" className="relative group">
               <FiShoppingCart className="size-6 text-gray-800 hover:text-purple-500 transition-colors duration-300" />
               <div className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
                 0
@@ -174,7 +175,7 @@ const Navbar = () => {
                 )}
               </div>
             ) : (
-              <Link to="/login" className="relative group">
+              <Link to="/auth/login" className="relative group">
                 <button className="px-4 py-2 bg-purple-600 rounded-lg text-white hover:bg-purple-700 transition-all duration-300 flex items-center space-x-2">
                   <span>Login</span>
                   <IoIosArrowRoundForward className="size-5" />
@@ -185,7 +186,7 @@ const Navbar = () => {
         </div>
 
         {/* Categories for Desktop */}
-        <div className="bg-gray-150 text-gray-800 flex overflow-x-auto py-3 px-4 space-x-4 shadow-md">
+        <div className="text-gray-800 flex overflow-x-auto py-3 px-4 space-x-4 shadow-lg">
           {categories.map((cat) => (
             <Link
               to={`/category/${cat.title}`}
@@ -222,7 +223,7 @@ const Navbar = () => {
           
 
           {/* Mobile Cart Button */}
-          <Link to="/" className="relative">
+          <Link to="/cart" className="relative">
             <FiShoppingCart className="size-6 text-gray-800 hover:text-purple-500" />
             <div className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
               0

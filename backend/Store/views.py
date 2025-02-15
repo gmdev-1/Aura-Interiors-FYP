@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from Store.serializers import UserSerializer
-from Store.models import User
 
 class SignupView(APIView):
     def post(self, request):

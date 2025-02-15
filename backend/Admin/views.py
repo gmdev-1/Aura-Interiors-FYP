@@ -3,17 +3,36 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from datetime import datetime, timedelta
+import jwt
+from jwt import ExpiredSignatureError, InvalidTokenError
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from Admin.models.category import Category
 from Admin.models.product import Product
 from Admin.models.carousal import Carousal
+from Admin.models.models import User
+from Admin.serializers.serializers import SignupSerializer
+from Admin.serializers.login_serializer import LoginSerializer
 from Admin.serializers.category_serializer import CategorySerializer
 from Admin.serializers.carousal_serializer import CarousalSerializer
 from Admin.serializers.product_serializer import ProductSerializer
-from rest_framework.permissions import IsAuthenticated
 import cloudinary.uploader
 import os
+from bson import ObjectId
+from utils.db_connection import mongo_db
+import bcrypt
+
+
+user_collection = mongo_db["users"]
 
 # Cloudinary methods
 def cloudinary_upload_image(file, folder_name):
@@ -37,10 +56,189 @@ def delete_cloudinary_image(image_url, folder_name):
     except Exception as e:
         return None
 
+# Authentication Views
+
+class AdminLoginView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        
+        try:
+            user = User.authenticate(email, password)
+            if not user:
+                return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+            # Generate JWT tokens
+            access_token = AccessToken()
+            access_token['user_id'] = user.id
+            access_token['email'] = user.email
+            access_token['role'] = user.role
+            
+            access_token.set_exp(lifetime=timedelta(minutes=15))
+            
+            refresh_token = RefreshToken()
+            refresh_token['user_id'] = user.id
+            refresh_token.set_exp(lifetime=timedelta(days=7))
+            
+            response_data = {
+                'user': {
+                    'id': user.id,
+                    'name': user.name,
+                    'email': user.email,
+                    'role': user.role
+                },
+                'message': 'Login Successful'
+            }
+            response = Response(response_data, status=status.HTTP_200_OK)
+            
+            response.set_cookie(
+                key='access_token',
+                value=str(access_token),
+                httponly=True,
+                secure=False,
+                samesite='Lax',
+                max_age=60 * 15
+            )
+            
+            response.set_cookie(
+                key='refresh_token',
+                value=str(refresh_token),
+                httponly=True,
+                secure=False,
+                samesite='Lax',
+                max_age=60 * 60 * 24 * 7
+            )
+            
+            return response
+        
+        except Exception as e:
+            print("Exception during authentication:", repr(e))
+            return Response({'error': 'Authentication failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class CookieJWTAuthentication(JWTAuthentication):
+    permission_classes = [AllowAny]
+    def authenticate(self, request):
+        raw_token = request.COOKIES.get('access_token')
+        if raw_token is not None:
+            try:
+                validated_token = self.get_validated_token(raw_token)
+            except TokenError as e:
+                raise AuthenticationFailed('Invalid or expired token.') from e
+            return self.get_user(validated_token), validated_token
+
+        return super().authenticate(request)   
+        
+    def get_user(self, validated_token):
+        try:
+            user_id = validated_token.get('user_id')
+            user = User.get_by_id(user_id)
+            if user is None:
+                raise AuthenticationFailed('User not found')
+            return user
+        except Exception as e:
+            raise AuthenticationFailed('User retrievel failed') from e
+
+           
+class VerifyAuthView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        if not user or not getattr(user, 'is_authenticated', False):
+            return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response({
+            'user_id': user.id,
+            'name': user.name,
+            'email': user.email,
+            'role': user.role,
+        }, status=status.HTTP_200_OK)
+        
+class CookieTokenRefreshView(TokenRefreshView):
+    permission_classes = [AllowAny]
+    def post(self, request, *args, **kwargs):
+        # Retrieve the refresh token from the cookie.
+        refresh_token = request.COOKIES.get('refresh_token')
+        if not refresh_token:
+            return Response({'detail': 'Refresh token not provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Pass the refresh token to the serializer by placing it in the expected "refresh" field.
+        data = {'refresh': refresh_token}
+        serializer = self.get_serializer(data=data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError:
+            return Response({'detail': 'Invalid or expired refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        new_access_token = serializer.validated_data.get('access')
+        response = Response({'access': new_access_token}, status=status.HTTP_200_OK)
+        
+        # Update the access token cookie with the new token.
+        response.set_cookie(
+            key='access_token',
+            value=new_access_token,
+            httponly=True,
+            secure=False,
+            samesite='Lax',
+            max_age=60 * 15  # 15 minutes
+        )
+        return response
+
+class AdminLogoutView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        response = Response(
+            {'message': 'Successfully logged out'},
+            status=status.HTTP_200_OK
+        )
+        
+        # Clear access token cookie
+        response.set_cookie(
+            key='access_token',
+            value='',
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite='Lax',
+            max_age=0  # Immediately expires
+        )
+        
+        # Clear refresh token cookie
+        response.set_cookie(
+            key='refresh_token',
+            value='',
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite='Lax',
+            max_age=0  # Immediately expires
+        )
+        
+        return response
+
+class AdminSignupView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        serializer = SignupSerializer(data=request.data)
+        if serializer.is_valid():
+            admin = serializer.save()
+            return Response({
+                'name': admin.name,
+                'email': admin.email,
+                'role': admin.role
+                },status=201)
+        return Response(serializer.errors, status=400)
+
 # Category Views
 
 class CategoryCreateView(APIView):
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request):
@@ -55,6 +253,8 @@ class CategoryCreateView(APIView):
 
 
 class CategoriesListView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         try:
             categories = Category.get_all_categories() 
@@ -74,6 +274,8 @@ class CategoriesListView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 class CategoryRetrieveView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, category_id):
         try:
             category = Category.get_one_category(category_id) 
@@ -91,6 +293,8 @@ class CategoryRetrieveView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class CategoryDeleteView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def delete(self, request, category_id):
         try:
             category = Category.get_one_category(category_id)
@@ -106,6 +310,8 @@ class CategoryDeleteView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 class CategoryUpdateView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
 
     def put(self, request, category_id):
@@ -137,8 +343,10 @@ class CategoryUpdateView(APIView):
 # Product Views
 
 class ProductCreateView(APIView):
-     parser_classes = (MultiPartParser, FormParser)
-     def post(self, request):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+    def post(self, request):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             image_file = request.FILES.get('image')
@@ -150,6 +358,8 @@ class ProductCreateView(APIView):
 
     
 class ProductsListView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         try:
             products = Product.get_all_products()
@@ -178,6 +388,8 @@ class ProductsListView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class ProductRetrieveView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, product_id):
         try:
             product = Product.get_one_product(product_id)
@@ -208,6 +420,8 @@ class ProductRetrieveView(APIView):
             
 
 class ProductDeleteView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def delete(self, request, product_id):
         try:
             product = Product.get_one_product(product_id)
@@ -224,6 +438,8 @@ class ProductDeleteView(APIView):
         
 
 class ProductUpdateView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
     def put(self, request, product_id):
         try:
@@ -265,7 +481,8 @@ class ProductUpdateView(APIView):
 # Carousal Views
 
 class CarousalCreateView(APIView):
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request):
@@ -281,6 +498,8 @@ class CarousalCreateView(APIView):
     
 
 class CarousalsListView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         try:
             carousals = Carousal.get_all_carousals() 
@@ -299,6 +518,8 @@ class CarousalsListView(APIView):
 
 
 class CarousalDeleteView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def delete(self, request, carousal_id):
         try:
             carousal = Carousal.get_one_carousal(carousal_id)

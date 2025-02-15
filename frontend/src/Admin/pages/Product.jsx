@@ -20,12 +20,14 @@ export default function Product() {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${BASE_URL}/api/dashboard/get-products/`);
+        const response = await axios.get(`${BASE_URL}/api/dashboard/get-products/`, 
+          { withCredentials: true }
+        );
         setProducts(response.data);
   
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        alert('Error fetching products');
       }
     };
     
@@ -39,12 +41,14 @@ export default function Product() {
          prevProducts.filter((product) => product.id !== productId)
        );
      try {
-       const response = await axios.delete(`${BASE_URL}/api/dashboard/delete-product/${productId}/`)
+       const response = await axios.delete(`${BASE_URL}/api/dashboard/delete-product/${productId}/`,
+        { withCredentials: true }
+       )
        alert('Successfully Deleted');
       } 
      catch (error) {
        setProducts(originalProducts);
-       console.error(error);
+       alert('Error deleting');
      }
    }
 

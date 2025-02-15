@@ -21,7 +21,9 @@ export default function AddProduct() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/dashboard/get-categories/`);
+      const response = await axios.get(`${BASE_URL}/api/dashboard/get-categories/`, 
+        { withCredentials: true }
+      );
       setCategories(response.data);
 
     } catch (error) {
@@ -59,6 +61,7 @@ export default function AddProduct() {
       const response = await axios.post(
         `${BASE_URL}/api/dashboard/add-product/`, 
         formData, 
+        { withCredentials: true},
         {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -104,7 +107,9 @@ export default function AddProduct() {
     if (isEditMode) {
       const fetchProduct = async () => {
         try {
-          const response = await axios.get(`${BASE_URL}/api/dashboard/get-product/${productId}/`);
+          const response = await axios.get(`${BASE_URL}/api/dashboard/get-product/${productId}/`, 
+            { withCredentials: true}
+          );
           const productData = response.data[0];
           reset({
             productName: productData.name,
@@ -153,6 +158,7 @@ export default function AddProduct() {
 
       await axios.put(
         `${BASE_URL}/api/dashboard/edit-product/${productId}/`, 
+        { withCredentials: true },
         formData, 
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );

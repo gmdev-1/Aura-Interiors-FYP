@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.core.exceptions import ValidationError
 import re
 import bcrypt
+import datetime
 from utils.db_connection import mongo_db
 
 # MongoDB collection
@@ -11,7 +12,7 @@ user_collection = mongo_db["users"]
 class User:
     def __init__(self, name, email, phone, password, role="user", id=None):
         self.name = name
-        self.email = email.lower() if email else None
+        self.email = email
         self.phone = phone
         self.password = password  # Hashed password
         self.role = role

@@ -20,7 +20,13 @@ export default function Carousal() {
       btnText: "Shop Decor"
     },
     {
-      src: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1739018412/carousals/xpxngsad20lumbgelu92.jpg",
+      src: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1739018098/carousals/jagfmb4gdok0sf0yojd2.jpg",
+      title: "Living Room Essentials",
+      description: "Create your perfect living space",
+      btnText: "View Collection"
+    },
+    {
+      src: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1739017887/carousals/v1slla2por9dbgbyoe6e.jpg",
       title: "Living Room Essentials",
       description: "Create your perfect living space",
       btnText: "View Collection"
@@ -57,14 +63,14 @@ export default function Carousal() {
               <img 
                 src={slide.src} 
                 alt={`Slide ${index + 1}`} 
-                className="w-full h-full object-cover transition-transform duration-700"
+                className="w-full h-full object-contain transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-12 text-white transform translate-y-0 transition-transform duration-500">
                 <h2 className="text-5xl font-bold mb-4 opacity-90">{slide.title}</h2>
                 <p className="text-xl mb-6 opacity-80">{slide.description}</p>
                 <button className="px-6 py-3 bg-white text-black font-semibold rounded-full 
-                  hover:bg-purple-600 hover:text-white transition-all duration-300 transform hover:scale-105">
+                  hover:bg-purple-600 hover:text-white transition-all duration-300 transform hover:scale-100">
                   {slide.btnText}
                 </button>
               </div>

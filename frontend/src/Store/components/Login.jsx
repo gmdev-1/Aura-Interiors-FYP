@@ -6,7 +6,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from 'axios';
 
 export default function Login() {
-    const {register, handleSubmit, formState: { errors },reset} = useForm();
+    const {register, handleSubmit, formState: { errors }, reset} = useForm();
     const [showPassword, setShowPassword] = useState(false);
     const [passwordValue, setPasswordValue] = useState("");
     const [loading, setLoading] = useState(false);

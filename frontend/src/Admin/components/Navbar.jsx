@@ -3,8 +3,14 @@ import { Link } from "react-router-dom";
 import { BiSidebar } from "react-icons/bi";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import {FiSearch } from "react-icons/fi";
+import Dropdown from './Dropdown';
+import { AuthContext } from '../contexts/AuthContext';
+import { useContext } from 'react';
+
 
 export default function Navbar({toggleSidebar}) {
+  const { userData, isAuthenticated, loading, Logout} = useContext(AuthContext);
+  
   return (
     <>
        <div className="bg-gray-800 text-gray-200 h-16 flex items-center justify-between px-6">
@@ -34,10 +40,14 @@ export default function Navbar({toggleSidebar}) {
           </form>
 
         <div className="flex justify-end w-52">
-            <Link to="/login" className="flex text-white bg-purple-700 hover:bg-purple-800 items-center px-2 py-1 rounded-md">
+          {isAuthenticated ? (
+            <Dropdown Logout={Logout} userData={userData}/>
+          ) : (
+            <Link to="/admin/login" className="flex text-white bg-purple-700 hover:bg-purple-800 items-center px-2 py-1 rounded-md">
                 <button className="ml-1">Login</button>
                 <IoIosArrowRoundForward className="size-6"/>
-              </Link>
+            </Link>
+          )}
         </div>
       </div>
     </>

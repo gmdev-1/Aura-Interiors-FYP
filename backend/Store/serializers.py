@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Store.models import User
+from Store.models.models import User
 from django.core.exceptions import ValidationError
 import io
 import re
@@ -27,13 +27,13 @@ class UserSerializer(serializers.Serializer):
             raise serializers.ValidationError("Phone number is already registered.")
         return value
 
-    # def validate_password(self, value):
-    #     password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-    #     if not re.match(password_regex, value):
-    #         raise serializers.ValidationError(
-    #             "Password must include uppercase, lowercase, number, and special character."
-    #         )
-    #     return value
+    def validate_password(self, value):
+        password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+        if not re.match(password_regex, value):
+            raise serializers.ValidationError(
+                "Password must include uppercase, lowercase, number, and special character."
+            )
+        return value
 
     def create(self, validated_data):
         user = User(

@@ -29,13 +29,13 @@ export default function Analytics() {
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">Sales Trends</h2>
           <div className="h-64">
-            <img src="https://via.placeholder.com/400x150" alt="Sales Trends Chart" className="w-full h-full object-cover" />
+            <img src="https://res.cloudinary.com/dctgk7mh7/image/upload/v1739017887/carousals/v1slla2por9dbgbyoe6e.jpg" alt="Sales Trends Chart" className="w-full h-full object-cover" />
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">Top Performing Products</h2>
           <div className="h-64">
-            <img src="https://via.placeholder.com/400x150" alt="Top Products Chart" className="w-full h-full object-cover" />
+            <img src="https://res.cloudinary.com/dctgk7mh7/image/upload/v1739018098/carousals/jagfmb4gdok0sf0yojd2.jpg" alt="Top Products Chart" className="w-full h-full object-cover" />
           </div>
         </div>
       </div>

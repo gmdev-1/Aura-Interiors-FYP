@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
 import { BiSidebar, BiCarousel } from "react-icons/bi";
-import { AiOutlinePlus } from "react-icons/ai";
 import { FiFilePlus, FiUser, FiBox, FiLayers, FiLogOut  } from "react-icons/fi";
 
 export default function Sidebar({isOpenSidebar, toggleSidebar, toggleDropDown}) {
@@ -55,18 +54,6 @@ export default function Sidebar({isOpenSidebar, toggleSidebar, toggleDropDown}) 
             <a href="#" className="flex px-4 py-2 hover:bg-gray-700 rounded">
             <FiFilePlus  className="size-5 mb-1 mr-3"/>
               Orders
-            </a>
-          </li>
-          <li>
-            <a href="#" className="flex px-4 py-2 hover:bg-gray-700 rounded border-b border-gray-600">
-            <FiUser  className="size-5 mb-1 mr-3"/>
-              Users
-            </a>
-          </li>
-          <li>
-            <a href="#" className="flex px-4 py-2 mt-3 hover:bg-gray-700 rounded">
-            <FiLogOut className="size-5 mb-1 mr-3"/>
-              Logout
             </a>
           </li>
         </ul>

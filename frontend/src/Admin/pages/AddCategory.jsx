@@ -36,6 +36,7 @@ export default function AddCategory() {
         `${BASE_URL}/api/dashboard/add-category/`, 
         formData, 
         {
+          withCredentials: true,
           headers: {
             'Content-Type': 'multipart/form-data',
             // 'Authorization': `Bearer ${token}` 
@@ -65,7 +66,6 @@ export default function AddCategory() {
           });
         }
       }
-      
     }
     setIsSubmitting(false);
   };
@@ -74,7 +74,9 @@ export default function AddCategory() {
     if (isEditMode) {
       const fetchCategory = async () => {
         try {
-          const response = await axios.get(`${BASE_URL}/api/dashboard/get-category/${categoryId}/`);
+          const response = await axios.get(`${BASE_URL}/api/dashboard/get-category/${categoryId}/`,
+            { withCredentials: true }
+          );
           const categoryData = response.data[0];
           reset({
             categoryName: categoryData.name,
@@ -104,6 +106,7 @@ export default function AddCategory() {
       await axios.put(
         `${BASE_URL}/api/dashboard/edit-category/${categoryId}/`, 
         formData, 
+        { withCredentials: true },
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
       navigate('/admin/dashboard/categories');

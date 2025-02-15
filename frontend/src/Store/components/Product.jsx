@@ -110,7 +110,7 @@ export default function Product() {
                   key={product.id}
                   className="relative bg-white rounded-lg shadow-md hover:shadow-xl transform transition-all duration-300 overflow-hidden flex flex-col"
                 >
-                  <Link to={`/product/${product.name}`}>
+                  <Link to="/productview">
                     <div className="h-48 overflow-hidden group">
                         <img
                           src={product.image}
@@ -118,6 +118,7 @@ export default function Product() {
                           className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                         />
                     </div>
+                  </Link>
 
                     <div className="p-5 flex flex-col flex-grow">
                       <h3 className="text-lg font-semibold text-gray-800 hover:text-purple-600 transition-colors">
@@ -147,7 +148,7 @@ export default function Product() {
                         </span>
                       </div>
                     </div>
-                  </Link>
+                  
 
                   <div className="px-5 pb-3 flex justify-between items-center">
                     <button className="px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">

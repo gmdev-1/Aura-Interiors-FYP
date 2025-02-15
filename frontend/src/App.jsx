@@ -10,6 +10,12 @@ import AddProduct from './Admin/pages/AddProduct';
 import Category from './Admin/pages/Category';
 import AddCategory from './Admin/pages/AddCategory';
 import Carousal from './Admin/pages/Carousal';
+import Cart from './Store/pages/Cart';
+import ProductView from './Store/pages/ProductView';
+import AdminSignup from './Admin/pages/AdminSignup';
+import AdminLogin from './Admin/pages/AdminLogin';
+import ProtectedRoute from './Admin/components/ProtectedRoute';
+import AuthLayout from './Admin/components/AuthLayout';
 
 function App() {
 
@@ -22,17 +28,21 @@ function App() {
           <Route exact path="/auth/signup" element={<Signup/>} />
           <Route exact path="/auth/forgot-password" element={<ForgotPassword />} />
 
-          <Route exact path="/admin/dashboard" element={<Dashboard />} />
-          <Route exact path="/admin/dashboard/products" element={<Product />} />
-          <Route exact path="/admin/dashboard/add-product" element={<AddProduct />} />
-          <Route exact path="/admin/dashboard/edit-product/:productId" element={<AddProduct />} />
+          <Route exact path="/cart" element={<Cart />} />
+          <Route exact path="/productview" element={<ProductView />} />
 
-          <Route exact path="/admin/dashboard/categories" element={<Category/>} />
-          <Route exact path="/admin/dashboard/add-category" element={<AddCategory/>} />
-          <Route exact path="/admin/dashboard/edit-category/:categoryId" element={<AddCategory />} />
-
-          <Route exact path="/admin/dashboard/carousal" element={<Carousal />} />
-          
+          <Route exact path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AuthLayout />}> 
+          <Route exact path="/admin/signup" element={<ProtectedRoute ><AdminSignup /></ProtectedRoute>} />
+          <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route exact path="/admin/dashboard/products" element={<ProtectedRoute><Product /></ProtectedRoute>}/>
+          <Route exact path="/admin/dashboard/add-product" element={<ProtectedRoute><AddProduct /></ProtectedRoute>}/>
+          <Route exact path="/admin/dashboard/edit-product/:productId" element={<ProtectedRoute><AddProduct /></ProtectedRoute>}/>
+          <Route exact path="/admin/dashboard/categories" element={<ProtectedRoute><Category/></ProtectedRoute>}/>
+          <Route exact path="/admin/dashboard/add-category" element={<ProtectedRoute><AddCategory/></ProtectedRoute>}/>
+          <Route exact path="/admin/dashboard/edit-category/:categoryId" element={<ProtectedRoute><AddCategory /></ProtectedRoute>}/>
+          <Route exact path="/admin/dashboard/carousal" element={<ProtectedRoute><Carousal /></ProtectedRoute>}/>
+          </Route>
         </Routes>
       </Router>
     </>

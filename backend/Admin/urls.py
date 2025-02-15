@@ -1,9 +1,16 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from Admin.views import CategoryCreateView, CategoriesListView, CategoryRetrieveView, CategoryDeleteView, CategoryUpdateView, ProductCreateView, ProductsListView, ProductRetrieveView, ProductDeleteView, ProductUpdateView, CarousalCreateView, CarousalsListView, CarousalDeleteView
+from Admin.views import AdminSignupView, AdminLoginView, VerifyAuthView, CookieTokenRefreshView, AdminLogoutView, CategoryCreateView, CategoriesListView, CategoryRetrieveView, CategoryDeleteView, CategoryUpdateView, ProductCreateView, ProductsListView, ProductRetrieveView, ProductDeleteView, ProductUpdateView, CarousalCreateView, CarousalsListView, CarousalDeleteView
 
 urlpatterns = [
+    path('admin/signup/', AdminSignupView.as_view(), name='signup'),
+    path('admin/login/', AdminLoginView.as_view(), name='login'),
+    path('admin/verify-auth/', VerifyAuthView.as_view(), name='verify-auth'),
+    path('admin/token-refresh/', CookieTokenRefreshView.as_view(), name='token-refresh'),
+    path('admin/logout/', AdminLogoutView.as_view(), name='logout'),
+    
+    
     path('add-category/', CategoryCreateView.as_view(), name='add-category'),
     path('get-categories/', CategoriesListView.as_view(), name='get-categories'),
     path('get-category/<str:category_id>/', CategoryRetrieveView.as_view(), name='get-category'),
