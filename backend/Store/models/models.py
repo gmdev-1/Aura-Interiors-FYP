@@ -1,70 +1,87 @@
-from rest_framework import serializers
-from django.core.exceptions import ValidationError
-import re
-import bcrypt
-import datetime
+from django.db import models
+from django.conf import settings
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import AbstractUser
+from datetime import datetime
+from bson import ObjectId
 from utils.db_connection import mongo_db
 
-# MongoDB collection
-user_collection = mongo_db["users"]
 
-# Model
+user_collection = mongo_db["users"]
+ 
+
 class User:
     def __init__(self, name, email, phone, password, role="user", id=None):
+        self.id = id
         self.name = name
         self.email = email
         self.phone = phone
-        self.password = password  # Hashed password
+        self.password = password
         self.role = role
-        self._id = id
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
 
-    @property
-    def id(self):
-        return str(self._id) if self._id else None
-
-    @staticmethod
-    def hash_password(raw_password):
-        return bcrypt.hashpw(raw_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-
-    @staticmethod
-    def check_password(hashed_password, raw_password):
-        return bcrypt.checkpw(raw_password.encode("utf-8"), hashed_password.encode("utf-8"))
-
     def save(self):
-        if user_collection.find_one({"email": self.email}):
-            raise ValueError("A user with this email already exists.")
-
-        if user_collection.find_one({"phone": self.phone}):
-            raise ValueError("A user with this phone number already exists.")
-
+        hashed_password = self.hash_password(self.password)
         user_document = {
             "name": self.name,
             "email": self.email,
             "phone": self.phone,
-            "password": self.hash_password(self.password),
+            "password": hashed_password,
             "role": self.role,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
         }
         result = user_collection.insert_one(user_document)
-        self._id = result.inserted_id
-        return self._id
-
+        self.id = str(result.inserted_id)
+        return self.id
+    
+    @staticmethod
+    def hash_password(raw_password):
+        return make_password(raw_password)
+    
+    @staticmethod    
+    def check_password(stored_hash, raw_password):
+        return check_password(raw_password, stored_hash)
+        
     @classmethod
     def authenticate(cls, email, password):
-        user_data = user_collection.find_one({"email": email.lower()})
-        if not user_data:
+        user = user_collection.find_one({"email": email, "role": "user"})
+        if not user:
             return None
         
-        if cls.check_password(user_data['password'], password):
-            return cls(
-                id=user_data['_id'],
-                name=user_data['name'],
-                email=user_data['email'],
-                phone=user_data['phone'],
-                password=user_data['password'],
-                role=user_data['role'],
-            )
-        return None
+        if cls.check_password(user["password"], password):
+            return cls.from_document(user)
+        
+    @classmethod
+    def from_document(cls, doc):
+        user = cls (
+            name=doc.get("name"),
+            email=doc.get("email"),
+            phone=doc.get("phone"),
+            password=doc.get("password"),
+            role=doc.get("role"),
+        )
+        user.id = str(doc.get("_id"))
+        user.created_at = doc.get("created_at")
+        user.updated_at = doc.get("updated_at")
+        return user
+    
+    @classmethod
+    def get_by_id(cls, user_id):
+        try:
+            user_doc = user_collection.find_one({"_id": ObjectId(user_id)})
+            if user_doc:
+                return cls.from_document(user_doc)
+            return None
+        except Exception:
+            return None
+        
+    @property
+    def is_authenticated(self):
+        return True
+    
+    
+    def __str__(self):
+        return f"User(name={self.name}, email={self.email}, phone={self.phone}, role={self.role})"

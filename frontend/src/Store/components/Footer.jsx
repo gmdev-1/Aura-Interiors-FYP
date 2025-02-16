@@ -49,19 +49,6 @@ export default function Footer() {
                 </span>
                 <div className="h-0.5 w-16 bg-purple-600 mt-2"/>
               </div>
-              
-              {/* Contact info styling updates */}
-              <div className="space-y-2 mt-6">
-                <a href="tel:+1234567890" className="flex items-center gap-2 hover:text-[#c6a355] transition-colors">
-                  <FiPhone className="text-purple-600" /> +1 (234) 567-890
-                </a>
-                <a href="mailto:info@aurainteriors.com" className="flex items-center gap-2 hover:text-purple-700 transition-colors">
-                  <FiMail className="text-purple-600" /> info@aurainteriors.com
-                </a>
-                <p className="flex items-center gap-2">
-                  <FiMapPin className="text-purple-600" /> 123 Furniture Street, Design District
-                </p>
-              </div>
             </div>
 
             {/* Quick Links - update hover states */}
@@ -71,7 +58,7 @@ export default function Footer() {
                 <div className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-purple-600"/>
               </h3>
               <ul className="space-y-2">
-                {['Shop', 'About Us', 'Contact Us', 'FAQs', 'Blog', 'Careers'].map((item) => (
+                {['Shop', 'FAQs'].map((item) => (
                   <li key={item}>
                     <Link 
                       to={`/${item.toLowerCase().replace(' ', '-')}`}
@@ -89,7 +76,7 @@ export default function Footer() {
             <div>
               <h3 className="text-lg font-bold mb-4 text-[#1a3c40] relative inline-block">
                 Customer Support
-                <div className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-[#c6a355]"/>
+                <div className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-purple-600"/>
               </h3>
               <ul className="space-y-2">
                 {[
@@ -110,28 +97,6 @@ export default function Footer() {
                     </Link>
                   </li>
                 ))}
-              </ul>
-            </div>
-
-            {/* Working Hours - enhanced styling */}
-            <div>
-              <h3 className="text-lg font-bold mb-4 text-[#1a3c40] relative inline-block">
-                Working Hours
-                <div className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-[#c6a355]"/>
-              </h3>
-              <ul className="space-y-3">
-                <li className="flex justify-between items-center p-2 hover:bg-purple-100 rounded transition-colors">
-                  <span>Monday - Friday:</span>
-                  <span className="text-purple-600 font-medium">9:00 AM - 8:00 PM</span>
-                </li>
-                <li className="flex justify-between">
-                  <span>Saturday:</span>
-                  <span>10:00 AM - 6:00 PM</span>
-                </li>
-                <li className="flex justify-between">
-                  <span>Sunday:</span>
-                  <span>Closed</span>
-                </li>
               </ul>
             </div>
           </div>

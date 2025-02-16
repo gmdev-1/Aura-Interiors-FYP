@@ -34,7 +34,7 @@ export default function Navbar({toggleSidebar}) {
             />
             <button
               type="submit"
-              className="h-10 px-4 bg-fuchsia-800 text-white flex items-center justify-center">
+              className="h-10 px-4 bg-purple-600 text-white flex items-center justify-center">
               <FiSearch />
             </button>
           </form>

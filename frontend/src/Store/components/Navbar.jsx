@@ -106,7 +106,7 @@ const Navbar = () => {
     <>
       {/* Desktop Navbar */}
       <div className="hidden sm:flex flex-col mb-5">
-        <div className="bg-gradient-to-t from-purple-200 to-purple-500 text-gray-800 h-20 flex items-center justify-between px-4 sm:px-6 shadow-lg">
+        <div className="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 text-gray-800 h-20 flex items-center justify-between px-4 sm:px-6 shadow-sm">
           {/* Logo */}
           <div className="flex flex-col items-center group cursor-pointer ml-10">
             <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider text-purple-600">
@@ -123,7 +123,7 @@ const Navbar = () => {
             <div className="relative w-full transition-all duration-300">
               <input
                 type="text"
-                className="w-full h-11 px-5 bg-gray-100 text-gray-800 placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
+                className="w-full h-11 px-5 bg-white text-gray-800 placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
                 placeholder="Search for products..."
               />
               <button
@@ -138,7 +138,7 @@ const Navbar = () => {
           {/* Desktop Icons */}
           <div className="flex items-center space-x-6">
             <Link to="/cart" className="relative group">
-              <FiShoppingCart className="size-6 text-gray-800 hover:text-purple-500 transition-colors duration-300" />
+              <FiShoppingCart className="size-6 text-purple-600 hover:text-purple-500 transition-colors duration-300" />
               <div className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
                 0
               </div>
@@ -175,7 +175,7 @@ const Navbar = () => {
                 )}
               </div>
             ) : (
-              <Link to="/auth/login" className="relative group">
+              <Link to="/user/login" className="relative group">
                 <button className="px-4 py-2 bg-purple-600 rounded-lg text-white hover:bg-purple-700 transition-all duration-300 flex items-center space-x-2">
                   <span>Login</span>
                   <IoIosArrowRoundForward className="size-5" />
@@ -186,12 +186,12 @@ const Navbar = () => {
         </div>
 
         {/* Categories for Desktop */}
-        <div className="text-gray-800 flex overflow-x-auto py-3 px-4 space-x-4 shadow-lg">
+        <div className="text-gray-800 flex items-center justify-center overflow-x-auto px-4 space-x-4 ">
           {categories.map((cat) => (
             <Link
               to={`/category/${cat.title}`}
               key={cat.id}
-              className="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-semibold hover:bg-purple-50 hover:text-purple-600 transition-all duration-300"
+              className="whitespace-nowrap px-4 pt-4 rounded-md text-sm font-semibold hover:text-purple-600 transition-all duration-300"
             >
               {cat.title}
             </Link>
@@ -202,7 +202,7 @@ const Navbar = () => {
       {/* Mobile Navbar */}
       <div className="sm:hidden">
         {/* Top Navbar */}
-        <div className="bg-gray-150 text-gray-800 shadow-lg flex justify-between items-center px-4 py-3">
+        <div className="bg-gray-150 text-gray-800 shadow-sm flex justify-between items-center px-4 py-3">
           {/* Mobile Menu Button */}
           <button
             className="text-gray-800 hover:text-purple-500"
@@ -224,7 +224,7 @@ const Navbar = () => {
 
           {/* Mobile Cart Button */}
           <Link to="/cart" className="relative">
-            <FiShoppingCart className="size-6 text-gray-800 hover:text-purple-500" />
+            <FiShoppingCart className="size-6 text-purple-800 hover:text-purple-500" />
             <div className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
               0
             </div>
@@ -232,7 +232,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Search Bar */}
-        <div className="bg-white px-4 py-3 shadow-md">
+        <div className="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 px-4 py-3 shadow-md">
           <form className="flex items-center bg-gray-50 rounded-md w-full">
             <input
               type="text"
@@ -249,7 +249,7 @@ const Navbar = () => {
         </div>
 
         {/* Categories for Mobile */}
-        <div className="bg-gray-150 text-gray-800 flex overflow-x-auto py-3 px-4 space-x-4 shadow-md">
+        <div className="bg-gray-150 text-gray-800 flex overflow-x-auto py-3 px-4 space-x-4 shadow-sm">
           {categories.map((cat) => (
             <Link
               to={`/category/${cat.title}`}
@@ -279,14 +279,14 @@ const Navbar = () => {
       {/* Close Button */}
       <button
         onClick={() => setSidebarOpen(false)}
-        className="absolute top-5 right-16 text-gray-800 hover:text-red-500"
+        className="absolute top-5 md:right-2/3 right-28 text-gray-800 hover:text-gray-200"
       >
-        <IoMdClose className="size-7" />
+        <IoMdClose className="size-10" />
       </button>
 
       {/* Login Button */}
       <div className="mb-6 flex">
-        <Link to="/auth/login">
+        <Link to="/user/login">
           <button className="px-4 py-2 bg-purple-600 rounded-lg text-white hover:bg-purple-700 transition-all duration-300 flex items-center space-x-2">
             <span>Login</span>
             <IoIosArrowRoundForward className="size-5" />

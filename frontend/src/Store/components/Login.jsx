@@ -100,7 +100,7 @@ export default function Login() {
                 Password
               </label>
               <div className="text-sm">
-                <Link to="/auth/forgot-password" className="font-semibold text-purple-600 hover:text-purple-500">
+                <Link to="/user/forgot-password" className="font-semibold text-purple-600 hover:text-purple-500">
                   Forgot password?
                 </Link>
               </div>
@@ -141,7 +141,7 @@ export default function Login() {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Don't have an account?{" "}
-          <Link to="/auth/signup" className="font-semibold text-purple-600 hover:text-purple-500">
+          <Link to="/user/signup" className="font-semibold text-purple-600 hover:text-purple-500">
             Sign up
           </Link>
         </p>

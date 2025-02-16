@@ -20,8 +20,8 @@ export default function Sidebar({isOpenSidebar, toggleSidebar, toggleDropDown}) 
             </span>
             <div className="h-0.5 w-0 bg-purple-600 group-hover:w-full transition-all duration-300"/>
           </div>
-            <button onClick={toggleSidebar} className="p-1.5 rounded-lg hover:bg-gray-800">
-              <BiSidebar  className="size-6 text-gray-300"/>
+            <button onClick={toggleSidebar} className="">
+              <BiSidebar  className="text-gray-300 p-2 size-10 rounded-full hover:bg-gray-800"/>
             </button>
         </div>
         <ul className="space-y-4 mt-8 px-4 transition-all duration-300">

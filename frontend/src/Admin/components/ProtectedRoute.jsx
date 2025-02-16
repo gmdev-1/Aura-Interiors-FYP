@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useContext(AuthContext);
   
   if (loading) {
-    return <div className="flex justify-center items-center mt-20"><Spinner /></div>;
+    return <div className="flex items-center justify-center h-screen"><Spinner /></div>;
   }
 
     return isAuthenticated ? children : <Navigate to="/admin/login" replace />;

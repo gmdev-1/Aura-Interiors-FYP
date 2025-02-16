@@ -232,7 +232,7 @@ export default function Signup() {
           <p className="mt-10 text-center text-sm text-gray-500">
             Already have an account?{" "}
             <Link
-              to="/auth/login"
+              to="/user/login"
               className="font-semibold text-purple-600 hover:text-purple-500">
               Login
             </Link>

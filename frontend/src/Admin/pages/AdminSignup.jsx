@@ -75,7 +75,7 @@ export default function AdminSignup() {
 
   return (
     <>
-       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8  bg-purple-50">
+       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50">
               <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <div className="flex flex-col items-center">
                   <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider group-hover:text-purple-500 transition-colors duration-300">

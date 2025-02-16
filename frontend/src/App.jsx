@@ -24,9 +24,9 @@ function App() {
      <Router>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/auth/login" element={<Login/>} />
-          <Route exact path="/auth/signup" element={<Signup/>} />
-          <Route exact path="/auth/forgot-password" element={<ForgotPassword />} />
+          <Route exact path="/user/login" element={<Login/>} />
+          <Route exact path="/user/signup" element={<Signup/>} />
+          <Route exact path="/user/forgot-password" element={<ForgotPassword />} />
 
           <Route exact path="/cart" element={<Cart />} />
           <Route exact path="/productview" element={<ProductView />} />

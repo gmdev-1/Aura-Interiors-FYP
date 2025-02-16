@@ -26,7 +26,7 @@ export default function Dropdown ({userData, Logout}) {
 
   return (
     <div
-      className="dropdown relative inline-flex rtl:[--placement:bottom-end] bg-white text-black p-1 border-2 border-purple-600 rounded-full"
+      className="dropdown relative inline-flex rtl:[--placement:bottom-end] bg-white text-black px-1 py-0.5 border-2 border-purple-600 rounded-full"
       ref={dropdownRef}
     >
       <button
