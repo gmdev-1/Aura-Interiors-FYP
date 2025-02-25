@@ -22,7 +22,6 @@ export default function Carousal() {
 
   const addCarousal = async (data) => {
     try {
-      const token = localStorage.getItem("token"); // Make sure to get the token
       const formData = new FormData();
       if (data.image && data.image[0]) {
         formData.append("image", data.image[0]);
@@ -30,9 +29,9 @@ export default function Carousal() {
 
       const response = await axios.post(
         `${BASE_URL}/api/dashboard/add-carousal/`,
-        { withCredentials: true },
         formData,
         {
+          withCredentials: true ,
           headers: {
             "Content-Type": "multipart/form-data",
           },});

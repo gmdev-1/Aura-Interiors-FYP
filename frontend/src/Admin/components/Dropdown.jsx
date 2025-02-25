@@ -26,13 +26,13 @@ export default function Dropdown ({userData, Logout}) {
 
   return (
     <div
-      className="dropdown relative inline-flex rtl:[--placement:bottom-end] bg-white text-black px-1 py-0.5 border-2 border-purple-600 rounded-full"
+      className="dropdown relative inline-flex rtl:[--placement:bottom-end] bg-white text-black px-1 py-0.5 border-purple-600 border-2 rounded-full"
       ref={dropdownRef}
     >
       <button
         id="dropdown-avatar"
         type="button"
-        className="dropdown-toggle btn btn-outline btn-primary flex items-center gap-0 rounded-full"
+        className="dropdown-toggle btn btn-outline cursor-pointer btn-primary flex items-center gap-0 rounded-full"
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-label="Dropdown"
@@ -62,7 +62,7 @@ export default function Dropdown ({userData, Logout}) {
             <small className="text-sm font-medium text-gray-500">{userData.email}</small>
           </div>
         </li>
-        <li className="text-black hover:bg-gray-100">
+        <li className="text-black hover:bg-gray-100 cursor-pointer">
           <Link
             className="dropdown-item block px-2 py-2 ml-2"
             to="/admin/orders"
@@ -70,7 +70,7 @@ export default function Dropdown ({userData, Logout}) {
             Orders
           </Link>
         </li>
-        <li onClick={Logout} className="text-red-500 hover:bg-red-50">
+        <li onClick={Logout} className="text-red-500 hover:bg-red-50 cursor-pointer">
           <a
             className="dropdown-item block px-2 py-2 ml-2 mb-1"
           >

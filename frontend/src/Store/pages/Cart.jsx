@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function Cart() {
   // Sample cart data – replace with your dynamic data.
@@ -152,6 +153,7 @@ export default function Cart() {
           </div>
         </div>
       </section>
+      <Footer />
     </>
   );
 }

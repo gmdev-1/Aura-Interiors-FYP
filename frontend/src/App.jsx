@@ -11,11 +11,12 @@ import Category from './Admin/pages/Category';
 import AddCategory from './Admin/pages/AddCategory';
 import Carousal from './Admin/pages/Carousal';
 import Cart from './Store/pages/Cart';
-import ProductView from './Store/pages/ProductView';
+import ProductDetail from './Store/pages/ProductDetail';
 import AdminSignup from './Admin/pages/AdminSignup';
 import AdminLogin from './Admin/pages/AdminLogin';
 import ProtectedRoute from './Admin/components/ProtectedRoute';
 import AuthLayout from './Admin/components/AuthLayout';
+import Shop from './Store/pages/Shop';
 
 function App() {
 
@@ -27,9 +28,9 @@ function App() {
           <Route exact path="/user/login" element={<Login/>} />
           <Route exact path="/user/signup" element={<Signup/>} />
           <Route exact path="/user/forgot-password" element={<ForgotPassword />} />
-
           <Route exact path="/cart" element={<Cart />} />
-          <Route exact path="/productview" element={<ProductView />} />
+          <Route exact path="/product-detail/:name" element={<ProductDetail />} />
+          <Route exact path="/shop" element={<Shop/>} />
 
           <Route exact path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AuthLayout />}> 

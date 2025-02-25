@@ -2,64 +2,98 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-# from Store.serializers import UserSerializer
+from rest_framework.permissions import AllowAny
+from Admin.models.product import Product
+from Admin.models.category import Category
+from Store.services import get_one_product_by_name
+from Store.services import get_filtered_products
 
 
-
-class SignupView(APIView):
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
-        return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
-class LoginView(APIView):
-    def post(self, request):
+class CategoriesFilterView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
         try:
-            data = request.data
-            email = data.get('email', '').strip().lower()
-            password = data.get('password', '').strip()
-
-            if not email or not password:
-                return Response(
-                    {'error': 'Email and password are required.'}, 
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-            # Authenticate user
-            user = User.authenticate(email, password)
+            categories = Category.get_all_categories() 
             
-            if not user:
-                return Response(
-                    {'error': 'Invalid email or password'}, 
-                    status=status.HTTP_401_UNAUTHORIZED
-                )
+            category_list = [
+                {
+                    "id": str(category.get("_id")), 
+                    "name": category.get("name", ""),
+                }
+                for category in categories
+            ]
             
-            # Generate tokens
-            refresh = RefreshToken.for_user(user)
-            access_token = refresh.access_token
-
-            # Add custom claims
-            access_token['role'] = user.role
-            access_token['email'] = user.email
-            access_token['user_id'] = user.id  # Add user_id to token
-            
-            return Response({
-                'refresh': str(refresh),
-                'access_token': str(access_token),
-                'user': {
-                    'id': user.id,
-                    'email': user.email,
-                    'name': user.name,
-                    'role': user.role
-                },
-                'message': 'Sign-in Successful'
-            }, status=status.HTTP_200_OK)
-            
+            return Response(category_list, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response(
-                {'error': str(e)}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-    
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+
+
+# Product Shop
+
+class ProductShopView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        try:
+            products = Product.get_all_products()
+            product_list = [
+                {
+                     "id": product.get("id"),
+                    "name": product.get("name"),
+                    "description": product.get("description"),
+                    "price": product.get("price"),
+                    "category": str(product.get("category")),
+                    "quantity": product.get("quantity"),
+                    "discount": product.get("discount"),
+                    "image": product.get("image"),
+                    "color": product.get("color"),
+                    "size": product.get("size"),
+                    "material": product.get("material"),
+                    "rating": product.get("rating"),
+                    "review": product.get("review"),
+                    "is_featured": product.get("is_featured"),
+                }
+                for product in products
+            ]
+            return Response(product_list, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+# Product Detail view
+
+class ProductDetailView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request, name):
+        try:
+            product = get_one_product_by_name(name)
+            product_list = [
+                {
+                    "id": str(product.get("id")), 
+                    "name": product.get("name"),
+                    "description": product.get("description"),
+                    "price": product.get("price"),
+                    "category": product.get("category"),
+                    "quantity": product.get("quantity"),
+                    "discount": product.get("discount"),
+                    "image": product.get("image"),
+                    "color": product.get("color"),
+                    "size": product.get("size"),
+                    "material": product.get("material"),
+                    "rating": product.get("rating"),
+                    "review": product.get("review"),
+                    "is_featured": product.get("is_featured", False),
+                }
+            ]
+            return Response(product_list, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+# Shop Filters
+
+class ProductShopFilterView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        products = get_filtered_products(request.query_params)
+        return Response(products)

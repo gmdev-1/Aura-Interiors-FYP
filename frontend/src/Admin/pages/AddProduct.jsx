@@ -61,8 +61,8 @@ export default function AddProduct() {
       const response = await axios.post(
         `${BASE_URL}/api/dashboard/add-product/`, 
         formData, 
-        { withCredentials: true},
         {
+          withCredentials: true,
           headers: {
             'Content-Type': 'multipart/form-data',
             // 'Authorization': `Bearer ${token}` 

@@ -27,8 +27,8 @@ export const AuthProvider = ({children}) => {
         }
         catch(error){
           if (retryCount < 2 && (!error.response || error.response.status >= 500)) {
-            setTimeout(() => {
-              VerifyAuth(retryCount + 1)
+           await new setTimeout(() => {
+             VerifyAuth(retryCount + 1)
             }, 1000 * (retryCount + 1));
           }
           if (error.response?.status === 401) {
@@ -43,6 +43,10 @@ export const AuthProvider = ({children}) => {
               if (newResponse.data.user_id){
                 setUserData(newResponse.data);
                 setIsAuthenticated(true)
+                navigate('/admin/dashboard');
+              }
+              else{
+                setIsAuthenticated(false);
               }
             }
             catch(error){
@@ -57,7 +61,7 @@ export const AuthProvider = ({children}) => {
         finally{
           setTimeout(() => {
             setLoading(false)
-          }, 2500);
+          }, 2800);
         }
       }
       

@@ -1,13 +1,14 @@
-import React from 'react';
+import React from "react";
 import { AiFillStar } from "react-icons/ai";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 export default function Product() {
   const products = [
     {
       id: 1,
       name: "Abstract-Canvas-Wall-Art",
-      description: "Beautiful abstract canvas painting to enhance your living room.",
+      description:
+        "Beautiful abstract canvas painting to enhance your living room.",
       price: 49.99,
       image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511",
       reviews: 4.7,
@@ -25,7 +26,8 @@ export default function Product() {
     {
       id: 3,
       name: "Stainless-Steel-Cookware-Set",
-      description: "Durable and elegant cookware set perfect for daily cooking.",
+      description:
+        "Durable and elegant cookware set perfect for daily cooking.",
       price: 99.99,
       image: "https://images.unsplash.com/photo-1572048572872-2394404cf1f3",
       reviews: 4.8,
@@ -34,9 +36,11 @@ export default function Product() {
     {
       id: 4,
       name: "Modern-Ceramic-Vase",
-      description: "Minimalist ceramic vase ideal for fresh or artificial flowers.",
+      description:
+        "Minimalist ceramic vase ideal for fresh or artificial flowers.",
       price: 29.99,
-      image: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738955606/products/ie34sqkoikxx8xjr4l5k.png",
+      image:
+        "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738955606/products/ie34sqkoikxx8xjr4l5k.png",
       reviews: 4.6,
       quantity: 6,
     },
@@ -45,7 +49,8 @@ export default function Product() {
       name: "Fluffy-Area-Rug",
       description: "A soft and cozy area rug to add warmth to any room.",
       price: 59.99,
-      image: "https://media.istockphoto.com/id/1190447864/photo/apple-iphone-11-pro-gray-smartphone.jpg?s=612x612&w=0&k=20&c=zETLJeguLoTEFBNKPl1vjPY1lvPW1uM6GPpyiMSvsC0=",
+      image:
+        "https://media.istockphoto.com/id/1190447864/photo/apple-iphone-11-pro-gray-smartphone.jpg?s=612x612&w=0&k=20&c=zETLJeguLoTEFBNKPl1vjPY1lvPW1uM6GPpyiMSvsC0=",
       reviews: 4.4,
       quantity: 15,
     },
@@ -54,7 +59,8 @@ export default function Product() {
       name: "Contemporary-Wall-Clock",
       description: "Elegant and modern wall clock to match any interior style.",
       price: 39.99,
-      image: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738952932/products/dk2b30wa26yhngwtcmrg.jpg",
+      image:
+        "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738952932/products/dk2b30wa26yhngwtcmrg.jpg",
       reviews: 4.9,
       quantity: 7,
     },
@@ -63,7 +69,8 @@ export default function Product() {
       name: "Contemporary-Wall-Clock",
       description: "Elegant and modern wall clock to match any interior style.",
       price: 39.99,
-      image: "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738955146/products/ktojjjvidpazp5pcprpj.png",
+      image:
+        "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738955146/products/ktojjjvidpazp5pcprpj.png",
       reviews: 4.9,
       quantity: 7,
     },
@@ -94,7 +101,11 @@ export default function Product() {
       <div className="relative">
         {/* Top Wave Separator */}
         <div className="absolute top-0 left-0 right-0 transform -translate-y-full">
-          <svg className="w-full h-16" viewBox="0 0 1440 54" preserveAspectRatio="none">
+          <svg
+            className="w-full h-16"
+            viewBox="0 0 1440 54"
+            preserveAspectRatio="none"
+          >
             <path
               fill="rgb(238 242 255)" // Matches from-indigo-50
               d="M0 22L120 16.7C240 11 480 1.00001 720 0.700012C960 1.00001 1200 11 1320 16.7L1440 22V54H1320C1200 54 960 54 720 54C480 54 240 54 120 54H0V22Z"
@@ -104,30 +115,33 @@ export default function Product() {
 
         <div className="bg-gradient-to-b from-indigo-50 via-purple-50 to-pink-50 p-4 sm:p-8 py-16 pb-20">
           <section className="py-10 px-2 sm:px-4 bg-transparent backdrop-blur-sm">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2 sm:px-4 max-w-screen-xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2 sm:px-4 max-w-screen-xl mx-auto">
               {products.map((product) => (
                 <div
                   key={product.id}
-                  className="relative bg-white rounded-lg shadow-md hover:shadow-xl transform transition-all duration-300 overflow-hidden flex flex-col"
+                  className="bg-white w-58 rounded-lg shadow overflow-hidden transform transition duration-300"
                 >
-                  <Link to="/productview">
-                    <div className="h-40 sm:h-48 overflow-hidden group">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
+                  <Link to="/productview" >
+                  <div className="absolute top-2 left-2 z-10 bg-purple-800 text-purple-100 text-xs font-semibold px-2 py-1 rounded">
+                    Featured
+                  </div>
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="w-full h-52 md:object-contain"
+                  />
                   </Link>
 
                   <div className="p-4 flex flex-col flex-grow">
                     <h3 className="text-lg font-semibold text-gray-800 hover:text-purple-600 transition-colors">
-                      {product.name.replace(/-/g, ' ')}
+                      {product.name}
                     </h3>
                     <div className="mt-2">
                       <span className="text-sm flex items-center">
                         <AiFillStar className="text-yellow-400 mr-1" />
-                        <span className="text-yellow-900 font-medium">{product.reviews}</span>
+                        <span className="text-yellow-900 font-medium">
+                          {product.reviews}
+                        </span>
                         <span className="ml-2 text-purple-600 font-semibold text-xs bg-purple-50 rounded-xl p-1">
                           ({product.quantity}) Reviews
                         </span>
@@ -135,7 +149,10 @@ export default function Product() {
                     </div>
                     <div className="mt-4">
                       <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-purple-500 bg-clip-text text-transparent">
-                        ${product.price.toFixed(2)} <span className='text-emerald-400'>$3.99</span>
+                        ${product.price.toFixed(2)}{" "}
+                        <span className="text-purple-600 text-sm ml-3">
+                          $3.99
+                        </span>
                       </span>
                     </div>
                   </div>
@@ -153,7 +170,11 @@ export default function Product() {
 
         {/* Bottom Wave Separator */}
         <div className="absolute bottom-0 left-0 right-0 transform translate-y-full rotate-180">
-          <svg className="w-full h-16" viewBox="0 0 1440 54" preserveAspectRatio="none">
+          <svg
+            className="w-full h-16"
+            viewBox="0 0 1440 54"
+            preserveAspectRatio="none"
+          >
             <path
               fill="rgb(253 242 248)" // Matches to-pink-50
               d="M0 22L120 16.7C240 11 480 1.00001 720 0.700012C960 1.00001 1200 11 1320 16.7L1440 22V54H1320C1200 54 960 54 720 54C480 54 240 54 120 54H0V22Z"
