@@ -5,8 +5,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from Admin.models.product import Product
 from Admin.models.category import Category
+from Admin.models.carousal import Carousal
+from Store.models.cart_model import Cart
 from Store.services import get_one_product_by_name
-from Store.services import get_filtered_products
+from Store.services import get_filtered_products, home_featured_products
 
 
 class CategoriesFilterView(APIView):
@@ -27,7 +29,58 @@ class CategoriesFilterView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+# Carousal Banner
 
+class HomeCarousalsView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        try:
+            carousals = Carousal.get_all_carousals()
+            
+            carousal_list = [
+                {
+                    "id": str(carousal.get(("_id"))),
+                    "image": carousal.get("image"),
+                }
+                for carousal in carousals
+            ]
+            return Response(carousal_list, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        
+# Shop by category section
+
+class HomeCategoriesView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        try:
+            categories = Category.get_all_categories() 
+            
+            category_list = [
+                {
+                    "id": str(category.get("_id")), 
+                    "name": category.get("name", ""),
+                    "image": category.get("image"),
+                }
+                for category in categories
+            ]
+            
+            return Response(category_list, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+# Top Products Section
+
+class TopProductsView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        try:
+            top_products = home_featured_products()
+            return Response(top_products, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
 
 # Product Shop

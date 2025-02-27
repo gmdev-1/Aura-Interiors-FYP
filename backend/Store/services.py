@@ -38,6 +38,12 @@ def get_one_product_by_name(product_name):
         product.pop("category_info", None)
         return product
     
+def home_featured_products():
+    featured_cursor = product_collection.find({"is_featured": True})
+    products = list(featured_cursor)
+    json_products = json.loads(json_util.dumps(products))
+    return json_products
+    
 
 def get_filtered_products(query_params):
     conditions = []

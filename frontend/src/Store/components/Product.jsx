@@ -1,80 +1,27 @@
 import React from "react";
 import { AiFillStar } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import {useState, useEffect} from 'react';
+import axios from 'axios';
 
 export default function Product() {
-  const products = [
-    {
-      id: 1,
-      name: "Abstract-Canvas-Wall-Art",
-      description:
-        "Beautiful abstract canvas painting to enhance your living room.",
-      price: 49.99,
-      image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511",
-      reviews: 4.7,
-      quantity: 12,
-    },
-    {
-      id: 2,
-      name: "Rustic-Dining-Table-Set",
-      description: "A charming rustic dining table with four matching chairs.",
-      price: 259.99,
-      image: "https://images.unsplash.com/photo-1524758631624-e2822e304c36",
-      reviews: 4.5,
-      quantity: 8,
-    },
-    {
-      id: 3,
-      name: "Stainless-Steel-Cookware-Set",
-      description:
-        "Durable and elegant cookware set perfect for daily cooking.",
-      price: 99.99,
-      image: "https://images.unsplash.com/photo-1572048572872-2394404cf1f3",
-      reviews: 4.8,
-      quantity: 10,
-    },
-    {
-      id: 4,
-      name: "Modern-Ceramic-Vase",
-      description:
-        "Minimalist ceramic vase ideal for fresh or artificial flowers.",
-      price: 29.99,
-      image:
-        "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738955606/products/ie34sqkoikxx8xjr4l5k.png",
-      reviews: 4.6,
-      quantity: 6,
-    },
-    {
-      id: 5,
-      name: "Fluffy-Area-Rug",
-      description: "A soft and cozy area rug to add warmth to any room.",
-      price: 59.99,
-      image:
-        "https://media.istockphoto.com/id/1190447864/photo/apple-iphone-11-pro-gray-smartphone.jpg?s=612x612&w=0&k=20&c=zETLJeguLoTEFBNKPl1vjPY1lvPW1uM6GPpyiMSvsC0=",
-      reviews: 4.4,
-      quantity: 15,
-    },
-    {
-      id: 6,
-      name: "Contemporary-Wall-Clock",
-      description: "Elegant and modern wall clock to match any interior style.",
-      price: 39.99,
-      image:
-        "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738952932/products/dk2b30wa26yhngwtcmrg.jpg",
-      reviews: 4.9,
-      quantity: 7,
-    },
-    {
-      id: 7,
-      name: "Contemporary-Wall-Clock",
-      description: "Elegant and modern wall clock to match any interior style.",
-      price: 39.99,
-      image:
-        "https://res.cloudinary.com/dctgk7mh7/image/upload/v1738955146/products/ktojjjvidpazp5pcprpj.png",
-      reviews: 4.9,
-      quantity: 7,
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
+   useEffect(() => {
+      TopProducts();
+    },[]);
+
+    const TopProducts = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/top-products/`);
+        setProducts(response.data);
+        
+      } 
+      catch (error) {
+        alert('An error occured')
+      }
+    }
 
   return (
     <>
@@ -118,16 +65,16 @@ export default function Product() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2 sm:px-4 max-w-screen-xl mx-auto">
               {products.map((product) => (
                 <div
-                  key={product.id}
+                  key={product._id.$oid}
                   className="bg-white w-58 rounded-lg shadow overflow-hidden transform transition duration-300"
                 >
-                  <Link to="/productview" >
+                  <Link to={`/product-detail/${encodeURIComponent(product.name)}`} >
                   <div className="absolute top-2 left-2 z-10 bg-purple-800 text-purple-100 text-xs font-semibold px-2 py-1 rounded">
                     Featured
                   </div>
                   <img
                     src={product.image}
-                    alt={product.title}
+                    alt={product.name}
                     className="w-full h-52 md:object-contain"
                   />
                   </Link>
@@ -140,19 +87,19 @@ export default function Product() {
                       <span className="text-sm flex items-center">
                         <AiFillStar className="text-yellow-400 mr-1" />
                         <span className="text-yellow-900 font-medium">
-                          {product.reviews}
+                          {product.rating}
                         </span>
                         <span className="ml-2 text-purple-600 font-semibold text-xs bg-purple-50 rounded-xl p-1">
-                          ({product.quantity}) Reviews
+                          ({product.review}) Reviews
                         </span>
                       </span>
                     </div>
                     <div className="mt-4">
                       <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-purple-500 bg-clip-text text-transparent">
-                        ${product.price.toFixed(2)}{" "}
-                        <span className="text-purple-600 text-sm ml-3">
-                          $3.99
-                        </span>
+                        ${product.price}{" "}
+                        {Number(product.discount) > 0 && (
+                            <span className="text-purple-600 text-sm ml-3">${product.discount} OFF</span>
+                          )}
                       </span>
                     </div>
                   </div>
