@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
 
 export default function Cart() {
   // Sample cart data – replace with your dynamic data.
@@ -145,9 +146,11 @@ export default function Cart() {
                   <span>Total</span>
                   <span>${total.toFixed(2)}</span>
                 </div>
+                <Link to="/order">
                 <button className="w-full mt-6 py-2 px-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
                   Checkout
                 </button>
+                </Link>
               </div>
             </div>
           </div>

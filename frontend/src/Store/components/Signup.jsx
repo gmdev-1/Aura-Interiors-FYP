@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { signup } from '../services/authService';
+import Spinner from '../components/Spinner';
+import axios from 'axios';
 
 export default function Signup() {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const { register, handleSubmit, setError, formState: { errors }, reset } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [passwordValue, setPasswordValue] = useState("");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('')
   const navigate = useNavigate();
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -22,36 +25,59 @@ export default function Signup() {
   const onSubmit = async (data) => {
     if (loading) return;
     setLoading(true);
-
-    try {
-      const response = await signup({
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        password: data.password,
-        role: 'user'
-      });
-
-      if (response) {
-        alert('Registration successful! Please login.');
-        reset();
-        navigate('/auth/login');
-      }
-    } catch (error) {
-      if (error.response?.data?.error) {
-        alert(error.response.data.error);
-      } else {
-        alert('An error occurred during registration');
-      }
-      console.error('Registration error:', error);
-    } finally {
-      setLoading(false);
+    
+    UserSignup(data)
     }
-  };
 
+    const UserSignup = async (data) => {
+      try{
+        const response = await axios.post(`${BASE_URL}/user/signup/`,{
+          name: data.name,
+          email: data.email,
+          password: data.password
+        });
+        reset();
+        setMessage(response.data.message)
+        // navigate('/user/login');
+      }
+      catch(error){
+        if (error.response) {
+          const errors = error.response.data;
+  
+          if (error.response.status === 400) {
+            const errors = error.response.data;
+            if (errors.name) {
+              setError("name", {
+                type: "server",
+                message: errors.name[0],
+              });
+            }
+            if (errors.email) {
+              setError("email", {
+                type: "server",
+                message: errors.email[0],
+              });
+            }
+            if (errors.password) {
+              setError("password", {
+                type: "server",
+                message: errors.password[0],
+              });
+            }
+          }
+        }
+        else {
+          alert(error.response.data.email[0] || 'An error occurred during signup');
+        }
+      }
+      finally{
+        setLoading(false)
+      }
+    }
+   
   return (
     <>
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className="flex flex-col items-center">
             <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider group-hover:text-purple-500 transition-colors duration-300">
@@ -99,7 +125,7 @@ export default function Signup() {
                   type="text"
                   autoComplete="name"
                   placeholder="Full Name"
-                  className="block w-full px-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm"
+                  className="block w-full px-4 rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm"
                 />
                 {errors.name && (
                   <p className="text-red-500 text-sm mt-2">
@@ -130,43 +156,11 @@ export default function Signup() {
                   type="email"
                   autoComplete="email"
                   placeholder="example@gmail.com"
-                  className="block w-full px-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm"
+                  className="block w-full px-4 rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm"
                 />
                 {errors.email && (
                   <p className="text-red-500 text-sm mt-2">
                     {errors.email.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Phone Number
-              </label>
-              <div className="mt-2">
-                <input
-                  {...register("phone", {
-                    required: "Phone number is required",
-                    pattern: {
-                      value: /^\+?1?\d{9,12}$/,
-                      message:
-                        "Phone number must be in the format +XX-XXX-XXXXXXX",
-                    },
-                  })}
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  placeholder="+XX-XXX-XXXXXXX"
-                  className="block w-full px-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm"
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-sm mt-2">
-                    {errors.phone.message}
                   </p>
                 )}
               </div>
@@ -187,7 +181,7 @@ export default function Signup() {
                       value:
                         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d#\u00a3@$!%*?&]{8,}$/,
                       message:
-                        "Password must be at least 8 characters, include uppercase, lowercase, number, and special character",
+                        "Password must be at least 8 characters, include uppercase, lowercase, number, and special character @$!%*?&",
                     },
                   })}
                   id="password"
@@ -196,7 +190,7 @@ export default function Signup() {
                   onChange={onChangePassword}
                   autoComplete="new-password"
                   placeholder="Must be at least 8 characters"
-                  className="w-full px-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm"
+                  className="w-full px-4 rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm"
                 />
                 <div
                   className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
@@ -217,13 +211,19 @@ export default function Signup() {
               </div>
             </div>
 
+            {message && (
+              <div className="text-green-600 text-sm font-medium text-center mt-4">
+                {message}
+              </div>
+            )}
+
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center mt-14 rounded-md bg-purple-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
+                className="flex w-full justify-center mt-14 rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
               >
                 {loading ? (
-              <svg className='w-10 h-5 border-4 border-purple-600 border-t-transparent rounded-full animate-spin'/>
+                  <Spinner />
                 ):('Sign up')}
               </button>
             </div>

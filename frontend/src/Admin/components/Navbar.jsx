@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { BiSidebar } from "react-icons/bi";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import {FiSearch } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import Dropdown from './Dropdown';
 import { AuthContext } from '../contexts/AuthContext';
 import { useContext } from 'react';

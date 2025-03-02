@@ -152,6 +152,8 @@ class VerifyAuthView(APIView):
         user = request.user
         if not user or not getattr(user, 'is_authenticated', False):
             return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        if user.role != 'admin':
+            return Response({'error': 'Only Admin can Access'}, status=status.HTTP_403_FORBIDDEN)
 
         return Response({
             'user_id': user.id,

@@ -4,13 +4,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form"
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from 'axios';
+import Spinner from './Spinner';
 
 export default function Login() {
-    const {register, handleSubmit, formState: { errors }, reset} = useForm();
+    const {register, handleSubmit, setError, formState: { errors }, reset} = useForm();
     const [showPassword, setShowPassword] = useState(false);
     const [passwordValue, setPasswordValue] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
@@ -21,39 +23,72 @@ export default function Login() {
       const onSubmit = async (data) => {
         if(loading) return;
         setLoading(true);
-        
-        try {
-            const response = await axios.post('http://localhost:8000/auth/login/', {
-                email: data.email.trim().toLowerCase(),
-                password: data.password.trim()
-            });
 
-            if (response.data && response.data.access_token) {
-                // Store tokens in localStorage
-                localStorage.setItem('accessToken', response.data.access_token);
-                localStorage.setItem('refreshToken', response.data.refresh);
-                
-                // Store user data if needed
-                localStorage.setItem('user', JSON.stringify(response.data.user));
-                
-                alert('Login successful!');
-                reset();
-                navigate('/'); // Navigate to home page
+        UserLogin(data);
+      }
+
+      const UserLogin = async (data) => {
+        setLoading(true);
+        try{
+          const response = await axios.post(
+            `${BASE_URL}/user/login/`,
+            data,
+            { withCredentials: true}
+          );
+          if (response.status === 200){
+            setTimeout(() => {
+              navigate('/');
+            }, 1000);
+          }
+        }
+        catch(error){
+          if (error.response) {
+            // Handle validation errors (HTTP 400)
+            if (error.response.status === 400) {
+              const errors = error.response.data;
+              if (errors.email) {
+                setError("email", {
+                  type: "server",
+                  message: errors.email[0],
+                });
+              }
+              if (errors.password) {
+                setError("password", {
+                  type: "server",
+                  message: errors.password[0],
+                });
+              }
             }
-        } catch (error) {
-            if (error.response?.data?.error) {
-                alert(error.response.data.error);
+            // Handle invalid credentials (HTTP 401)
+            else if (error.response.status === 401) {
+              setError("root", {
+                type: "server",
+                message: error.response.data.error || "Invalid email or password",
+              });
+              console.log(error.response.data.error)
+            }
+            // Handle server errors (HTTP 500)
+            else if (error.response.status === 500) {
+              setError("root", {
+                type: "server",
+                message:
+                  error.response.data.error ||
+                  "Authentication failed. Please try again later.",
+              });
             } else {
-                alert('An error occurred during login');
+              alert("An unexpected error occurred. Please try again later.");
             }
-            console.error('Login error:', error);
-        } finally {
-            setLoading(false);
+          } else {
+            alert("Network error. Please try again later.");
+          }
+        }
+        finally{
+          setLoading(false);
         }
       }
   return (
     <>
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-5">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
       <div className="flex flex-col items-center">
         <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider group-hover:text-purple-500 transition-colors duration-300">
@@ -88,7 +123,7 @@ export default function Login() {
                 type="email"
                 autoComplete="email"
                 placeholder='example@gmail.com'
-                className="block w-full px-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm"
+                className="block w-full px-4 rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm"
               />
                {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email.message}</p>}
             </div>
@@ -119,7 +154,7 @@ export default function Login() {
                 onChange={onChangePassword}
                 autoComplete="current-password"
                 placeholder='Must be atleast 8 characters'
-                className="block w-full px-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm" 
+                className="block w-full px-4 rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm" 
               />
               <div className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
                 onClick={togglePasswordVisibility}>
@@ -129,11 +164,17 @@ export default function Login() {
             </div>
           </div>
 
+          {errors.root && (
+              <div className="text-red-500 text-sm text-center mt-4">
+                {errors.root.message}
+              </div>
+            )}
+
           <div>
             <button type="submit"
-              className="flex w-full justify-center  mt-14  rounded-md bg-purple-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600">
+              className="flex w-full justify-center mt-14  rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600">
               {loading ? (
-              <svg className='w-10 h-7 border-4 border-purple-600 border-t-transparent rounded-full animate-spin'/>
+                <Spinner />
                 ):('Login')}
             </button>
           </div>

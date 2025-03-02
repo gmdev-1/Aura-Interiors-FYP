@@ -10,7 +10,6 @@ user_collection = mongo_db["users"]
 class UserSignupSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=100)
     email = serializers.EmailField(required=True)
-    phone = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True, min_length=8, style={'input_type': 'password'})
     role = serializers.CharField(default='user', read_only=True)
     
@@ -29,18 +28,12 @@ class UserSignupSerializer(serializers.Serializer):
            raise serializers.ValidationError("Email already taken")
        return value.strip() 
     
-    def validate_phone(value):
-        phone_regex = r'^\+?1?\d{9,12}$'
-        if not re.match(phone_regex, value):
-            raise serializers.ValidationError("Enter a valid phone number")
-        return value.strip()
-    
     def validate_password(self, value):
         password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d#\u00a3@$!%*?&]{8,}$'
         if not re.match(password_regex, value):
             raise serializers.ValidationError("Password must contain at least 8 characters, "
                 "one uppercase letter, one lowercase letter, "
-                "one number, and one special character")
+                "one number, and one special character @$!%*?&")
         return value
     
     def create(self, validated_data):
@@ -48,7 +41,6 @@ class UserSignupSerializer(serializers.Serializer):
         user = User(
             name=validated_data['name'],
             email=validated_data['email'],
-            phone=validated_data['phone'],
             password=validated_data['password'],
             role='user'
         )
