@@ -27,7 +27,7 @@ export const UserAuthProvider = ({ children }) => {
         catch(error){
           if (retryCount < 2 && (!error.response || error.response.status >= 500)) {
            await new setTimeout(() => {
-             VerifyAuth(retryCount + 1)
+             UserVerifyAuth(retryCount + 1)
             }, 1000 * (retryCount + 1));
           }
           if (error.response?.status === 401) {
@@ -42,7 +42,7 @@ export const UserAuthProvider = ({ children }) => {
               if (newResponse.data.user_id){
                 setUserData(newResponse.data);
                 setIsAuthenticated(true)
-                navigate('/');
+                  navigate('/');
               }
               else{
                 setIsAuthenticated(false);
@@ -58,15 +58,15 @@ export const UserAuthProvider = ({ children }) => {
           }
         }
         finally{
-          setTimeout(() => {
-            setLoading(false)
-          }, 2800);
+            setLoading(false);
         }
       }
       
       useEffect(() => {
+        setTimeout(() => {
           UserVerifyAuth();
-      }, []);
+        }, 100)
+      },[]);
 
 
       const Logout = async () => {

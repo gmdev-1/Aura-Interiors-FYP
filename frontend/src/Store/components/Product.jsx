@@ -3,9 +3,12 @@ import { AiFillStar } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import {useState, useEffect} from 'react';
 import axios from 'axios';
+import { CartContext } from '../context/CartContext';
+import { useContext } from 'react';
 
 export default function Product() {
   const [products, setProducts] = useState([]);
+  const { AddtoCart } = useContext(CartContext);
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
    useEffect(() => {
@@ -20,6 +23,15 @@ export default function Product() {
       } 
       catch (error) {
         alert('An error occured')
+      }
+    }
+
+    const handleAddToCart = async (productId) => {
+      try{
+        await AddtoCart(productId, 1)
+      }
+      catch(error){
+        console.error(error);
       }
     }
 
@@ -105,7 +117,7 @@ export default function Product() {
                   </div>
 
                   <div className="px-4 pb-3">
-                    <button className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
+                    <button onClick={() => handleAddToCart(product._id.$oid)} className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
                       Add to Cart
                     </button>
                   </div>

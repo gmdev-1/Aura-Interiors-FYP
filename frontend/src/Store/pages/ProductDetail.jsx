@@ -5,12 +5,15 @@ import { Link, useParams, useLocation } from 'react-router-dom';
 import Footer from '../components/Footer';
 import axios from 'axios';
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { CartContext } from '../context/CartContext';
+import { useContext } from 'react';
 
 export default function ProductDetail() {
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
   const { pathname } = useLocation();
   const { name } = useParams();
+  const { AddtoCart } = useContext(CartContext);
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   useEffect(() => {
@@ -34,6 +37,15 @@ export default function ProductDetail() {
     }
     finally{
       setLoading(false);
+    }
+  }
+
+  const handleAddToCart = async (productId) => {
+    try{
+      await AddtoCart(productId, 1)
+    }
+    catch(error){
+      console.error(error);
     }
   }
 
@@ -109,7 +121,7 @@ export default function ProductDetail() {
 
                   {/* Action Button */}
                   <div className="mb-8 ">
-                    <button
+                    <button onClick={() => handleAddToCart(product.id)}
                       type="button"
                       className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800"
                     >

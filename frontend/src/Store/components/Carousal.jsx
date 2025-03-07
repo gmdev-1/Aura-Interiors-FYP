@@ -59,8 +59,7 @@ export default function Carousal() {
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-transparent" /> 
               <div className="absolute bg-gradient-to-t from-black/50 via-black/20 bottom-0 left-0 right-0 p-12 text-white transform translate-y-0 transition-transform duration-500">
-                <h2 className="text-5xl font-bold mb-4 opacity-90">Living Room Essentials</h2>
-                <p className="text-xl mb-6 opacity-80">Create your perfect living space</p>
+                <h2 className="text-5xl font-bold mb-10 opacity-90">Aura Interiors</h2>
                 <Link to='/shop' className="px-6 py-3 bg-white text-black font-semibold rounded-full 
                   hover:bg-purple-600 hover:text-white transition-all duration-300 transform hover:scale-100">
                   View Collection

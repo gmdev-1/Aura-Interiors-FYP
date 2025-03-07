@@ -21,12 +21,14 @@ import VerifyEmail from './Store/components/VerifyEmail';
 import Order from './Store/pages/Order';
 import UserAuthLayout from './Store/components/UserAuthLayout';
 import UserProtectedRoute from './Store/components/UserProtectedRoute';
+import { CartProvider } from './Store/context/CartContext';
 
 function App() {
 
   return (
     <>
      <Router>
+            <CartProvider>
         <Routes>
           <Route path="/" element={<UserAuthLayout />} >
             <Route exact path="/" element={<Home />} />
@@ -53,6 +55,7 @@ function App() {
             <Route exact path="/admin/dashboard/carousal" element={<ProtectedRoute><Carousal /></ProtectedRoute>}/>
           </Route>
         </Routes>
+      </CartProvider>
       </Router>
     </>
   )

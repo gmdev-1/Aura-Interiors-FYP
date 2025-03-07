@@ -8,7 +8,7 @@ cart_collection = mongo_db["cart"]
 
 class Cart:
     def __init__(self, user_id, product_id, product_name, price, quantity, image, discount, size, color, material):
-        self.user_id = user_id
+        self.user_id = user_id     
         self.product_id = product_id
         self.product_name = product_name
         self.price = price
@@ -20,7 +20,7 @@ class Cart:
         self.material = material
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
-        self._id = None
+        self.id = None
         
     def save(self):
         cart_data = {
@@ -38,28 +38,59 @@ class Cart:
             "updated_at": self.updated_at
         }
         result = cart_collection.insert_one(cart_data)
+        self.id = result.inserted_id
         return result
     
-    
-    @staticmethod
-    def update_quantity(self, new_quantity):
-        self.quantity = new_quantity
-        self.updated_at = datetime.utcnow()
+    @classmethod
+    def create_cart_item(cls, user_id, product_data, quantity=1):
+        product_id = str(product_data.get("_id"))
+        existing = cart_collection.find_one({"user_id": user_id, "product_id": product_id})
+        if existing:
+            new_quantity = existing.get("quantity", 1) + quantity
+            update_data = {
+                "quantity": new_quantity,
+                "updated_at": datetime.utcnow()
+            }
+            cart_collection.update_one(
+                {"_id": ObjectId(existing["_id"])},
+                {"$set": update_data}
+            )
+            updated_item = cart_collection.find_one({"_id": existing["_id"]})
+            return updated_item, None
+        else:
+            cart_item = cls(
+                user_id=user_id,
+                product_id=str(product_data.get("_id")),
+                product_name=product_data.get("name", ""),
+                price=product_data.get("price", 0),
+                quantity=quantity,
+                image=product_data.get("image", ""),
+                discount=product_data.get("discount", 0),
+                size=product_data.get("size", ""),
+                color=product_data.get("color", ""),
+                material=product_data.get("material", "")
+            )
+        cart_item.save()
+        return cart_item
+
+    @classmethod
+    def get_cart_items(cls, user_id):
+        items = cart_collection.find({"user_id": user_id})
+        return list(items)
+
+    @classmethod
+    def update_cart_item(cls, cart_item_id, user_id, update_data):
+        update_data["updated_at"] = datetime.utcnow()
+        existing = cart_collection.find_one({"_id": ObjectId(cart_item_id), "user_id": user_id})
         result = cart_collection.update_one(
-            {"_id": self._id},
-            {"$set": {"quantity": self.quantity, "updated_at": self.updated_at}}
+            {"_id": ObjectId(cart_item_id), "user_id": user_id},
+            {"$set": update_data}
         )
-        return result
-    
-    @staticmethod
-    def get_cart_by_user(user_id):
-        items = list(cart_collection.find({"user_id": user_id}))
-        for item in items:
-            item["_id"] = str(item.get("_id"))
-        return items
-    
-    @staticmethod
-    def remove_from_cart(user_id):
-        result = cart_collection.delete_one({"_id": ObjectId(cart_item_id)})
-        return result
-        
+        if result.modified_count > 0 and result.modified_count == 0:
+            return 1
+        return result.modified_count
+
+    @classmethod
+    def delete_cart_item(cls, cart_item_id, user_id):
+        result = cart_collection.delete_one({"_id": ObjectId(cart_item_id), "user_id": user_id})
+        return result.deleted_count

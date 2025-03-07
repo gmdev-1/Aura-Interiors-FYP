@@ -26,7 +26,7 @@ export default function Dropdown ({userData, Logout}) {
 
   return (
     <div
-      className="dropdown w-50 relative inline-flex rtl:[--placement:bottom-end] bg-white text-black px-1 py-0.5 border-purple-600 border-2 rounded-full"
+      className="dropdown w-11 relative inline-flex rtl:[--placement:bottom-end] bg-white text-black px-1 py-0.5 border-purple-600 border-2 rounded-full"
       ref={dropdownRef}
     >
       <button
@@ -41,7 +41,6 @@ export default function Dropdown ({userData, Logout}) {
         <div className="w-8 h-8 bg-purple-600 rounded-full mr-1 flex items-center justify-center">
             <FiUser className="text-white" size={18} />
         </div>
-        {userData.name}
         <span
           className={`icon-[tabler--chevron-down] size-4 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
@@ -50,7 +49,7 @@ export default function Dropdown ({userData, Logout}) {
       </button>
       <ul
         className={`dropdown-menu absolute right-0 mt-9 min-w-56 bg-white border rounded-md shadow-lg z-10 transition-opacity duration-200 ${
-          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+          isOpen ? "opacity-100 visible translate-x-5" : "opacity-0 invisible translate-x-0"
         }`}
         role="menu"
         aria-orientation="vertical"

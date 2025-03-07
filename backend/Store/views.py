@@ -15,6 +15,7 @@ from jwt import ExpiredSignatureError, InvalidTokenError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 import os
+import uuid
 from bson import ObjectId
 from utils.db_connection import mongo_db
 from utils.verify_email import send_verification_email
@@ -29,6 +30,7 @@ from Store.services import get_one_product_by_name
 from Store.services import get_filtered_products, home_featured_products
 
 user_collection = mongo_db["users"]
+product_collection = mongo_db["product"]
 
 
 class CategoriesFilterView(APIView):
@@ -383,3 +385,91 @@ class VerifyEmailView(APIView):
         
         # return Response({"message": "Email verified successfully"}, status=status.HTTP_200_OK)
         return redirect (f"{settings.FRONTEND_URL}/user/login")
+
+# Cart Views
+
+class AddToCartView(APIView):
+   authentication_classes = [UserCookieJWTAuthentication]
+   permission_classes = [IsAuthenticated]
+   def post(self, request):
+        user_id = str(request.user.id)
+        product_id = request.data.get("product_id")
+        if not product_id:
+            return Response({"error": "product_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            product_data = product_collection.find_one({"_id": ObjectId(product_id)})
+        except Exception:
+            return Response({"error": "Invalid product id format"}, status=status.HTTP_400_BAD_REQUEST)
+        if not product_data:
+            return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        quantity = request.data.get("quantity", 1)
+        
+        cart_item = Cart.create_cart_item(user_id, product_data, quantity)
+        
+        cart_item_dict = {
+            "id": str(cart_item.id),
+            "user_id": cart_item.user_id,
+            "product_id": cart_item.product_id,
+            "product_name": cart_item.product_name,
+            "price": cart_item.price,
+            "quantity": cart_item.quantity,
+            "image": cart_item.image,
+            "discount": cart_item.discount,
+            "size": cart_item.size,
+            "color": cart_item.color,
+            "material": cart_item.material,
+            "created_at": cart_item.created_at,
+            "updated_at": cart_item.updated_at,
+        }
+        return Response({"message": "Cart item created", "cart_item": cart_item_dict}, status=status.HTTP_201_CREATED)
+
+class UpdateCartView(APIView):
+    authentication_classes = [UserCookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def put(self, request, cart_item_id):
+        try:
+            user_id = str(request.user.id)
+            update_data = {}
+            if "quantity" in request.data:
+                update_data["quantity"] = request.data["quantity"]
+            if not update_data:
+                return Response({"error": "No update data provided"}, status=status.HTTP_400_BAD_REQUEST)
+            modified_count = Cart.update_cart_item(cart_item_id, user_id, update_data)
+            if modified_count is None:
+                 return Response({"error": "Update method did not return a value"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            if modified_count > 0:    
+                return Response({"message": "Cart item updated successfully"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Cart item not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": repr(e)}, status=status.HTTP_404_NOT_FOUND)
+
+class DeleteCartView(APIView):
+    authentication_classes = [UserCookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def delete(self, request, cart_item_id):
+        user_id = str(request.user.id)
+        deleted_count = Cart.delete_cart_item(cart_item_id, user_id)
+        if deleted_count > 0:
+            return Response({"message": "Cart item deleted successfully"}, status=status.HTTP_200_OK)
+        return Response({"error": "Cart item not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    
+class ListCartView(APIView):
+    authentication_classes = [UserCookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user_id = str(request.user.id)
+        cart_items = Cart.get_cart_items(user_id)
+        for item in cart_items:
+            item["id"] = str(item["_id"])
+            del item["_id"]
+        return Response({"cart_items": cart_items}, status=status.HTTP_200_OK)
+
+
+
+    
+
+

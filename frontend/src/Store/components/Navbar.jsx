@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { IoIosArrowRoundForward, IoMdClose } from "react-icons/io";
-import { FiShoppingCart, FiSearch, FiMenu, FiChevronDown, FiChevronRight, FiLogOut, FiUser } from "react-icons/fi";;
+import { FiShoppingCart, FiSearch, FiMenu, FiChevronDown, FiChevronRight } from "react-icons/fi";;
 import Dropdown from './Dropdown';
 import { UserAuthContext } from '../context/UserAuthContext';
+import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
 import Spinner from './Spinner';
 
@@ -11,6 +12,7 @@ const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
   const { userData, isAuthenticated, loading, Logout} = useContext(UserAuthContext);
+  const { CartCount } = useContext(CartContext);
 
   const toggleCategory = (categoryName) => {
     setOpenCategory(openCategory === categoryName ? null : categoryName);
@@ -33,12 +35,13 @@ const Navbar = () => {
         <div className="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 text-gray-800 h-20 flex items-center justify-between px-4 sm:px-6 shadow-sm">
           {/* Logo */}
           <div className="flex flex-col items-center group cursor-pointer ml-10">
-            <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider text-purple-600">
-              AURA
+            <img src="logo_s.jpg" alt="" className='h-12 w-12 rounded-full' />
+            {/* <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider text-purple-600">
+              Aura 
             </span>
             <span className="font-playfair text-sm md:text-base tracking-[0.3em] text-gray-600">
-              INTERIORS
-            </span>
+              Interiors
+            </span> */}
             <div className="h-0.5 w-0 bg-purple-600 group-hover:w-full transition-all duration-300" />
           </div>
 
@@ -64,7 +67,7 @@ const Navbar = () => {
             <Link to="/cart" className="relative group">
               <FiShoppingCart className="size-6 text-purple-600 hover:text-purple-500 transition-colors duration-300" />
               <div className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                0
+                {CartCount}
               </div>
             </Link>
             {isAuthenticated ? (

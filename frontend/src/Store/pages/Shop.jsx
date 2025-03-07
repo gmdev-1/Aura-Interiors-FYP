@@ -6,6 +6,8 @@ import { AiFillStar } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Spinner from '../../Admin/components/Spinner';
 import axios from 'axios';
+import { CartContext } from '../context/CartContext';
+import { useContext } from 'react';
 
 export default function Shop() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -14,6 +16,7 @@ export default function Shop() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const { AddtoCart } = useContext(CartContext);
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [filter, setFilter] = useState({
     category: [],
@@ -111,6 +114,14 @@ export default function Shop() {
     setCurrentPage(pageNumber);
   };
  
+  const handleAddToCart = async (productId) => {
+    try{
+      await AddtoCart(productId, 1)
+    }
+    catch(error){
+      console.error(error);
+    }
+  }
 
   // Shared filter content
   const FilterContent = (
@@ -273,7 +284,7 @@ export default function Shop() {
                     </div>
 
                     <div className="px-4 pb-3">
-                      <button className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
+                      <button onClick={() => handleAddToCart(product.id)} className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
                         Add to Cart
                       </button>
                     </div>
