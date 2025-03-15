@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, Children } from "react";
 import axios from "axios";
+import axiosInstance from "../services/axiosInstance";
 import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext({});
@@ -14,7 +15,7 @@ export const AuthProvider = ({children}) => {
 
     const VerifyAuth = async (retryCount = 0) => {
         try{
-            const response = await axios.get(`${BASE_URL}/api/dashboard/admin/verify-auth/`, {
+            const response = await axiosInstance.get(`${BASE_URL}/api/dashboard/admin/verify-auth/`, {
             withCredentials: true
           });
           if (response.data.user_id){
@@ -33,11 +34,11 @@ export const AuthProvider = ({children}) => {
           }
           if (error.response?.status === 401) {
             try{
-              await axios.post(`${BASE_URL}/api/dashboard/admin/token-refresh/`, 
+              await axiosInstance.post(`${BASE_URL}/api/dashboard/admin/token-refresh/`, 
                 {},
                 { withCredentials : true}
               );
-              const newResponse = await axios.get(`${BASE_URL}/api/dashboard/admin/verify-auth/`,
+              const newResponse = await axiosInstance.get(`${BASE_URL}/api/dashboard/admin/verify-auth/`,
                 { withCredentials: true}
               );
               if (newResponse.data.user_id){

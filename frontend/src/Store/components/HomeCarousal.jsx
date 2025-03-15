@@ -1,10 +1,10 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { RiArrowRightWideFill, RiArrowLeftWideFill } from "react-icons/ri";
 import axios from 'axios';
 
-export default function Carousal() {
+export default function HomeCarousal({ category }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [carousals, setCarousals] = useState([]);
@@ -12,11 +12,18 @@ export default function Carousal() {
 
   useEffect(() => {
     fetchCarousals();
-  },[]);
+  },[category]);
 
   const fetchCarousals = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/home-carousals/`);
+      let endpoint = "";
+      if (category && category.trim() !== ""){
+        endpoint = `${BASE_URL}/carousals/?category=${encodeURIComponent(category)}`; 
+      }
+      else{
+        endpoint = `${BASE_URL}/home-carousals/`;
+      }
+      const response = await axios.get(endpoint);
       setCarousals(response.data);
       
     }
@@ -59,7 +66,7 @@ export default function Carousal() {
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-transparent" /> 
               <div className="absolute bg-gradient-to-t from-black/50 via-black/20 bottom-0 left-0 right-0 p-12 text-white transform translate-y-0 transition-transform duration-500">
-                <h2 className="text-5xl font-bold mb-10 opacity-90">Aura Interiors</h2>
+                <h2 className="text-5xl font-bold mb-10 opacity-90"> Aura Interiors</h2>
                 <Link to='/shop' className="px-6 py-3 bg-white text-black font-semibold rounded-full 
                   hover:bg-purple-600 hover:text-white transition-all duration-300 transform hover:scale-100">
                   View Collection
@@ -86,19 +93,7 @@ export default function Carousal() {
         <RiArrowRightWideFill className="text-2xl" />
       </button>
 
-      {/* Dots Navigation
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 
-              ${currentIndex === index 
-                ? 'bg-white w-8' 
-                : 'bg-white/40 hover:bg-white/60'}`}
-          />
-        ))}
-      </div> */}
+      
     </div>
     </>
   )

@@ -10,8 +10,10 @@ carousal_collection = mongo_db["carousal"]
  
 
 class Carousal:
-    def __init__(self, image=None):
+    def __init__(self, image=None, image_type='home', category=None):
         self.image = image
+        self.image_type = image_type
+        self.category = category
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
         
@@ -19,6 +21,8 @@ class Carousal:
     def save(self):
         carousal_document = {
             "image": self.image,
+            "image_type": self.image_type,
+            "category": self.category,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
         }
@@ -42,4 +46,4 @@ class Carousal:
         return result.deleted_count
     
     def __str__(self):
-        return f"Carousal(image={self.image})"  
+        return f"Carousal(image={self.image}, image_type={self.image_type}, category={self.category})"  

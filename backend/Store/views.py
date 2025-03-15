@@ -31,6 +31,7 @@ from Store.services import get_filtered_products, home_featured_products
 
 user_collection = mongo_db["users"]
 product_collection = mongo_db["product"]
+carousal_collection = mongo_db["carousal"]
 
 
 class CategoriesFilterView(APIView):
@@ -57,8 +58,7 @@ class HomeCarousalsView(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
         try:
-            carousals = Carousal.get_all_carousals()
-            
+            carousals = carousal_collection.find({"image_type": "home"})
             carousal_list = [
                 {
                     "id": str(carousal.get(("_id"))),
@@ -70,6 +70,28 @@ class HomeCarousalsView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class CarousalCategoryView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        try:
+            category = request.query_params.get("category")
+            if category:
+                carousals = carousal_collection.find({
+                    "image_type": "category",
+                    "category": category
+                })
+            else:
+                carousals = []
+            carousal_list = [
+                {
+                "id": str(carousal.get("_id")),
+                "image": carousal.get("image")
+                }
+                for carousal in carousals
+            ]
+            return Response(carousal_list, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 # Shop by category section
 

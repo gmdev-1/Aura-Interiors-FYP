@@ -10,6 +10,13 @@ class CarousalSerializer(serializers.Serializer):
             validators=[
                 FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'webp', 'avif'])
                 ])
+    image_type = serializers.ChoiceField([("home", "Home"), ("category", "Category")], required=True)
+    category = serializers.CharField(required=False)
+    
+    def validate(self, attrs):
+        if attrs.get("image_type") == "category" and not attrs.get("category"):
+            raise serializers.ValidationError("Category is required when image type is category")
+        return attrs
     
     def validate_image(self, value):
         max_size = 5 * 1024 * 1024

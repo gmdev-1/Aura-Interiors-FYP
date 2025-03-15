@@ -493,8 +493,7 @@ class CarousalCreateView(APIView):
             image_file = request.FILES.get('image')
             image_url = cloudinary_upload_image(image_file, folder_name="carousals")
             carousal = serializer.save(image=image_url)
-            return Response(status=status.HTTP_201_CREATED)
-            
+            return Response({"message": "Carousal created"},status=status.HTTP_201_CREATED)
         return Response(serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
 
     

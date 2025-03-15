@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
-import Carousal from '../components/Carousal'
+import HomeCarousal from '../components/HomeCarousal'
 import Categories from '../components/Categories'
 import Product from '../components/Product'
 import Footer from '../components/Footer'
@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <>
         <Navbar />
-        <Carousal />
+        <HomeCarousal />
         <Categories />
         <Product />
         <Footer /> 

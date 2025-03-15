@@ -7,7 +7,7 @@ import { RiDeleteBin6Fill } from "react-icons/ri";
 import { useState, useEffect } from "react";
 
 export default function Carousal() {
-  const { register, handleSubmit, setError, formState: { errors }, reset, } = useForm();
+  const { register, handleSubmit, setError, formState: { errors }, reset, watch } = useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [carousals, setCarousals] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -26,12 +26,16 @@ export default function Carousal() {
       if (data.image && data.image[0]) {
         formData.append("image", data.image[0]);
       }
+      formData.append("image_type", data.image_type);
+      if (data.image_type === "category" && data.category){
+        formData.append("category", data.category);
+      }
 
       const response = await axios.post(
         `${BASE_URL}/api/dashboard/add-carousal/`,
         formData,
         {
-          withCredentials: true ,
+          withCredentials: true,
           headers: {
             "Content-Type": "multipart/form-data",
           },});
@@ -89,6 +93,8 @@ export default function Carousal() {
     }
   };
 
+  const imageType = watch("image_type", "home");
+
   return (
     <>
       <Dashboard>
@@ -121,6 +127,37 @@ export default function Carousal() {
                   </p>
                 )}
               </div>
+              <div className="w-60">
+              <label className="block text-sm font-medium text-gray-700">Image Type</label>
+              <div className="flex space-x-4 mt-1">
+                <label>
+                  <input type="radio" value="home" {...register("image_type", { required: "Select image type" })} defaultChecked />
+                  Home
+                </label>
+                <label>
+                  <input type="radio" value="category" {...register("image_type", { required: "Select image type" })} />
+                  Category
+                </label>
+              </div>
+              {errors.image_type && <p className="text-red-500 text-sm mt-1">{errors.image_type.message}</p>}
+              {imageType === "category" && (
+                <div className="mt-2">
+                  <label className="block text-sm font-medium text-gray-700">Select Category</label>
+                  <select
+                    {...register("category", { required: "Category is required" })}
+                    className="mt-1 block w-full border border-gray-300 rounded-md"
+                  >
+                    <option value="">Select a category</option>
+                    <option value="Bed Room">Bed Room</option>
+                    <option value="Living Room">Living Room</option>
+                    <option value="Dining Room">Dining Room</option>
+                    <option value="Kitchen">Kitchen</option>
+                    <option value="Office">Office</option>
+                  </select>
+                  {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>}
+                </div>
+              )}
+            </div>
 
               <div className="w-32 mt-7">
                 <button

@@ -18,7 +18,7 @@ import ProtectedRoute from './Admin/components/ProtectedRoute';
 import AuthLayout from './Admin/components/AuthLayout';
 import Shop from './Store/pages/Shop';
 import VerifyEmail from './Store/components/VerifyEmail';
-import Order from './Store/pages/Order';
+import Order from './Order/pages/Order';
 import UserAuthLayout from './Store/components/UserAuthLayout';
 import UserProtectedRoute from './Store/components/UserProtectedRoute';
 import { CartProvider } from './Store/context/CartContext';
@@ -32,6 +32,7 @@ function App() {
         <Routes>
           <Route path="/" element={<UserAuthLayout />} >
             <Route exact path="/" element={<Home />} />
+            <Route exact path="/category/:category" element={<Shop />} />
             <Route exact path="/user/signup" element={<Signup/>} />
             <Route exact path="/user/login" element={<Login/>} />
             <Route exact path="/user/verify-email" element={<VerifyEmail />} />

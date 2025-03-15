@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from "../components/Navbar";
-import Carousal from "../components/Carousal";
+import Carousal from "../components/HomeCarousal";
 import Footer from "../components/Footer";
 import { AiFillStar } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Spinner from '../../Admin/components/Spinner';
 import axios from 'axios';
 import { CartContext } from '../context/CartContext';
@@ -18,6 +18,7 @@ export default function Shop() {
   const itemsPerPage = 10;
   const { AddtoCart } = useContext(CartContext);
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+  const { category } = useParams();
   const [filter, setFilter] = useState({
     category: [],
     featured: false,
@@ -191,7 +192,7 @@ export default function Shop() {
   return (
     <>
       <Navbar />
-      <Carousal />
+      <Carousal category={category} />
 
       <section className="py-8 px-4 bg-gray-100 min-h-screen">
         <div className="max-w-7xl mx-auto">

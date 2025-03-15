@@ -7,26 +7,33 @@ import { UserAuthContext } from '../context/UserAuthContext';
 import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
 import Spinner from './Spinner';
+import axios from 'axios';
 
 const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
   const { userData, isAuthenticated, loading, Logout} = useContext(UserAuthContext);
   const { CartCount } = useContext(CartContext);
+  const [categories, setCategories] = useState([]);
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   const toggleCategory = (categoryName) => {
     setOpenCategory(openCategory === categoryName ? null : categoryName);
   };
 
-  const categories = [
-    { id: 1, title: "Bed Room", subcategories: ['Beds', 'Wardrobes', 'Mattresses', 'Side Tables'] },
-    { id: 2, title: "Living Room", subcategories: ['Sofas', 'Coffee Tables', 'TV Units', 'Seating'] },
-    { id: 3, title: "Kitchen", subcategories: ['Cabinets', 'Islands', 'Storage', 'Dining Sets'] },
-    { id: 4, title: "Office", subcategories: ['Desks', 'Chairs', 'Storage', 'Accessories'] },
-    { id: 5, title: "Dining Room", subcategories: ['Dining Tables', 'Chairs', 'Storage'] },
-  ];
+   useEffect(() => {
+      NavCategories();
+    },[]);
 
-
+    const NavCategories = async () => {
+      try {
+      const response = await axios.get(`${BASE_URL}/home-categories/`);
+      setCategories(response.data);
+      }
+      catch (error) {
+        alert('An error occured')
+      }
+    }
   return (
     
     <>
@@ -35,7 +42,7 @@ const Navbar = () => {
         <div className="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 text-gray-800 h-20 flex items-center justify-between px-4 sm:px-6 shadow-sm">
           {/* Logo */}
           <div className="flex flex-col items-center group cursor-pointer ml-10">
-            <img src="logo_s.jpg" alt="" className='h-12 w-12 rounded-full' />
+            <img src="logo2.png" alt="" className='h-30 w-48' />
             {/* <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider text-purple-600">
               Aura 
             </span>
@@ -86,13 +93,13 @@ const Navbar = () => {
 
         {/* Categories for Desktop */}
         <div className="text-gray-800 flex items-center justify-center overflow-x-auto px-4 space-x-4 ">
-          {categories.map((cat) => (
+          {categories.map((category) => (
             <Link
-              to={`/category/${cat.title}`}
-              key={cat.id}
+              to={`/category/${encodeURIComponent(category.name)}`}
+              key={category.id}
               className="whitespace-nowrap px-4 pt-4 rounded-md text-sm font-semibold hover:text-purple-600 transition-all duration-300"
             >
-              {cat.title}
+              {category.name}
             </Link>
           ))}
         </div>
@@ -112,12 +119,13 @@ const Navbar = () => {
 
           {/* Logo */}
           <div className="flex flex-col items-center group cursor-pointer">
-            <span className="font-cinzel text-lg font-bold tracking-wider text-purple-600">
+            {/* <span className="font-cinzel text-lg font-bold tracking-wider text-purple-600">
               AURA
             </span>
             <span className="font-playfair text-sm tracking-[0.2em] text-gray-600">
               INTERIORS
-            </span>
+            </span> */}
+              <img src="logo2.png" alt="" className='h-16 w-30' />
           </div>
           
 
@@ -149,13 +157,13 @@ const Navbar = () => {
 
         {/* Categories for Mobile */}
         <div className="bg-gray-150 text-gray-800 flex overflow-x-auto py-3 px-4 space-x-4 shadow-sm">
-          {categories.map((cat) => (
+          {categories.map((category) => (
             <Link
-              to={`/category/${cat.title}`}
-              key={cat.id}
+              to={`/category/${category.name}`}
+              key={category.id}
               className="whitespace-nowrap px-4 py-1.5 rounded-md text-sm font-medium hover:bg-purple-600/20 hover:text-purple-700 transition-all duration-300"
             >
-              {cat.title}
+              {category.name}
             </Link>
           ))}
         </div>
@@ -166,13 +174,14 @@ const Navbar = () => {
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 flex">
           <div className="w-64 bg-white h-full shadow-lg p-4">
              {/* Logo */}
-      <div className="flex flex-col group mb-6">
-        <span className="font-cinzel ml-1 text-lg font-bold tracking-wider text-purple-600">
+      <div className="flex flex-col group mb-6 mr-28">
+        {/* <span className="font-cinzel ml-1 text-lg font-bold tracking-wider text-purple-600">
           AURA
         </span>
         <span className="font-playfair text-sm tracking-[0.2em] text-gray-600">
           INTERIORS
-        </span>
+        </span> */}
+         <img src="logo2.png" alt="" className='h-30 w-48' />
       </div>
 
       {/* Close Button */}
@@ -193,33 +202,14 @@ const Navbar = () => {
         </Link>
       </div>
             <ul className="mt-7 space-y-5">
-              {categories.map((cat) => (
-                <li key={cat.id}>
+              {categories.map((category) => (
+                <li key={category.id}>
                   <button
-                    onClick={() => toggleCategory(cat.title)}
+                    onClick={() => toggleCategory(category.name)}
                     className="w-full flex justify-between"
                   >
-                    {cat.title}
-                    {openCategory === cat.title ? (
-                      <FiChevronDown />
-                    ) : (
-                      <FiChevronRight />
-                    )}
+                    {category.name}
                   </button>
-                  {openCategory === cat.title && (
-                    <ul className="pl-4 mt-2 space-y-1">
-                      {cat.subcategories.map((sub) => (
-                        <li key={sub}>
-                          <Link
-                            to={`/category/${cat.title}/${sub}`}
-                            className="text-gray-600 hover:text-purple-600"
-                          >
-                            {sub}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
                 </li>
               ))}
             </ul>
