@@ -94,3 +94,4 @@ class Cart:
     def delete_cart_item(cls, cart_item_id, user_id):
         result = cart_collection.delete_one({"_id": ObjectId(cart_item_id), "user_id": user_id})
         return result.deleted_count
+    

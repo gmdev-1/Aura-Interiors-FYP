@@ -92,7 +92,6 @@ export default function AddCategory() {
 
   const editCategory = async (data) => {
     try {
-      // const token = localStorage.getItem('token');
       const formData = new FormData();
       formData.append('name', data.categoryName);
       formData.append('description', data.categoryDescription);

@@ -22,6 +22,9 @@ import Order from './Order/pages/Order';
 import UserAuthLayout from './Store/components/UserAuthLayout';
 import UserProtectedRoute from './Store/components/UserProtectedRoute';
 import { CartProvider } from './Store/context/CartContext';
+import OrderHistory from './Order/pages/OrderHistory';
+import OrderDetail from './Order/pages/OrderDetail';
+import Orders from './Admin/pages/Orders';
 
 function App() {
 
@@ -41,6 +44,8 @@ function App() {
             <Route exact path="/product-detail/:name" element={<ProductDetail />} />
             <Route exact path="/shop" element={<Shop/>} />
             <Route exact path="/order" element={<UserProtectedRoute ><Order /></UserProtectedRoute>} />
+            <Route exact path="/order/order-history" element={<UserProtectedRoute ><OrderHistory /></UserProtectedRoute>} />
+            <Route exact path="/order/order-detail/:order_id" element={<UserProtectedRoute ><OrderDetail /></UserProtectedRoute>} />
           </Route>
 
           <Route exact path="/admin/login" element={<AdminLogin />} />
@@ -54,6 +59,7 @@ function App() {
             <Route exact path="/admin/dashboard/add-category" element={<ProtectedRoute><AddCategory/></ProtectedRoute>}/>
             <Route exact path="/admin/dashboard/edit-category/:categoryId" element={<ProtectedRoute><AddCategory /></ProtectedRoute>}/>
             <Route exact path="/admin/dashboard/carousal" element={<ProtectedRoute><Carousal /></ProtectedRoute>}/>
+            <Route exact path="/admin/dashboard/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>}/>
           </Route>
         </Routes>
       </CartProvider>

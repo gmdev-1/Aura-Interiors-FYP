@@ -64,7 +64,7 @@ export default function Dropdown ({userData, Logout}) {
         <li className="text-black hover:bg-gray-100 cursor-pointer">
           <Link
             className="dropdown-item block px-2 py-2 ml-2"
-            to="/admin/orders"
+            to="/order/order-history"
           >
             Orders
           </Link>

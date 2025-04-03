@@ -51,7 +51,7 @@ export default function Sidebar({isOpenSidebar, toggleSidebar, toggleDropDown}) 
             </Link>
           </li>
           <li>
-            <a href="#" className="flex px-4 py-2 hover:bg-gray-700 rounded">
+            <a href="/admin/dashboard/orders" className="flex px-4 py-2 hover:bg-gray-700 rounded">
             <FiFilePlus  className="size-5 mb-1 mr-3"/>
               Orders
             </a>

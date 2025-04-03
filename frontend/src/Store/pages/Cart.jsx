@@ -47,10 +47,10 @@ export default function Cart() {
    }
 
   const subTotal = cart.reduce(
-    (sum, cart) => sum + cart.price * cart.quantity,
+    (sum, cart) => sum + (cart.price - cart.discount) * cart.quantity,
     0
   );
-  const shipping = 20.0;
+  const shipping = 0;
   const total = subTotal + shipping;
 
   return (
@@ -96,9 +96,6 @@ export default function Cart() {
                         Size: {cart.size}
                       </p>
                       <p className="text-sm text-gray-500 mt-1">
-                        Category: {cart.category}
-                      </p>
-                      <p className="text-sm text-gray-500 mt-1">
                         Quantity: {cart.quantity}
                       </p>
                     </div>
@@ -112,7 +109,7 @@ export default function Cart() {
                       <span className="text-xl font-bold text-purple-600">
                         ${cart.price}
                       </span>
-                      <button onClick={() => handleDeleteCart(cart.id)} className="mt-2 px-2 py-2 hover:bg-gray-200 text-gray-800 text-sm rounded-full">
+                      <button onClick={() => handleDeleteCart(cart.id)} className="mt-2 px-2 py-2 hover:bg-red-100 text-gray-800 text-sm rounded-full">
                         <RiDeleteBin6Fill color='red'  size={20} />
                       </button>
                     </div>
@@ -135,12 +132,6 @@ export default function Cart() {
                   <span className="text-base text-gray-700">Subtotal</span>
                   <span className="text-base text-gray-700">
                     {cart && `$${subTotal.toFixed(2)}`}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-base text-gray-700">Shipping</span>
-                  <span className="text-base text-gray-700">
-                    {cart && `$${shipping.toFixed(2)}`}
                   </span>
                 </div>
                 <hr className="border-gray-300" />

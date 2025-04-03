@@ -241,7 +241,7 @@ class UserLoginView(APIView):
                 httponly=True,
                 secure=False,
                 samesite='Lax',
-                max_age=60 * 15
+                max_age=60 * 60
             )
             
             response.set_cookie(
@@ -325,7 +325,7 @@ class UserCookieTokenRefreshView(TokenRefreshView):
             httponly=True,
             secure=False,
             samesite='Lax',
-            max_age=60 * 15  # 15 minutes
+            max_age=60 * 60  # 60 minutes
         )
         return response
 
@@ -489,9 +489,3 @@ class ListCartView(APIView):
             item["id"] = str(item["_id"])
             del item["_id"]
         return Response({"cart_items": cart_items}, status=status.HTTP_200_OK)
-
-
-
-    
-
-
