@@ -153,10 +153,70 @@ class OrderDetailView(APIView):
             return Response({"error": "Invalid order ID"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ListOrdersAdminView(APIView):
+    authentication_classes = [UserCookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        try:
+            orders = Order.get_all_orders()
+
+            serialized_orders = []
+            for order in orders:
+                serialized_orders.append({
+                    "order_id": order["_id"],
+                    "user_id": order["user_id"],
+                    "total": order["total"],
+                    "order_status": order["order_status"],
+                    "payment_status": order["payment_status"],
+                    "payment_method": order["payment_method"],
+                    "items": order["items"],
+                    "shipping_details": order["shipping_details"],
+                    "created_at": order["created_at"].isoformat(),
+                    "updated_at": order["updated_at"].isoformat(),
+                })
+                
+            return Response({"orders": serialized_orders}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": f"An error occurred while fetching orders: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class OrderDetailAdminView(APIView):
+    authentication_classes = [UserCookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, order_id):
+        try:
+            # Fetch order from database
+            order = Order.get_order_by_id(order_id)
+            if not order:
+                return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            # Serialize order
+            order_data = {
+                "order_id": str(order["_id"]),
+                "user_id": order["user_id"],
+                "total": order["total"],
+                "order_status": order["order_status"],
+                "payment_status": order["payment_status"],
+                "payment_method": order["payment_method"],
+                "items": order["items"],
+                "shipping_details": order["shipping_details"],
+                "created_at": order["created_at"].isoformat(),
+                "updated_at": order["updated_at"].isoformat(),
+            }
+
+            return Response({"order": order_data}, status=status.HTTP_200_OK)
+
+        except Exception:
+            return Response({"error": "Invalid order ID"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 class UpdateOrderStatusView(APIView):
     """Allows admins to update order status."""
     authentication_classes = [UserCookieJWTAuthentication]
-    permission_classes = [IsAuthenticated]  # Modify for admin-level permission control
+    permission_classes = [IsAuthenticated]  
 
     def patch(self, request, order_id):
         new_status = request.data.get("order_status")

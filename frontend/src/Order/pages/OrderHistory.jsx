@@ -23,7 +23,7 @@ export default function OrderHistory() {
 
     useEffect(() => {
       OrderList();
-    }, []);
+    }, [BASE_URL]);
 
     const OrderDetail = async (order_id) => {
       navigate(`/order/order-detail/${order_id}`);
@@ -38,6 +38,7 @@ export default function OrderHistory() {
                     <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
                         <thead>
                             <tr className="bg-gray-100 border-b">
+                                <th className="py-3 px-6 text-left">#</th>
                                 <th className="py-3 px-6 text-left">Order ID</th>
                                 <th className="py-3 px-6 text-left">Date</th>
                                 <th className="py-3 px-6 text-left">Total</th>
@@ -48,6 +49,7 @@ export default function OrderHistory() {
                         <tbody>
                             {orders.map((order, index) => (
                                 <tr key={index} className="border-b hover:bg-gray-50">
+                                    <td className="py-3 px-6">{index+1}</td>
                                     <td className="py-3 px-6">{order.order_id.slice(5, 12)}</td>
                                     <td className="py-3 px-6">{order.created_at.slice(0, 10)}</td>
                                     <td className="py-3 px-6">{order.total}</td>
@@ -57,7 +59,13 @@ export default function OrderHistory() {
                                     }`}>
                                         {order.order_status}
                                     </td>
-                                    <td className="py-3 px-6 cursor-pointer"><AiFillEye size={20} onClick={()=> OrderDetail(order.order_id)}/></td>
+                                    <td className="py-3 px-6 cursor-pointer">
+                                       <button onClick={() => OrderDetail(order.order_id)} className="flex bg-purple-600 text-white px-2 py-1 rounded-2xl">
+                                          <AiFillEye
+                                          size={20} className="mt-0.5 mr-1"/>
+                                          Details
+                                        </button>
+                                      </td>
                                 </tr>
                             ))}
                         </tbody>

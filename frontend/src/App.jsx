@@ -24,7 +24,8 @@ import UserProtectedRoute from './Store/components/UserProtectedRoute';
 import { CartProvider } from './Store/context/CartContext';
 import OrderHistory from './Order/pages/OrderHistory';
 import OrderDetail from './Order/pages/OrderDetail';
-import Orders from './Admin/pages/Orders';
+import OrdersHistory from './Admin/pages/OrdersHistory';
+import OrdersDetail from './Admin/pages/OrdersDetail';
 
 function App() {
 
@@ -59,7 +60,8 @@ function App() {
             <Route exact path="/admin/dashboard/add-category" element={<ProtectedRoute><AddCategory/></ProtectedRoute>}/>
             <Route exact path="/admin/dashboard/edit-category/:categoryId" element={<ProtectedRoute><AddCategory /></ProtectedRoute>}/>
             <Route exact path="/admin/dashboard/carousal" element={<ProtectedRoute><Carousal /></ProtectedRoute>}/>
-            <Route exact path="/admin/dashboard/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>}/>
+            <Route exact path="/admin/dashboard/orders" element={<ProtectedRoute><OrdersHistory /></ProtectedRoute>}/>
+            <Route exact path="/admin/dashboard/orders/order-detail/:order_id" element={<ProtectedRoute><OrdersDetail /></ProtectedRoute>}/>
           </Route>
         </Routes>
       </CartProvider>

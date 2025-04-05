@@ -119,3 +119,11 @@ class Order:
         result = cart_collection.delete_many({"user_id": user_id})
         print("Deleted cart items count:", result.deleted_count)
         return result.deleted_count
+    
+    @classmethod
+    def get_all_orders(cls):
+        orders = list(order_collection.find({}))
+        # Optionally transform orders here (e.g., add order_id from _id)
+        for order in orders:
+            order["order_id"] = str(order["_id"])
+        return orders
