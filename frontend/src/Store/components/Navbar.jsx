@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { IoIosArrowRoundForward, IoMdClose } from "react-icons/io";
-import { FiShoppingCart, FiSearch, FiMenu, FiChevronDown, FiChevronRight } from "react-icons/fi";;
+import { FiShoppingCart, FiSearch, FiMenu } from "react-icons/fi";
+import { PiMagicWandFill } from "react-icons/pi";
 import Dropdown from './Dropdown';
 import { UserAuthContext } from '../context/UserAuthContext';
-import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
 import Spinner from './Spinner';
 import axios from 'axios';
 
@@ -70,7 +71,8 @@ const Navbar = () => {
           </form>
 
           {/* Desktop Icons */}
-          <div className="flex items-center space-x-6 w-40">
+          <div className="flex items-center space-x-6 w-72">
+            <Link to="/imagen" className="bg-gradient-to-r from-purple-600 via-purple-600 to-pink-400 text-white px-5 py-1.5 rounded-lg inline-flex items-center justify-center whitespace-nowrap">Try AI <PiMagicWandFill size={20} className='ml-1' /></Link>
             <Link to="/cart" className="relative group">
               <FiShoppingCart className="size-6 text-purple-600 hover:text-purple-500 transition-colors duration-300" />
               <div className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
@@ -82,7 +84,7 @@ const Navbar = () => {
               <Dropdown userData={userData} Logout={Logout} />
             ) : (
             <Link to="/user/login" className="relative group">
-                <button className="px-4 py-2 bg-purple-600 rounded-lg text-white hover:bg-purple-700 transition-all duration-300 flex items-center space-x-2">
+                <button className="px-4 py-1.5 bg-purple-600 rounded-lg text-white hover:bg-purple-700 transition-all duration-300 flex items-center space-x-2">
                   <span>Login</span>
                   <IoIosArrowRoundForward className="size-5" />
                 </button>

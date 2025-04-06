@@ -26,6 +26,8 @@ import OrderHistory from './Order/pages/OrderHistory';
 import OrderDetail from './Order/pages/OrderDetail';
 import OrdersHistory from './Admin/pages/OrdersHistory';
 import OrdersDetail from './Admin/pages/OrdersDetail';
+import Landing from './ImageGeneration/pages/Landing';
+import DesignGenerater from './ImageGeneration/pages/DesignGenerater';
 
 function App() {
 
@@ -44,9 +46,11 @@ function App() {
             <Route exact path="/cart" element={<Cart />} />
             <Route exact path="/product-detail/:name" element={<ProductDetail />} />
             <Route exact path="/shop" element={<Shop/>} />
+            <Route exact path="/imagen" element={<Landing />} />
             <Route exact path="/order" element={<UserProtectedRoute ><Order /></UserProtectedRoute>} />
             <Route exact path="/order/order-history" element={<UserProtectedRoute ><OrderHistory /></UserProtectedRoute>} />
             <Route exact path="/order/order-detail/:order_id" element={<UserProtectedRoute ><OrderDetail /></UserProtectedRoute>} />
+            <Route exact path="/imagen/design/generate" element={<UserProtectedRoute ><DesignGenerater /></UserProtectedRoute>} />
           </Route>
 
           <Route exact path="/admin/login" element={<AdminLogin />} />
