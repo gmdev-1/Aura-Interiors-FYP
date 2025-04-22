@@ -2,27 +2,39 @@ import React from 'react';
 import { useState } from "react";
 import Nav from '../components/Nav';
 import { useForm } from "react-hook-form";
+import axios from 'axios';
 
 export default function DesignGenerater() {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [roomType, setRoomType] = useState("");
-  const [designType, setDesignType] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatedImages, setGeneratedImages] = useState([]);
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   const roomTypes = ["Living Room", "Bedroom", "Kitchen", "Office", "Dining Room"];
   const designTypes = ["Modern", "Classic", "Industrial", "Minimalist", "Bohemian"];
 
-  const handleGenerate = (data) => {
-    // You can use data.fileUpload, data.roomType, and data.designType in your API call.
-    // For now, we'll simulate generated images.
-    const dummyGeneratedImages = [
-      "https://source.unsplash.com/800x600/?interior,living-room",
-      "https://source.unsplash.com/800x600/?interior,bedroom",
-      "https://source.unsplash.com/800x600/?interior,kitchen",
-    ];
-    setGeneratedImages(dummyGeneratedImages);
-  };
+  const onSubmit = (data) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    GenerateDesign(data);
+  }
+
+  const GenerateDesign = async (data) => {
+    try{
+      const response = axios.post(`${BASE_URL}/api/imagen/interior-design/generate/`, data, 
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }
+        }
+      );
+    }
+    catch(error){
+      console.error(error);
+    }
+  }
 
   return (
     <>
@@ -33,7 +45,7 @@ export default function DesignGenerater() {
           <div className="md:w-1/3 bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold mb-4">Generate Your Design</h2>
             {/* Form with React Hook Form */}
-            <form onSubmit={handleSubmit(handleGenerate)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2" htmlFor="fileUpload">
                   Upload a Room Image
@@ -86,6 +98,25 @@ export default function DesignGenerater() {
                 </select>
                 {errors.designType && (
                   <p className="text-red-500 text-sm mt-1">{errors.designType.message}</p>
+                )}
+              </div>
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 mb-2"
+                  htmlFor="prompt"
+                >
+                  Prompt
+                </label>
+                <textarea
+                  id="prompt"
+                  {...register("prompt", { required: "Prompt is required" })}
+                  placeholder="Describe your interior design concept..."
+                  className="border p-2 w-full h-32 resize-none"
+                />
+                {errors.prompt && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.prompt.message}
+                  </p>
                 )}
               </div>
               <button

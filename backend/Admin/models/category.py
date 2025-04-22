@@ -47,7 +47,7 @@ class Category:
     
     @staticmethod
     def update_one_category(category_id, update_data):
-        update_product_data["updated_at"] = datetime.utcnow()
+        update_data["updated_at"] = datetime.utcnow()
         result = category_collection.update_one(
             {"_id": ObjectId(category_id)},
             {"$set": update_data}

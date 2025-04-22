@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf import settings
-# from ImageGenertion.views import 
+from ImageGeneration.views import DesignGenerateView
 
 urlpatterns = [
-    # path('user/signup/', UserSignupView.as_view(), name='user-signup'),
+    path('interior-design/generate/', DesignGenerateView.as_view(), name='design-generate'),
 ]
