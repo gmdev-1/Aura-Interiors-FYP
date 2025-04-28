@@ -7,6 +7,7 @@ import axios from 'axios';
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
+import Recommender from '../components/Recommender';
 
 export default function ProductDetail() {
   const [product, setProduct] = useState([]);
@@ -105,17 +106,9 @@ export default function ProductDetail() {
 
                   {/* Size Selection */}
                   <div className="mb-6">
-                    <h3 className="text-lg font-bold text-gray-800 mb-3">Size</h3>
+                    <h3 className="text-xl font-bold text-gray-800 mb-3">Size</h3>
                     <div className="flex gap-4">
-                      {[product.size].map((size) => (
-                        <button
-                          key={size}
-                          type="button"
-                          className="w-12 h-12 border border-gray-300 hover:border-gray-700 text-md font-semibold text-gray-800 rounded-full flex items-center justify-center transition-colors duration-300"
-                        >
-                          {size}
-                        </button>
-                      ))}
+                        {product.size}
                     </div>
                   </div>
 
@@ -135,12 +128,6 @@ export default function ProductDetail() {
                     <p className="text-gray-600 text-base leading-relaxed">
                       {product.description}
                     </p>
-                    <ul className="list-disc list-inside text-gray-600 mt-4 space-y-1">
-                      <li>Versatile design for everyday wear</li>
-                      <li>Available in multiple sizes</li>
-                      <li>Machine washable for easy care</li>
-                      <li>Modern fit for a sleek look</li>
-                    </ul>
                   </div>
                 </div>
 
@@ -170,10 +157,10 @@ export default function ProductDetail() {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
+      <Recommender productName={product.name} />
       <Footer />
     </>
   );

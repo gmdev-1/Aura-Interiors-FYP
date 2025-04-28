@@ -49,7 +49,7 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_SECURE': False,
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_SAMESITE': 'Lax',
-    'BLACKLIST_AFTER_ROTATION': False,
+    'BLACKLIST_AFTER_ROTATION': True,
 }
 # settings.py
 SECURE_COOKIES = os.getenv('SECURE_COOKIES', 'False').lower() == 'true'
@@ -106,6 +106,7 @@ INSTALLED_APPS = [
     'Store',
     'Admin',
     'Order',
+    'recommender',
     'ImageGeneration'
 ]
 

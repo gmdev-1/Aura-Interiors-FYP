@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { AiFillStar } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import {useState, useEffect} from 'react';
@@ -6,39 +6,43 @@ import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
 
-export default function Product() {
-  const [products, setProducts] = useState([]);
-  const { AddtoCart } = useContext(CartContext);
-  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+export default function Recommender({ productName }) {
+    const [products, setProducts] = useState([]);
+    const { AddtoCart } = useContext(CartContext);
+    const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
-   useEffect(() => {
-      TopProducts();
-    },[]);
-
-    const TopProducts = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/top-products/`);
-        setProducts(response.data);
-        
-      } 
-      catch (error) {
-        alert('An error occured')
+    useEffect(() => {
+        if (!productName) return;
+        Recommendations(productName);
+      },[productName]);
+  
+      const Recommendations = async ( productName ) => {
+        try {
+          const response = await axios.get(`${BASE_URL}/api/recommender/recommend/${encodeURIComponent(productName)}/`,
+            { withCredentials: true },
+            { params: {product_name: productName } }
+          );
+          setProducts(response.data.recommendations);
+          console.log(response.data);
+        } 
+        catch (error) {
+          alert('An error occured')
+        }
       }
-    }
-
-    const handleAddToCart = async (productId) => {
-      try{
-        await AddtoCart(productId, 1)
+  
+      const handleAddToCart = async (productId) => {
+        try{
+          await AddtoCart(productId, 1)
+        }
+        catch(error){
+          console.error(error);
+        }
       }
-      catch(error){
-        console.error(error);
-      }
-    }
+      if (!products.length) return null;
 
   return (
     <>
-      
-      <div className="relative mt-24">
+       <div className="relative mt-24">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
           <div className="w-full border-t border-gray-300"></div>
         </div>
@@ -53,7 +57,7 @@ export default function Product() {
 
       <div className="text-center mb-8 p-5 sm:p-10 mt-5">
         <h2 className="mt-2 mb-4 text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 drop-shadow-sm">
-          Our Top Products
+          Recommended Products
         </h2>
       </div>
 
@@ -77,13 +81,14 @@ export default function Product() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2 sm:px-4 max-w-screen-xl mx-auto">
               {products.map((product) => (
                 <div
-                  key={product._id.$oid}
+                  key={product._id}
                   className="bg-white w-58 rounded-lg shadow overflow-hidden transform transition duration-300"
                 >
                   <Link to={`/product-detail/${encodeURIComponent(product.name)}`} >
-                  <div className="absolute top-2 left-2 z-10 bg-purple-800 text-purple-100 text-xs font-semibold px-2 py-1 rounded">
-                    Featured
-                  </div>
+                  {(product.is_featured === 'true' || product.is_featured === true) &&
+                <div className="absolute top-2 left-2 z-10 bg-purple-800 text-purple-100 text-xs font-semibold px-2 py-1 rounded">
+                   {(product.is_featured === 'true' || product.is_featured === true) && 'Featured'}
+                </div>}
                   <img
                     src={product.image}
                     alt={product.name}
@@ -142,5 +147,5 @@ export default function Product() {
         </div>
       </div>
     </>
-  );
+  )
 }

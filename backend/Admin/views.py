@@ -102,7 +102,7 @@ class AdminLoginView(APIView):
                 httponly=True,
                 secure=False,
                 samesite='Lax',
-                max_age=60 * 60
+                max_age=60 * 60 * 2
             )
             
             response.set_cookie(
@@ -188,7 +188,7 @@ class CookieTokenRefreshView(TokenRefreshView):
             httponly=True,
             secure=False,
             samesite='Lax',
-            max_age=60 * 60  # 60 minutes
+            max_age=60 * 60 * 2
         )
         return response
 

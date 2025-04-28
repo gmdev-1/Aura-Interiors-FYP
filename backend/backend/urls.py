@@ -22,5 +22,6 @@ urlpatterns = [
     path('', include('Store.urls')),
     path('api/dashboard/', include('Admin.urls')),
     path('api/order/', include('Order.urls')),
+    path('api/recommender/', include('recommender.urls')),
     path('api/imagen/', include('ImageGeneration.urls')),
 ]

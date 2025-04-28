@@ -15,7 +15,7 @@ export default function Shop() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
   const { AddtoCart } = useContext(CartContext);
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const { category } = useParams();
@@ -166,7 +166,7 @@ export default function Shop() {
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-gray-800 mb-2">Material</h3>
         <div className="flex flex-col space-y-1">
-        {["wood", "ceramic", "steel"].map((material) => (
+        {["Wood", "Ceramic", "Metal", "Brass", "Marble"].map((material) => (
           <label key={material} className="inline-flex items-center">
             <input value={material} type="checkbox" name="material" className="form-checkbox" onChange={handleFilterChange}  />
             <span className="ml-2">{material}</span>
@@ -178,7 +178,7 @@ export default function Shop() {
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-gray-800 mb-2">Color</h3>
         <div className="flex flex-col space-y-1">
-        {["black", "green", "brown"].map((color) => (
+        {["Black", "Dark Brown", "Brown", "Gold"].map((color) => (
           <label  key={color} className="inline-flex items-center">
             <input value={color} type="checkbox" name="color" className="form-checkbox"  onChange={handleFilterChange} />
             <span className="ml-2">{color}</span>

@@ -21,7 +21,7 @@ class ProductSerializer(serializers.Serializer):
     is_featured = serializers.BooleanField()
     color = serializers.CharField(max_length=100, allow_blank=False)
     material = serializers.CharField(max_length=100, allow_blank=False)
-    size = serializers.CharField(max_length=50, allow_blank=False)
+    size = serializers.CharField(max_length=80, allow_blank=False)
     discount = serializers.IntegerField(required=False, default=0)
     
     def validate_name(self, value):
@@ -32,7 +32,7 @@ class ProductSerializer(serializers.Serializer):
         return value
 
     def validate_description(self, value):
-        if len(value) > 255:
+        if len(value) > 500:
             raise serializers.ValidationError("Description is too long (maximum 255 characters).")
         return value
     
@@ -74,6 +74,8 @@ class ProductSerializer(serializers.Serializer):
     def validate_size(self, value):
         if not value.strip():
             raise serializers.ValidationError("Size cannot be blank.")
+        elif len(value) > 70:
+            raise serializers.ValidationError("Description is too long (maximum 70 words).")
         return value
 
     def validate_discount(self, value):

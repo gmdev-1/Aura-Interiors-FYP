@@ -39,7 +39,7 @@ def get_one_product_by_name(product_name):
         return product
     
 def home_featured_products():
-    featured_cursor = product_collection.find({"is_featured": True})
+    featured_cursor = product_collection.find({"is_featured": "true"})
     products = list(featured_cursor)
     json_products = json.loads(json_util.dumps(products))
     return json_products

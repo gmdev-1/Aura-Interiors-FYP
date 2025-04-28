@@ -40,7 +40,6 @@ export default function AddProduct() {
 
   const addProduct = async (data) => {
     try {
-      const token = localStorage.getItem('token'); // Make sure to get the token
       const formData = new FormData();
       formData.append('name', data.productName);
       formData.append('description', data.productDescription);
@@ -158,8 +157,8 @@ export default function AddProduct() {
 
       await axios.put(
         `${BASE_URL}/api/dashboard/edit-product/${productId}/`, 
+         formData, 
         { withCredentials: true },
-        formData, 
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
       navigate('/admin/dashboard/products');

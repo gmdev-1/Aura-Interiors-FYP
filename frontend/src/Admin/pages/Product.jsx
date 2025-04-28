@@ -104,12 +104,6 @@ export default function Product() {
                   Price
               </th>
               <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                  Stock Quantity
-              </th>
-              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                  Rating
-              </th>
-              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
                   Is Featured
               </th>
               <th className="p-4 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">
@@ -146,12 +140,6 @@ export default function Product() {
                 </td>
                 <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                     <span className='text-purple-700'>$</span>{product.price}
-                </td>
-                <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
-                    {product.quantity}
-                </td>
-                <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
-                    {product.rating}
                 </td>
                         <td className="p-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                           <span
