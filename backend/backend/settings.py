@@ -107,6 +107,7 @@ INSTALLED_APPS = [
     'Admin',
     'Order',
     'recommender',
+    'chatbot',
     'ImageGeneration'
 ]
 

@@ -3,7 +3,6 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework_simplejwt.authentication import JWTAuthentication
