@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 
 export default function Center() {
     const dummyImages = [
-        "https://source.unsplash.com/800x600/?interior,living-room",
-        "https://source.unsplash.com/800x600/?interior,bedroom",
-        "https://source.unsplash.com/800x600/?interior,kitchen",
-        "https://source.unsplash.com/800x600/?interior,office",
-        "https://source.unsplash.com/800x600/?interior,dining",
-        "https://source.unsplash.com/800x600/?interior,studio",
+        "1.jpg",
+        "2.jpg",
+        "3.jpg",
+        "4.jpg",
+        "5.jpg",
+        "6.jpg",
       ];
   return (
     <>

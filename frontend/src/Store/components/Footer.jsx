@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
-import { FiInstagram, FiGlobe, FiArrowUp, FiMail, FiPhone, FiMapPin } from "react-icons/fi";
-import { RiTwitterXFill, RiFacebookBoxFill } from "react-icons/ri";
+import { FiInstagram, FiGlobe, FiMessageCircle , FiMail, FiPhone, FiMapPin } from "react-icons/fi";
+import { RiTwitterXFill, RiFacebookBoxFill, RiCloseFill } from "react-icons/ri";
+import Chatbot from './Chatbot';
 
 export default function Footer() {
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      };
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleChat = () => {
+    setIsOpen(!isOpen);
+  };
   return (
     <>
        {/* Bold Decorative Separator */}
@@ -125,13 +127,17 @@ export default function Footer() {
                 ))}
               </div>
 
-              {/* Scroll to Top Button */}
+            {isOpen && (
+              <div className="fixed bottom-24 right-5 w-80 max-w-sm z-50">
+                <Chatbot />
+              </div>
+            )}
               <button
-                onClick={scrollToTop}
+                 onClick={toggleChat}
                 className="fixed bottom-8 right-5 bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transform hover:-translate-y-1 transition-all duration-300 hover:shadow-xl"
-                aria-label="Scroll to top"
+                aria-label="Open chat"
               >
-                <FiArrowUp size={24} />
+              {isOpen ? <RiCloseFill size={24} /> : <FiMessageCircle  size={24} /> }
               </button>
             </div>
           </div>

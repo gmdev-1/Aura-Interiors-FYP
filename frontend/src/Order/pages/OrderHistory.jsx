@@ -54,10 +54,13 @@ export default function OrderHistory() {
                                     <td className="py-3 px-6">{order.created_at.slice(0, 10)}</td>
                                     <td className="py-3 px-6">{order.total}</td>
                                     <td className={`py-3 px-6 font-semibold ${
-                                      order.order_status === "Delivered" ? "text-green-600" : 
-                                      order.order_status === "Shipped" ? "text-blue-600" : "text-yellow-600"
+                                      order.order_status === "pending" ? "text-yellow-600" :
+                                      order.order_status === "confirmed" ? "text-blue-600" :
+                                      order.order_status === "delivered" ? "text-blue-600" :
+                                      order.order_status === "canceled" ? "text-red-600" :
+                                      ""
                                     }`}>
-                                        {order.order_status}
+                                      {order.order_status}
                                     </td>
                                     <td className="py-3 px-6 cursor-pointer">
                                        <button onClick={() => OrderDetail(order.order_id)} className="flex bg-purple-600 text-white px-2 py-1 rounded-2xl">

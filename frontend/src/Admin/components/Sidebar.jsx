@@ -12,6 +12,7 @@ export default function Sidebar({isOpenSidebar, toggleSidebar, toggleDropDown}) 
           isOpenSidebar ? '-translate-x-full' : ' translate-x-0' }`}>
         <div className="p-6 flex justify-between">
         <div className="flex flex-col items-center group cursor-pointer">
+        {/* <img src="https://res.cloudinary.com/dctgk7mh7/image/upload/v1746376645/logo2_vzld3j.png" alt="" className='h-30 w-48' /> */}
             <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider text-purple-600">
               AURA
             </span>

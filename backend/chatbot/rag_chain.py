@@ -9,6 +9,7 @@ load_dotenv()
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+_rag_chain = None
 
 def initialize_rag_chain():
     # Load Hugging Face embedding model
@@ -17,15 +18,15 @@ def initialize_rag_chain():
     vectorstore = PineconeVectorStore(
         index_name="rag-chatbot",
         embedding=embeddings,
-        pinecone_api_key=os.getenv("PINECONE_API_KEY"),  # Explicitly pass API key
+        pinecone_api_key=os.getenv("PINECONE_API_KEY"),
+        # pinecone_environment=os.getenv("PINECONE_ENVIRONMENT"),
     )
     
     # Initialize LLM (Hugging Face)
     llm = HuggingFaceEndpoint(
-        repo_id="google/flan-t5-small",
-         huggingfacehub_api_token=os.getenv("HUGGINGFACE_ACCESS_TOKEN"),
-        temperature=0,          
-        max_new_tokens=100 
+        repo_id="HuggingFaceH4/zephyr-7b-beta",
+        task="text-generation",
+        huggingfacehub_api_token=os.getenv("HUGGINGFACE_ACCESS_TOKEN"),   
     )
     
     # Create RAG chain
@@ -36,4 +37,8 @@ def initialize_rag_chain():
     )
     return qa_chain
 
-rag_chain = initialize_rag_chain()
+def get_rag_chain():
+    global _rag_chain
+    if _rag_chain is None:
+        _rag_chain = initialize_rag_chain()
+    return _rag_chain

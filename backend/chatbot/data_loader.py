@@ -27,7 +27,8 @@ def load_data_to_pinecone():
         texts=texts,
         index_name="rag-chatbot",
         embedding=embeddings,
-        pinecone_api_key=os.getenv("PINECONE_API_KEY"),  # Explicitly pass API key
+        pinecone_api_key=os.getenv("PINECONE_API_KEY"),
+        # pinecone_environment=os.getenv("PINECONE_ENVIRONMENT"),
     )
 
 if __name__ == "__main__":

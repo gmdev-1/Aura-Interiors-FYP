@@ -16,25 +16,38 @@ export default function DesignGenerater() {
   const onSubmit = (data) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
+  
+    const { roomType, designType } = data;
+  
+    // Generate a placeholder image URL based on roomType and designType
+    const imageUrl = "https://res.cloudinary.com/dctgk7mh7/image/upload/v1746288995/sdxl_lora_output_desmkx.jpg";
+  
+    // Update the generatedImages state with the new image
+    setGeneratedImages((prev) => [...prev, imageUrl]);
+  
+    // Reset the submitting state
+    setIsSubmitting(false);
+  };
 
-    GenerateDesign(data);
-  }
+  // const GenerateDesign = async (data) => {
+  //   try{
+  //     const response = axios.post(`${BASE_URL}/api/imagen/interior-design/generate/`, data, 
+  //       {
+  //         withCredentials: true,
+  //         headers: {
+  //           'Content-Type': 'multipart/form-data',
+  //         }
+  //       }
+  //     );
+  //   }
+  //   catch(error){
+  //     console.error(error);
+  //   }
+  // }
 
-  const GenerateDesign = async (data) => {
-    try{
-      const response = axios.post(`${BASE_URL}/api/imagen/interior-design/generate/`, data, 
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          }
-        }
-      );
-    }
-    catch(error){
-      console.error(error);
-    }
-  }
+
+
+
 
   return (
     <>
@@ -121,9 +134,10 @@ export default function DesignGenerater() {
               </div>
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-300 w-full"
               >
-                Generate
+                {isSubmitting ? 'Generating...' : 'Generate'}
               </button>
             </form>
           </div>
