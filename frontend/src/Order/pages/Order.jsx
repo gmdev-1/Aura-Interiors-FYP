@@ -7,19 +7,22 @@ import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../Store/context/CartContext';
 import Spinner from "../../Store/components/Spinner";
 import Footer from "../../Store/components/Footer";
+import { FaStripe } from "react-icons/fa";
+import { loadStripe } from "@stripe/stripe-js";
 
 export default function Order(){
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { cart, ListCart } = useContext(CartContext);
-     const [isSubmitting, setIsSubmitting] = useState(false);
-     const navigate = useNavigate();
-    const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
+    const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL; 
+    const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_PUBLISHABLE_KEY);
     
     useEffect(() => {
         ListCart();
      },[]);
     
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         if (isSubmitting) return;
         setIsSubmitting(true);
         CreateOrder(data);
@@ -29,7 +32,7 @@ export default function Order(){
         try{
             const payload = {
                 shipping_details: data,
-                payment_method: "Cash on Delivery"
+                payment_method: "Stripe"
             };
             const response = await axios.post(`${BASE_URL}/api/order/create-order/`, payload, { withCredentials: true });
             navigate('/order/order-history');
@@ -39,6 +42,8 @@ export default function Order(){
         }
         setIsSubmitting(false);
     }  
+    
+    
     return(
         <>
         <Navbar />
@@ -118,6 +123,20 @@ export default function Order(){
               />
               {errors.city && (
                 <p className="text-red-500 text-sm">{errors.city.message}</p>
+              )}
+            </div>
+            <div className="mb-4">
+            <label className="block text-gray-700">Payment Method</label>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  value="bank"
+                  {...register('paymentMethod', { required: 'Please select payment method' })}
+                />
+                <span><FaStripe size={45} /></span>
+              </label>
+              {errors.paymentMethod && (
+                <p className="text-red-500 text-sm">{errors.paymentMethod.message}</p>
               )}
             </div>
             <button

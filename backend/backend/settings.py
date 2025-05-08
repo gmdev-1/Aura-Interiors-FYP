@@ -70,6 +70,15 @@ PASSWORD_HASHERS = [
     # ... other hashers ...
 ]
 
+# Stability ai Credentials
+
+STABILITY_API_KEY=config('STABILITY_API_KEY')
+API_HOST=config('API_HOST')
+
+# Stripe Credentials
+
+STRIPE_API_SECRET=config('STRIPE_API_SECRET')
+
 # Cloudinary Credentials
 
 CLOUDINARY_CONFIG = {

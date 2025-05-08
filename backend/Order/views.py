@@ -12,6 +12,8 @@ from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from Store.models.models import User
 from Store.models.cart_model import Cart
 from Order.models import Order
+import stripe
+stripe.api_key = settings.STRIPE_API_SECRET
 
 
 class UserCookieJWTAuthentication(JWTAuthentication):
@@ -37,6 +39,32 @@ class UserCookieJWTAuthentication(JWTAuthentication):
         except Exception as e:
             raise AuthenticationFailed('User retrievel failed') from e
 
+class CreatePaymentIntentView(APIView):
+    authentication_classes = [UserCookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user_id = str(request.user.id)
+        cart_items = request.data.get("cart", [])
+
+        if not cart_items:
+            return Response({"error": "Cart is empty"}, status=400)
+
+        total_amount = sum(
+            (item["price"] - item.get("discount", 0)) * item["quantity"]
+            for item in cart_items
+        )
+
+        try:
+            intent = stripe.PaymentIntent.create(
+                amount=int(total_amount * 100),  # in cents
+                currency='usd',
+                metadata={"user_id": user_id},
+            )
+            return Response({"client_secret": intent.client_secret})
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+
 
 class CreateOrderView(APIView):
     authentication_classes = [UserCookieJWTAuthentication]
@@ -61,7 +89,7 @@ class CreateOrderView(APIView):
                 user_id=user_id,
                 cart_items=cart_items,
                 shipping_details=shipping_details,
-                payment_method=request.data.get("payment_method", "Cash on Delivery")
+                payment_method=request.data.get("payment_method", "Stripe")
             )
             
             # Fetch the created order
