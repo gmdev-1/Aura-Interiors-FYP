@@ -5,6 +5,7 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
+import ReactGA from "react-ga4";
 
 export default function Product() {
   const [products, setProducts] = useState([]);
@@ -28,7 +29,14 @@ export default function Product() {
 
     const handleAddToCart = async (productId) => {
       try{
-        await AddtoCart(productId, 1)
+        await AddtoCart(productId, 1);
+
+        ReactGA.event({
+              category: "Ecommerce",
+              action: "Add to Cart",
+             label: productId,          
+             value: 1                
+            });
       }
       catch(error){
         console.error(error);

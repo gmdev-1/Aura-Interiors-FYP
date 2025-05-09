@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import ReactGA from "react-ga4";
 import Home from './Store/pages/Home';
 import Login from './Store/components/Login';
 import Signup from './Store/components/Signup';
@@ -29,12 +31,25 @@ import OrdersDetail from './Admin/pages/OrdersDetail';
 import Landing from './ImageGeneration/pages/Landing';
 import DesignGenerater from './ImageGeneration/pages/DesignGenerater';
 
+
+function AnalyticsListener() {
+  const location = useLocation();
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: location.pathname });
+  }, [location]);
+  return null;
+}
+
 function App() {
+
+  ReactGA.initialize("G-L662N5CB4B");
+  ReactGA.send({ hitType: "pageview", page: window.location.pathname });
 
   return (
     <>
      <Router>
-            <CartProvider>
+        <AnalyticsListener />
+           <CartProvider>
         <Routes>
           <Route path="/" element={<UserAuthLayout />} >
             <Route exact path="/" element={<Home />} />

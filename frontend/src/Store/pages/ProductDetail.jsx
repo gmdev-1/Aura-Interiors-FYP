@@ -8,6 +8,7 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
 import Recommender from '../components/Recommender';
+import ReactGA from "react-ga4";
 
 export default function ProductDetail() {
   const [product, setProduct] = useState([]);
@@ -16,6 +17,14 @@ export default function ProductDetail() {
   const { name } = useParams();
   const { AddtoCart } = useContext(CartContext);
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
+  useEffect(() => {
+    ReactGA.event({
+      category: "Product",
+      action: "View Product Detail",
+      label: name
+    });
+  }, [name]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -26,7 +26,7 @@ export default function Recommender({ productName }) {
           console.log(response.data);
         } 
         catch (error) {
-          alert('An error occured')
+          alert('Login to get recommendations');
         }
       }
   
