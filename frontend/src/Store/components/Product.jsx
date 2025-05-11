@@ -27,16 +27,23 @@ export default function Product() {
       }
     }
 
-    const handleAddToCart = async (productId) => {
+    const handleAddToCart = async (productId, productName, price) => {
       try{
         await AddtoCart(productId, 1);
 
-        ReactGA.event({
-              category: "Ecommerce",
-              action: "Add to Cart",
-             label: productId,          
-             value: 1                
-            });
+      ReactGA.event('add_to_cart', {
+      currency: 'USD',
+      value: price,
+      items: [
+        {
+          item_id: productId,
+          item_name: productName,
+          quantity: 1,
+          price: price,
+        },
+      ],
+    });
+
       }
       catch(error){
         console.error(error);
@@ -125,7 +132,7 @@ export default function Product() {
                   </div>
 
                   <div className="px-4 pb-3">
-                    <button onClick={() => handleAddToCart(product._id.$oid)} className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
+                    <button onClick={() => handleAddToCart(product._id.$oid, product.name, product.price)} className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
                       Add to Cart
                     </button>
                   </div>

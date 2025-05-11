@@ -9,6 +9,7 @@ import Spinner from "../../Store/components/Spinner";
 import Footer from "../../Store/components/Footer";
 import { FaStripe } from "react-icons/fa";
 import { loadStripe } from "@stripe/stripe-js";
+import ReactGA from "react-ga4";
 
 export default function Order(){
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -20,6 +21,21 @@ export default function Order(){
     
     useEffect(() => {
         ListCart();
+
+      ReactGA.event('purchase', {
+      transaction_id: 'T' + new Date().getTime(), // replace with actual order ID if available
+      affiliation: 'Aura Interiors Online Store',
+      currency: 'USD',
+      value: cart.reduce((sum, item) => sum + (item.price - item.discount) * item.quantity, 0),
+      tax: 0,
+      shipping: 0,
+      items: cart.map(item => ({
+        item_id: item.id,
+        item_name: item.product_name,
+        quantity: item.quantity,
+        price: item.price - item.discount,
+      })),
+    });
      },[]);
     
     const onSubmit = async (data) => {

@@ -1,74 +1,183 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { ResponsiveContainer, LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid
+} from 'recharts';
+import Spinner from './Spinner';
 
 export default function Analytics() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, []);
+
+  const fetchAnalytics = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get(
+        `${BASE_URL}/api/dashboard/analytics-data/`,
+        { withCredentials: true }
+      );
+      // Convert date strings like "20250508" to a more readable format
+      const formatted = data.map(d => ({
+        ...d,
+        date: `${d.date.slice(4,6)}/${d.date.slice(6,8)}` // "MM/DD"
+      }));
+      setData(formatted);
+    } catch (e) {
+      console.error('Analytics fetch error', e);
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
+   if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Spinner />
+      </div>
+    );
+  }
+
+  // Summary calculations
+  const totalActiveUsers = data.reduce((sum, d) => sum + d.activeUsers, 0);
+  const totalPageViews = data.reduce((sum, d) => sum + d.screenPageViews, 0);
+  const totalEvents = data.reduce((sum, d) => sum + d.eventCount, 0);
+  const totalRevenue = data.reduce((sum, d) => sum + d.purchaseRevenue, 0);
+
   return (
-    <>
-      <div className="flex-1 p-6 bg-gray-100 rounded-xs shadow-md">
-      <h1 className="text-3xl font-bold mb-6 text-black">Analytics Dashboard</h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="p-6 bg-gray-100 rounded shadow space-y-6">
+      <h1 className="text-3xl font-bold">Analytics</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-sm font-semibold text-gray-600 uppercase mb-2">Total Visitors</h2>
-          <p className="text-2xl font-bold text-gray-800">24,350</p>
+          <h2 className="text-sm font-semibold text-gray-600 uppercase">Active Users</h2>
+          <p className="text-2xl font-bold text-gray-800">{totalActiveUsers}</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-sm font-semibold text-gray-600 uppercase mb-2">Total Sales</h2>
-          <p className="text-2xl font-bold text-gray-800">$123,450</p>
+          <h2 className="text-sm font-semibold text-gray-600 uppercase">Page Views</h2>
+          <p className="text-2xl font-bold text-gray-800">{totalPageViews}</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-sm font-semibold text-gray-600 uppercase mb-2">Orders</h2>
-          <p className="text-2xl font-bold text-gray-800">1,234</p>
+          <h2 className="text-sm font-semibold text-gray-600 uppercase">Events</h2>
+          <p className="text-2xl font-bold text-gray-800">{totalEvents}</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-sm font-semibold text-gray-600 uppercase mb-2">Conversion Rate</h2>
-          <p className="text-2xl font-bold text-gray-800">4.7%</p>
+          <h2 className="text-sm font-semibold text-gray-600 uppercase">Revenue</h2>
+          <p className="text-2xl font-bold text-gray-800">${totalRevenue}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Sales Trends</h2>
-          <div className="h-64">
-            {/* <img src="https://res.cloudinary.com/dctgk7mh7/image/upload/v1739017887/carousals/v1slla2por9dbgbyoe6e.jpg" alt="Sales Trends Chart" className="w-full h-full object-cover" /> */}
-          </div>
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 1. Active Users & Events */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-lg font-semibold mb-4">Users & Events (Last 7 Days)</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend verticalAlign="top" height={36} />
+              <Area
+                type="monotone"
+                dataKey="activeUsers"
+                name="Active Users"
+                stroke="#8884d8"
+                fillOpacity={0.3}
+                fill="#8884d8"
+              />
+              <Area
+                type="monotone"
+                dataKey="eventCount"
+                name="Event Count"
+                stroke="#82ca9d"
+                fillOpacity={0.3}
+                fill="#82ca9d"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Top Performing Products</h2>
-          <div className="h-64">
-            {/* <img src="https://res.cloudinary.com/dctgk7mh7/image/upload/v1739018098/carousals/jagfmb4gdok0sf0yojd2.jpg" alt="Top Products Chart" className="w-full h-full object-cover" /> */}
-          </div>
-        </div>
-      </div>
 
-      {/* Recent Orders Section */}
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">Recent Orders</h2>
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Order ID</th>
-              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Customer</th>
-              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Total</th>
-              <th className="p-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Date</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            <tr className="hover:bg-gray-50">
-              <td className="p-4 text-sm text-gray-800">#1001</td>
-              <td className="p-4 text-sm text-gray-800">John Doe</td>
-              <td className="p-4 text-sm text-gray-800">$250</td>
-              <td className="p-4 text-sm text-gray-800">2024-12-09</td>
-            </tr>
-            <tr className="hover:bg-gray-50">
-              <td className="p-4 text-sm text-gray-800">#1002</td>
-              <td className="p-4 text-sm text-gray-800">Jane Smith</td>
-              <td className="p-4 text-sm text-gray-800">$450</td>
-              <td className="p-4 text-sm text-gray-800">2024-12-08</td>
-            </tr>
-          </tbody>
-        </table>
+        {/* 2. Page Views & Engagement Rate */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-lg font-semibold mb-4">Page Views & Engagement Rate</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis yAxisId="left" />
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                domain={[0, 100]}
+                tickFormatter={val => `${val}%`}
+              />
+              <Tooltip />
+              <Legend verticalAlign="top" height={36} />
+              <Line
+                yAxisId="left"
+                type="monotone"
+                dataKey="screenPageViews"
+                name="Page Views"
+                stroke="#ffc658"
+              />
+              <Line
+                yAxisId="right"
+                type="monotone"
+                dataKey="engagementRate"
+                name="Engagement Rate"
+                stroke="#ff7300"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* 3. E-Commerce Metrics */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-lg font-semibold mb-4">E-Commerce Activity</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend verticalAlign="top" height={36} />
+              <Bar dataKey="addToCarts" name="Add to Carts" fill="#8884d8" />
+              <Bar dataKey="checkouts" name="Checkouts" fill="#82ca9d" />
+              <Bar dataKey="ecommercePurchases" name="Purchases" fill="#ffc658" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* 4. Revenue Over Time */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-lg font-semibold mb-4">Revenue Over Time</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis tickFormatter={val => `$${val}`} />
+              <Tooltip formatter={val => `$${val}`} />
+              <Line
+                type="monotone"
+                dataKey="purchaseRevenue"
+                name="Purchase Revenue"
+                stroke="#8884d8"
+              />
+              <Line
+                type="monotone"
+                dataKey="totalRevenue"
+                name="Total Revenue"
+                stroke="#82ca9d"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
-    </>
-  )
+  );
 }

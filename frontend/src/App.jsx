@@ -35,6 +35,7 @@ import DesignGenerater from './ImageGeneration/pages/DesignGenerater';
 function AnalyticsListener() {
   const location = useLocation();
   useEffect(() => {
+    const page_path = location.pathname + location.search;
     ReactGA.send({ hitType: "pageview", page: location.pathname });
   }, [location]);
   return null;
@@ -43,7 +44,6 @@ function AnalyticsListener() {
 function App() {
 
   ReactGA.initialize("G-L662N5CB4B");
-  ReactGA.send({ hitType: "pageview", page: window.location.pathname });
 
   return (
     <>

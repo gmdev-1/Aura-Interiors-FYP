@@ -48,8 +48,8 @@ export default function Dropdown ({userData, Logout}) {
         />
       </button>
       <ul
-        className={`dropdown-menu absolute right-0 mt-9 min-w-56 bg-white border rounded-md shadow-lg z-10 transition-opacity duration-200 ${
-          isOpen ? "opacity-100 visible translate-x-5" : "opacity-0 invisible translate-x-0"
+        className={`dropdown-menu absolute right-0 mt-10 min-w-56 bg-white border rounded-md shadow-lg z-10 transition-opacity duration-200 ${
+          isOpen ? "opacity-100 visible translate-x-8" : "opacity-0 invisible translate-x-0"
         }`}
         role="menu"
         aria-orientation="vertical"

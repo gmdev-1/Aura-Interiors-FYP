@@ -18,13 +18,21 @@ export default function ProductDetail() {
   const { AddtoCart } = useContext(CartContext);
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
-  useEffect(() => {
-    ReactGA.event({
-      category: "Product",
-      action: "View Product Detail",
-      label: name
-    });
-  }, [name]);
+  useEffect(()=> {
+    if(product){
+      ReactGA.event('view_item', {
+        currency: 'USD',
+        value: product.price,
+        items: [
+          {
+            item_id: product.id,
+            item_name: product.name,
+            price: product.price,
+          },
+        ],
+      });
+    }
+  }, [product]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -50,9 +58,22 @@ export default function ProductDetail() {
     }
   }
 
-  const handleAddToCart = async (productId) => {
+  const handleAddToCart = async (productId, productName, price) => {
     try{
       await AddtoCart(productId, 1)
+
+       ReactGA.event('add_to_cart', {
+            currency: 'USD',
+            value: price,
+            items: [
+              {
+                item_id: productId,
+                item_name: productName,
+                quantity: 1,
+                price: price,
+              },
+            ],
+          });
     }
     catch(error){
       console.error(error);
@@ -123,7 +144,7 @@ export default function ProductDetail() {
 
                   {/* Action Button */}
                   <div className="mb-8 ">
-                    <button onClick={() => handleAddToCart(product.id)}
+                    <button onClick={() => handleAddToCart(product.id, product.name, product.price)}
                       type="button"
                       className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800"
                     >

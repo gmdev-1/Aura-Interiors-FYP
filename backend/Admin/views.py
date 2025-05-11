@@ -29,6 +29,7 @@ import os
 from bson import ObjectId
 from utils.db_connection import mongo_db
 import bcrypt
+from .analytics import AnalyticsService
 
 
 user_collection = mongo_db["users"]
@@ -534,3 +535,34 @@ class CarousalDeleteView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+
+# Analytics Views
+
+class AnalyticsDataView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request, format=None):
+
+       service = AnalyticsService(settings.GA4_PROPERTY_ID)
+       report = service.run_report(start_date="7daysAgo", end_date="today")
+
+       data = []
+       
+       for row in report.rows:
+            dims = row.dimension_values
+            mets = row.metric_values
+            data.append({
+                "date":              dims[0].value,
+                "activeUsers":       int(mets[0].value),
+                "eventCount":        int(mets[1].value),
+                "screenPageViews":   int(mets[2].value),
+                "engagementRate":    float(mets[3].value) * 100,
+                "sessions":          int(mets[4].value),
+                "addToCarts":        int(mets[5].value),
+                "checkouts":         int(mets[6].value),
+                "ecommercePurchases":int(mets[7].value),
+                "purchaseRevenue":   float(mets[8].value),
+                "totalRevenue":      float(mets[9].value),
+            })
+
+       return Response(data)

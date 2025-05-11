@@ -4,12 +4,24 @@ import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { RiDeleteBin6Fill  } from "react-icons/ri";
+import ReactGA from "react-ga4";
 
 export default function Cart() {
    const { cart, ListCart, UpdateCart, DeleteCart } = useContext(CartContext);
 
       useEffect(() => {
            ListCart();
+
+            ReactGA.event('begin_checkout', {
+    currency: 'USD',
+    value: cart.reduce((sum, item) => sum + (item.price - item.discount) * item.quantity, 0),
+    items: cart.map(item => ({
+      item_id: item.id,
+      item_name: item.product_name,
+      quantity: item.quantity,
+      price: item.price - item.discount,
+    })),
+  });
        },[]);
 
    const handleDeleteCart = async (cartId) => {
