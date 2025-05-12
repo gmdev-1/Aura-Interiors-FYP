@@ -54,5 +54,14 @@ class Category:
             )
         return result.modified_count
     
+    @staticmethod
+    def search(q: str):
+        return list(category_collection.find({
+            "$or": [
+                {"name":        {"$regex": q, "$options": "i"}},
+                {"description": {"$regex": q, "$options": "i"}}
+            ]
+        }, {"_id": 0}))
+    
     def __str__(self):
         return f"Category(name={self.name}, description={self.description}, image={self.image})"

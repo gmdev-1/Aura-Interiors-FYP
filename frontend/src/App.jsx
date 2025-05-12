@@ -30,6 +30,7 @@ import OrdersHistory from './Admin/pages/OrdersHistory';
 import OrdersDetail from './Admin/pages/OrdersDetail';
 import Landing from './ImageGeneration/pages/Landing';
 import DesignGenerater from './ImageGeneration/pages/DesignGenerater';
+import SearchResults from './Admin/pages/SearchResults';
 
 
 function AnalyticsListener() {
@@ -61,6 +62,7 @@ function App() {
             <Route exact path="/cart" element={<Cart />} />
             <Route exact path="/product-detail/:name" element={<ProductDetail />} />
             <Route exact path="/shop" element={<Shop/>} />
+            <Route exact path="/search" element={<Shop/>} />
             <Route exact path="/imagen" element={<Landing />} />
             <Route exact path="/order" element={<UserProtectedRoute ><Order /></UserProtectedRoute>} />
             <Route exact path="/order/order-history" element={<UserProtectedRoute ><OrderHistory /></UserProtectedRoute>} />
@@ -81,6 +83,7 @@ function App() {
             <Route exact path="/admin/dashboard/carousal" element={<ProtectedRoute><Carousal /></ProtectedRoute>}/>
             <Route exact path="/admin/dashboard/orders" element={<ProtectedRoute><OrdersHistory /></ProtectedRoute>}/>
             <Route exact path="/admin/dashboard/orders/order-detail/:order_id" element={<ProtectedRoute><OrdersDetail /></ProtectedRoute>}/>
+            <Route exact path="/admin/dashboard/search" element={<ProtectedRoute><SearchResults /></ProtectedRoute>}/>
           </Route>
         </Routes>
       </CartProvider>

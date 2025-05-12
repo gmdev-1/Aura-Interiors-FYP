@@ -127,3 +127,12 @@ class Order:
         for order in orders:
             order["order_id"] = str(order["_id"])
         return orders
+    
+    @staticmethod
+    def search(q: str):
+        return list(order_collection.find({
+            "$or": [
+                {"name":        {"$regex": q, "$options": "i"}},
+                {"status": {"$regex": q, "$options": "i"}}
+            ]
+        }, {"_id": 0}))

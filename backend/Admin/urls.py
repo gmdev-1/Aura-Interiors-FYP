@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from Admin.views import AdminSignupView, AdminLoginView, VerifyAuthView, CookieTokenRefreshView, AdminLogoutView, CategoryCreateView, CategoriesListView, CategoryRetrieveView, CategoryDeleteView, CategoryUpdateView, ProductCreateView, ProductsListView, ProductRetrieveView, ProductDeleteView, ProductUpdateView, CarousalCreateView, CarousalsListView, CarousalDeleteView, AnalyticsDataView
+from Admin.views import AdminSignupView, AdminLoginView, VerifyAuthView, CookieTokenRefreshView, AdminLogoutView, CategoryCreateView, CategoriesListView, CategoryRetrieveView, CategoryDeleteView, CategoryUpdateView, ProductCreateView, ProductsListView, ProductRetrieveView, ProductDeleteView, ProductUpdateView, CarousalCreateView, CarousalsListView, CarousalDeleteView, AnalyticsDataView, AdminSearchView
 
 urlpatterns = [
     path('admin/signup/', AdminSignupView.as_view(), name='signup'),
@@ -28,6 +28,8 @@ urlpatterns = [
     path('delete-carousal/<carousal_id>/', CarousalDeleteView.as_view(), name='delete-carousal'),
 
     path('analytics-data/', AnalyticsDataView.as_view(), name='analytics'),
+    
+    path('search/', AdminSearchView.as_view(), name='search'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

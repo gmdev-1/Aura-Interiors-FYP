@@ -86,7 +86,7 @@ export default function Analytics() {
                 type="monotone"
                 dataKey="activeUsers"
                 name="Active Users"
-                stroke="#8884d8"
+                stroke="#82ca9d"
                 fillOpacity={0.3}
                 fill="#8884d8"
               />
@@ -94,9 +94,9 @@ export default function Analytics() {
                 type="monotone"
                 dataKey="eventCount"
                 name="Event Count"
-                stroke="#82ca9d"
+                stroke="#8884d8"
                 fillOpacity={0.3}
-                fill="#82ca9d"
+                fill="#8884d8"
               />
             </AreaChart>
           </ResponsiveContainer>

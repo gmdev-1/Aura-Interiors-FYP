@@ -19,6 +19,7 @@ from Admin.models.category import Category
 from Admin.models.product import Product
 from Admin.models.carousal import Carousal
 from Admin.models.models import User
+from Order.models import Order
 from Admin.serializers.serializers import SignupSerializer
 from Admin.serializers.login_serializer import LoginSerializer
 from Admin.serializers.category_serializer import CategorySerializer
@@ -566,3 +567,48 @@ class AnalyticsDataView(APIView):
             })
 
        return Response(data)
+    
+
+# Search View
+
+class AdminSearchView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        q = request.query_params.get('q', '').strip()
+        try:
+            raw_products   = Product.search(q)
+            raw_categories = Category.search(q)
+            raw_orders     = Order.search(q)
+
+            def serialize(raw_list):
+                out = []
+                for doc in raw_list:
+                    # make a shallow copy so we don't mutate the original
+                    item = dict(doc)
+                    # convert MongoDB id
+                    if isinstance(item.get('_id'), ObjectId):
+                        item['id'] = str(item['_id'])
+                        item.pop('_id')
+                    # convert any other ObjectIds you might have
+                    for k, v in list(item.items()):
+                        if isinstance(v, ObjectId):
+                            item[k] = str(v)
+                    out.append(item)
+                return out
+
+            products   = serialize(raw_products)
+            categories = serialize(raw_categories)
+            orders     = serialize(raw_orders)
+
+            return Response({
+                "products":   products,
+                "categories": categories,
+                "orders":     orders
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { BiSidebar } from "react-icons/bi";
 import { IoIosArrowRoundForward } from "react-icons/io";
@@ -10,6 +12,14 @@ import { useContext } from 'react';
 
 export default function Navbar({toggleSidebar}) {
   const { userData, isAuthenticated, loading, Logout} = useContext(AuthContext);
+  const [q, setQ] = useState('')
+  const navigate = useNavigate()
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    if (!q.trim()) return
+    navigate(`/admin/dashboard/search?q=${encodeURIComponent(q)}`)
+  }
   
   return (
     <>
@@ -26,9 +36,11 @@ export default function Navbar({toggleSidebar}) {
             </span>
             <div className="h-0.5 w-0 bg-purple-600 group-hover:w-full transition-all duration-300"/>
           </div>
-         <form className="sm:mx-auto sm:w-full sm:max-w-sm flex items-center bg-gray-50 rounded-md overflow-hidden">
+         <form onSubmit={handleSubmit} className="sm:mx-auto sm:w-full sm:max-w-sm flex items-center bg-gray-50 rounded-md overflow-hidden">
             <input
               type="text"
+              value={q}
+              onChange={e => setQ(e.target.value)}
               className="flex-grow h-10 px-5 bg-transparent text-gray-700 placeholder-gray-500 focus:outline-none"
               placeholder="Search..."
             />

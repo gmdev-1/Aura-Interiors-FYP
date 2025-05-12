@@ -124,6 +124,16 @@ class Product:
         )
         return result.modified_count
     
+    @staticmethod
+    def search(q: str):
+        return list(product_collection.find({
+            "$or": [
+                {"name":        {"$regex": q, "$options": "i"}},
+                {"description": {"$regex": q, "$options": "i"}}
+            ]
+        }, {"_id": 0}))
+
+    
     
     def __str__(self):
         return f"Product(name={self.name}, description={self.description}, image={self.image}, price={self.price}, category={self.category}, quantity={self.quantity}, discount={self.discount})"
