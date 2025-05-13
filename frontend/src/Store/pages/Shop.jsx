@@ -8,6 +8,7 @@ import Spinner from '../../Admin/components/Spinner';
 import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function Shop() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -19,6 +20,11 @@ export default function Shop() {
   const { AddtoCart } = useContext(CartContext);
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const { category } = useParams();
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const q = params.get('q');
+  
+  
   const [filter, setFilter] = useState({
     category: [],
     featured: false,
@@ -36,6 +42,20 @@ export default function Shop() {
    useEffect(() => {
       getCategories();
     }, []);
+
+    useEffect(() => {
+      SearchProducts(q);
+    }, [q]);
+
+    const SearchProducts = async (searchQuery) => {
+      try{
+        const response = await axios.get(`${BASE_URL}/search-products/`, { params: { q: searchQuery }});
+        setProducts(response.data.products);
+      }
+      catch(error){
+        console.error('error ocuurred');
+      }
+    }
 
     const fetchProducts = async () => {
       setLoading(true);

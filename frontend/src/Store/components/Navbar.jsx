@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IoIosArrowRoundForward, IoMdClose } from "react-icons/io";
 import { FiShoppingCart, FiSearch, FiMenu } from "react-icons/fi";
 import { PiMagicWandFill } from "react-icons/pi";
@@ -16,6 +16,8 @@ const Navbar = () => {
   const { userData, isAuthenticated, loading, Logout} = useContext(UserAuthContext);
   const { CartCount } = useContext(CartContext);
   const [categories, setCategories] = useState([]);
+   const [q, setQ] = useState('')
+  const navigate = useNavigate()
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   const toggleCategory = (categoryName) => {
@@ -35,6 +37,13 @@ const Navbar = () => {
         alert('An error occured')
       }
     }
+
+    const handleSubmit = e => {
+    e.preventDefault()
+    if (!q.trim()) return
+    navigate(`/shop?q=${encodeURIComponent(q)}`)
+    
+  }
   return (
     
     <>
@@ -54,10 +63,12 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Search */}
-          <form className="flex sm:w-full sm:max-w-md items-center">
+          <form onSubmit={handleSubmit} className="flex sm:w-full sm:max-w-md items-center">
             <div className="relative w-full transition-all duration-300">
               <input
                 type="text"
+                value={q}
+                onChange={e => setQ(e.target.value)}
                 className="w-full h-11 px-5 bg-white text-gray-800 placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
                 placeholder="Search for products..."
               />

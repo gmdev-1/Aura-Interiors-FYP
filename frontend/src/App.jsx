@@ -62,7 +62,6 @@ function App() {
             <Route exact path="/cart" element={<Cart />} />
             <Route exact path="/product-detail/:name" element={<ProductDetail />} />
             <Route exact path="/shop" element={<Shop/>} />
-            <Route exact path="/search" element={<Shop/>} />
             <Route exact path="/imagen" element={<Landing />} />
             <Route exact path="/order" element={<UserProtectedRoute ><Order /></UserProtectedRoute>} />
             <Route exact path="/order/order-history" element={<UserProtectedRoute ><OrderHistory /></UserProtectedRoute>} />

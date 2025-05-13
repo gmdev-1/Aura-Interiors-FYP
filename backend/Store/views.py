@@ -489,3 +489,23 @@ class ListCartView(APIView):
             item["id"] = str(item["_id"])
             del item["_id"]
         return Response({"cart_items": cart_items}, status=status.HTTP_200_OK)
+
+
+# Search View
+
+class SearchProductsView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        q = request.query_params.get('q', '').strip()
+        try:
+            # if not q:
+            #     # return all products when no search query
+            #     products = Product.all()
+            # else:
+            products = Product.search_products(q)
+
+            return Response({"products": products}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

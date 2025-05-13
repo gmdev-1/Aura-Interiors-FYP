@@ -133,6 +133,40 @@ class Product:
             ]
         }, {"_id": 0}))
 
+    @staticmethod
+    def search_products(q: str, projection=None):
+        q = q.strip()
+        if not q:
+            return []  # no search term → no results
+
+        projection = projection or {
+            "_id":         0,
+            "id":          1,
+            "name":        1,
+            "description": 1,
+            "price":       1,
+            "image":       1,
+            "is_featured": 1,
+            "rating":      1,
+            "review":      1,
+            "discount":    1,
+        }
+
+        filter_q = {
+            "$or": [
+                {"name":        {"$regex": q, "$options": "i"}},
+                {"description": {"$regex": q, "$options": "i"}}
+            ]
+        }
+        return list(product_collection.find(filter_q, projection))
+
+
+    @staticmethod
+    def all():
+        # fetch all products for initial load
+        projection = {"_id":0, "id":1, "name":1, "description":1, "price":1, "image":1, "is_featured":1, "rating":1, "review":1, "discount":1}
+        return list(product_collection.find({}, projection))
+
     
     
     def __str__(self):
