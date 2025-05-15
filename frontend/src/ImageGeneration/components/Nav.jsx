@@ -10,9 +10,9 @@ export default function Nav() {
   const { userData, isAuthenticated, loading, Logout} = useContext(UserAuthContext);
   return (
     <>
-      <nav className="w-full px-6 py-4 flex items-center justify-between shadow-md bg-white">
+      <nav className="w-full px-6 m-1 h-16 flex items-center justify-between shadow-md bg-white">
       <div className="text-xl font-bold text-gray-800">
-        Aura Interiors
+         <img src="https://res.cloudinary.com/dq9ucjymr/image/upload/v1747186449/logo2_jpzebf.png" alt="" className='h-30 w-48' />
       </div>
       {isAuthenticated ? (
           loading ? <Spinner /> :

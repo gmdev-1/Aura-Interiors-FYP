@@ -1,12 +1,14 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form"
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from 'axios';
 import Spinner from './Spinner';
+import { UserAuthContext } from "../context/UserAuthContext";
 
 export default function Login() {
+   const { UserVerifyAuth } = useContext(UserAuthContext);
     const {register, handleSubmit, setError, formState: { errors }, reset} = useForm();
     const [showPassword, setShowPassword] = useState(false);
     const [passwordValue, setPasswordValue] = useState("");
@@ -36,6 +38,7 @@ export default function Login() {
             { withCredentials: true}
           );
           if (response.status === 200){
+            UserVerifyAuth();
             setTimeout(() => {
               navigate('/');
             }, 1000);
@@ -91,12 +94,7 @@ export default function Login() {
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-5">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
       <div className="flex flex-col items-center">
-        <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider group-hover:text-purple-500 transition-colors duration-300">
-          AURA
-        </span>
-        <span className="font-playfair text-sm md:text-base tracking-[0.3em] group-hover:text-purple-400 transition-colors duration-300">
-          INTERIORS
-        </span>
+        <img src="https://res.cloudinary.com/dq9ucjymr/image/upload/v1747186449/logo2_jpzebf.png" alt="" className='h-30 w-48' />
         <div className="h-0.5 w-0 bg-purple-600 group-hover:w-full transition-all duration-300"/>
       </div>
         <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
@@ -134,11 +132,11 @@ export default function Login() {
               <label htmlFor="password" className="block text-sm font-medium text-gray-900">
                 Password
               </label>
-              <div className="text-sm">
+              {/* <div className="text-sm">
                 <Link to="/user/forgot-password" className="font-semibold text-purple-600 hover:text-purple-500">
                   Forgot password?
                 </Link>
-              </div>
+              </div> */}
             </div>
             <div className="mt-2 relative">
               <input  {...register("password", {

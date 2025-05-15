@@ -31,6 +31,7 @@ export const CartProvider = ({ children }) => {
              { withCredentials: true },
             );
             ListCart();
+        
             return response.data;
         }
         catch(error){

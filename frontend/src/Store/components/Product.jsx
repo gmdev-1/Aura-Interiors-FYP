@@ -6,6 +6,7 @@ import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
 import ReactGA from "react-ga4";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Product() {
   const [products, setProducts] = useState([]);
@@ -23,13 +24,15 @@ export default function Product() {
         
       } 
       catch (error) {
-        alert('An error occured')
+        toast.error('An error occured')
       }
     }
 
     const handleAddToCart = async (productId, productName, price) => {
       try{
-        await AddtoCart(productId, 1);
+         const { message } = await AddtoCart(productId, 1);
+         toast.success(message);
+        
 
       ReactGA.event('add_to_cart', {
       currency: 'USD',
@@ -46,13 +49,16 @@ export default function Product() {
 
       }
       catch(error){
-        console.error(error);
+        toast.error(error);
       }
     }
 
   return (
     <>
-      
+        <Toaster
+        position="top-right"
+        reverseOrder={false}
+      />
       <div className="relative mt-24">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
           <div className="w-full border-t border-gray-300"></div>
@@ -68,7 +74,7 @@ export default function Product() {
 
       <div className="text-center mb-8 p-5 sm:p-10 mt-5">
         <h2 className="mt-2 mb-4 text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 drop-shadow-sm">
-          Our Top Products
+          Hot Sellers
         </h2>
       </div>
 
@@ -97,7 +103,7 @@ export default function Product() {
                 >
                   <Link to={`/product-detail/${encodeURIComponent(product.name)}`} >
                   <div className="absolute top-2 left-2 z-10 bg-purple-800 text-purple-100 text-xs font-semibold px-2 py-1 rounded">
-                    Featured
+                    Hot Sellers
                   </div>
                   <img
                     src={product.image}
@@ -107,7 +113,7 @@ export default function Product() {
                   </Link>
 
                   <div className="p-4 flex flex-col flex-grow">
-                    <h3 className="text-lg font-semibold text-gray-800 hover:text-purple-600 transition-colors">
+                    <h3 className="text-lg font-semibold text-gray-800 transition-colors">
                       {product.name}
                     </h3>
                     <div className="mt-2">

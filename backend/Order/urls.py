@@ -1,6 +1,6 @@
 from django.urls import path
 from django.conf import settings
-from Order.views import CreateOrderView, ListOrdersView, OrderDetailView, ListOrdersAdminView, OrderDetailAdminView, UpdateOrderStatusView, UpdatePaymentStatusView, CreatePaymentIntentView
+from Order.views import CreateOrderView, ListOrdersView, OrderDetailView, ListOrdersAdminView, OrderDetailAdminView, UpdateOrderStatusView, UpdatePaymentStatusView
 
 
 urlpatterns = [
@@ -11,6 +11,5 @@ urlpatterns = [
     path('order-detail-admin/<str:order_id>/', OrderDetailAdminView.as_view(), name='order-detail-admin'),
     path('update-status/<str:order_id>/', UpdateOrderStatusView.as_view(), name='update-status'),
     path('update-payment/<str:order_id>/', UpdatePaymentStatusView.as_view(), name='update-payment'),
-    path('create-payment-intent/', CreatePaymentIntentView.as_view(), name='payment-intent'),
 
 ]

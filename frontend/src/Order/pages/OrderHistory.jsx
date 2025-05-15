@@ -42,7 +42,8 @@ export default function OrderHistory() {
                                 <th className="py-3 px-6 text-left">Order ID</th>
                                 <th className="py-3 px-6 text-left">Date</th>
                                 <th className="py-3 px-6 text-left">Total</th>
-                                <th className="py-3 px-6 text-left">Status</th>
+                                <th className="py-3 px-6 text-left">Order Status</th>
+                                <th className="py-3 px-6 text-left">Payment Status</th>
                                 <th className="py-3 px-6 text-left">Details</th>
                             </tr>
                         </thead>
@@ -56,11 +57,20 @@ export default function OrderHistory() {
                                     <td className={`py-3 px-6 font-semibold ${
                                       order.order_status === "pending" ? "text-yellow-600" :
                                       order.order_status === "confirmed" ? "text-blue-600" :
-                                      order.order_status === "delivered" ? "text-blue-600" :
-                                      order.order_status === "canceled" ? "text-red-600" :
+                                      order.order_status === "delivered" ? "text-green-600" :
+                                      order.order_status === "failed" ? "text-red-600" :
                                       ""
                                     }`}>
                                       {order.order_status}
+                                    </td>
+                                    <td className={`py-3 px-6 font-semibold ${
+                                      order.payment_status === "pending" ? "text-yellow-600" :
+                                      order.payment_status === "processing" ? "text-blue-600" :
+                                      order.payment_status === "paid" ? "text-green-600" :
+                                      order.payment_status === "failed" ? "text-red-600" :
+                                      ""
+                                    }`}>
+                                      {order.payment_status}
                                     </td>
                                     <td className="py-3 px-6 cursor-pointer">
                                        <button onClick={() => OrderDetail(order.order_id)} className="flex bg-purple-600 text-white px-2 py-1 rounded-2xl">

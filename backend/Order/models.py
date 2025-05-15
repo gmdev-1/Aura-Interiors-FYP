@@ -11,7 +11,7 @@ cart_collection = mongo_db["cart"]
 ORDER_STATUS = ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"]
 
 class Order:
-    def __init__(self, user_id, items, total, shipping_details, payment_method="Stripe", payment_status="pending", order_status="pending"):
+    def __init__(self, user_id, items, total, shipping_details, payment_method="Cash on Delivery", payment_status="pending", order_status="pending"):
         self.order_id = str(ObjectId()) 
         self.user_id = user_id
         self.items = items
@@ -41,7 +41,7 @@ class Order:
         return self.order_id
 
     @classmethod
-    def create_from_cart(cls, user_id, cart_items, shipping_details, payment_method="Stripe"):
+    def create_from_cart(cls, user_id, cart_items, shipping_details, payment_method="Cash on Delivery"):
         """Creates an order from cart items."""
         if not cart_items:
             raise ValueError("Cart is empty. Cannot create order.")

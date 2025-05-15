@@ -8,7 +8,7 @@ export default function Chatbot() {
   const [messages, setMessages] = useState([
     {
       sender: "bot",
-      text: "Hi! 👋 I'm GM, and I’ll be your guide to Aura Interiors today.",
+      text: "Hi! 👋 I'm bot, and I’ll be your guide to Aura Interiors today.",
       time: "5:55 PM",
     },
   ]);
@@ -80,7 +80,6 @@ export default function Chatbot() {
 
   return (
     <div className="w-full max-w-md mx-auto mt-10 shadow-xl rounded-xl border p-4 bg-white font-sans flex flex-col h-[500px]">
-      <div className="text-sm text-gray-500 mb-2">October 15, 2024</div>
 
       <div className="space-y-4 overflow-y-auto flex-1 pr-2 mb-4">
         {messages.map((msg, i) => (
@@ -106,7 +105,7 @@ export default function Chatbot() {
         {isLoading && (
           <div className="flex justify-start">
             <div className="rounded-lg px-4 py-2 max-w-xs bg-gray-100 text-gray-500 italic">
-              GM is typing…
+              Bot is typing…
             </div>
           </div>
         )}

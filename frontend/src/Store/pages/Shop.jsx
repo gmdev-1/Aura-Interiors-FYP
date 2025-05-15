@@ -9,6 +9,7 @@ import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Shop() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -44,7 +45,9 @@ export default function Shop() {
     }, []);
 
     useEffect(() => {
-      SearchProducts(q);
+      if (q && q.trim() !== "") {
+       SearchProducts(q);
+  }
     }, [q]);
 
     const SearchProducts = async (searchQuery) => {
@@ -53,7 +56,7 @@ export default function Shop() {
         setProducts(response.data.products);
       }
       catch(error){
-        console.error('error ocuurred');
+        toast.error('error ocuurred');
       }
     }
 
@@ -93,7 +96,7 @@ export default function Shop() {
           setLoading(false);
         }, 1000);
       } catch (error) {
-        alert('Error fetching products');
+        toast.error('Error fetching products');
         setLoading(false);
       }
     };
@@ -137,10 +140,11 @@ export default function Shop() {
  
   const handleAddToCart = async (productId) => {
     try{
-      await AddtoCart(productId, 1)
+       const { message } = await AddtoCart(productId, 1);
+        toast.success(message);
     }
     catch(error){
-      console.error(error);
+      toast.error(error);
     }
   }
 
@@ -213,6 +217,10 @@ export default function Shop() {
     <>
       <Navbar />
       <Carousal category={category} />
+            <Toaster
+              position="top-right"
+              reverseOrder={false}
+            />
 
       <section className="py-8 px-4 bg-gray-100 min-h-screen">
         <div className="max-w-7xl mx-auto">

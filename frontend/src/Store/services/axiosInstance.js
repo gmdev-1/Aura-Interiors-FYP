@@ -1,39 +1,69 @@
-import axios from "axios";
+// services/axiosInstance.js
+import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true, 
+  withCredentials: true,
 });
 
-// Add a response interceptor
+// Flag to avoid multiple simultaneous refreshes
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) prom.reject(error);
+    else prom.resolve(token);
+  });
+  failedQueue = [];
+};
+
 axiosInstance.interceptors.response.use(
-  response => response, // if the response is OK, just pass it through
-  async error => {
-    const originalRequest = error.config;
-    // Check if error is due to an expired token (status 401 with token_not_valid)
-    if (
-      error.response &&
-      error.response.data &&
-      error.response.data.code === "token_not_valid" &&
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true; // Prevent infinite loops
-      try {
-        // Attempt to refresh the token
-        await axiosInstance.post("/user/token-refresh/", {}, { withCredentials: true });
-        // After refreshing, reattempt the original request
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        // If token refresh fails, clear cookies and redirect to login
-        document.cookie = 'access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        document.cookie = 'refresh_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        window.location.href = "/user/login";
-        return Promise.reject(refreshError);
+  resp => resp,
+  err => {
+    const originalReq = err.config;
+
+    // If 401 on any endpoint except token-refresh itself
+    if (err.response?.status === 401 && !originalReq._retry) {
+      if (originalReq.url.includes('/user/token-refresh/')) {
+        // Refresh also failed → user must log in again
+        return Promise.reject(err);
       }
+
+      if (isRefreshing) {
+        // Queue other calls while one refresh is in flight
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        }).then(token => {
+          originalReq.headers['Authorization'] = 'Bearer ' + token;
+          return axiosInstance(originalReq);
+        });
+      }
+
+      originalReq._retry = true;
+      isRefreshing = true;
+
+      // Attempt refresh
+      return new Promise((resolve, reject) => {
+        axiosInstance.post('/user/token-refresh/')
+          .then(({ data }) => {
+            processQueue(null, data.access);
+            originalReq.headers['Authorization'] = 'Bearer ' + data.access;
+            resolve(axiosInstance(originalReq));
+          })
+          .catch(refreshErr => {
+            processQueue(refreshErr, null);
+            reject(refreshErr);
+          })
+          .finally(() => {
+            isRefreshing = false;
+          });
+      });
     }
-    return Promise.reject(error);
+
+    return Promise.reject(err);
   }
 );
 

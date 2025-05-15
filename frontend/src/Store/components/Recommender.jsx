@@ -5,6 +5,7 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Recommender({ productName }) {
     const [products, setProducts] = useState([]);
@@ -23,25 +24,34 @@ export default function Recommender({ productName }) {
             { params: {product_name: productName } }
           );
           setProducts(response.data.recommendations);
-          console.log(response.data);
         } 
         catch (error) {
-          alert('Login to get recommendations');
+          toast(
+      "Login to get Recommendations",
+      {
+        duration: 3000,
+      }
+      );
         }
       }
   
       const handleAddToCart = async (productId) => {
         try{
-          await AddtoCart(productId, 1)
+          const { message } = await AddtoCart(productId, 1);
+          toast.success(message);
         }
         catch(error){
-          console.error(error);
+          toast.error(error);
         }
       }
       if (!products.length) return null;
 
   return (
     <>
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+          />
        <div className="relative mt-24">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
           <div className="w-full border-t border-gray-300"></div>

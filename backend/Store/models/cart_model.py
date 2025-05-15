@@ -7,7 +7,9 @@ from utils.db_connection import mongo_db
 cart_collection = mongo_db["cart"]
 
 class Cart:
-    def __init__(self, user_id, product_id, product_name, price, quantity, image, discount, size, color, material):
+    def __init__(self, user_id, product_id, product_name, price, quantity, image, discount, size, color, material, created_at=None,
+        updated_at=None, _id=None):
+        self._id = _id
         self.user_id = user_id     
         self.product_id = product_id
         self.product_name = product_name
@@ -20,7 +22,6 @@ class Cart:
         self.material = material
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
-        self.id = None
         
     def save(self):
         cart_data = {
@@ -38,41 +39,61 @@ class Cart:
             "updated_at": self.updated_at
         }
         result = cart_collection.insert_one(cart_data)
-        self.id = result.inserted_id
+        self._id = result.inserted_id
         return result
     
     @classmethod
     def create_cart_item(cls, user_id, product_data, quantity=1):
-        product_id = str(product_data.get("_id"))
-        existing = cart_collection.find_one({"user_id": user_id, "product_id": product_id})
+        product_id = str(product_data["_id"])
+        existing = cart_collection.find_one({
+            "user_id": user_id,
+            "product_id": product_id
+        })
+
         if existing:
-            new_quantity = existing.get("quantity", 1) + quantity
-            update_data = {
-                "quantity": new_quantity,
-                "updated_at": datetime.utcnow()
-            }
+            new_qty = existing["quantity"] + quantity
             cart_collection.update_one(
                 {"_id": ObjectId(existing["_id"])},
-                {"$set": update_data}
+                {"$set": {
+                    "quantity": new_qty,
+                    "updated_at": datetime.utcnow()
+                }}
             )
-            updated_item = cart_collection.find_one({"_id": existing["_id"]})
-            return updated_item, None
+            raw = cart_collection.find_one({"_id": existing["_id"]})
         else:
-            cart_item = cls(
-                user_id=user_id,
-                product_id=str(product_data.get("_id")),
-                product_name=product_data.get("name", ""),
-                price=product_data.get("price", 0),
-                quantity=quantity,
-                image=product_data.get("image", ""),
-                discount=product_data.get("discount", 0),
-                size=product_data.get("size", ""),
-                color=product_data.get("color", ""),
-                material=product_data.get("material", "")
-            )
-        cart_item.save()
-        return cart_item
+            raw = {
+                "user_id": user_id,
+                "product_id": product_id,
+                "product_name": product_data.get("name", ""),
+                "price": product_data.get("price", 0),
+                "quantity": quantity,
+                "image": product_data.get("image", ""),
+                "discount": product_data.get("discount", 0),
+                "size": product_data.get("size", ""),
+                "color": product_data.get("color", ""),
+                "material": product_data.get("material", ""),
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow(),
+            }
+            result = cart_collection.insert_one(raw)
+            raw["_id"] = result.inserted_id
 
+        cart_item = cls(
+            user_id=raw["user_id"],
+            product_id=raw["product_id"],
+            product_name=raw["product_name"],
+            price=raw["price"],
+            quantity=raw["quantity"],
+            image=raw["image"],
+            discount=raw["discount"],
+            size=raw["size"],
+            color=raw["color"],
+            material=raw["material"],
+            created_at=raw["created_at"],
+            updated_at=raw["updated_at"],
+            _id=raw["_id"]
+        )
+        return cart_item
     @classmethod
     def get_cart_items(cls, user_id):
         items = cart_collection.find({"user_id": user_id})

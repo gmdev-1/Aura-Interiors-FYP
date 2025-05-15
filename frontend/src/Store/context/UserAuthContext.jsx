@@ -12,7 +12,7 @@ export const UserAuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
-    const UserVerifyAuth = async (retryCount = 0) => {
+    const UserVerifyAuth = async () => {
         try{
             const response = await axiosInstance.get(`${BASE_URL}/user/verify-auth/`, {
             withCredentials: true
@@ -21,42 +21,14 @@ export const UserAuthProvider = ({ children }) => {
             setUserData(response.data)
             setIsAuthenticated(true);
           }
-          else{
-            setIsAuthenticated(false);
-          }
         }
         catch(error){
-          if (retryCount < 2 && (!error.response || error.response.status >= 500)) {
-           await new setTimeout(() => {
-             UserVerifyAuth(retryCount + 1)
-            }, 1000 * (retryCount + 1));
-          }
-          if (error.response?.status === 401) {
-            try{
-              await axiosInstance.post(`${BASE_URL}/user/token-refresh/`, 
-                {},
-                { withCredentials : true}
-              );
-              const newResponse = await axiosInstance.get(`${BASE_URL}/user/verify-auth/`,
-                { withCredentials: true}
-              );
-              if (newResponse.data.user_id){
-                setUserData(newResponse.data);
-                setIsAuthenticated(true)
-                  navigate('/');
-              }
-              else{
-                setIsAuthenticated(false);
-              }
-            }
-            catch(error){
-              
-            }
+            
             // Clear cookies and redirect if token is invalid
             document.cookie = 'access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
             document.cookie = 'refresh_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
             setIsAuthenticated(false);
-          }
+          
         }
         finally{
             setLoading(false);

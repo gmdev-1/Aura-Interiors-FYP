@@ -43,13 +43,7 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="space-y-4">
               <div className="flex flex-col items-center">
-                <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider text-gray-800 group-hover:text-purple-600 transition-colors duration-300">
-                  AURA
-                </span>
-                <span className="font-playfair text-sm md:text-base tracking-[0.3em] text-gray-800 group-hover:text-purple-600 transition-colors duration-300">
-                  INTERIORS
-                </span>
-                <div className="h-0.5 w-16 bg-purple-600 mt-2"/>
+               <img src="https://res.cloudinary.com/dq9ucjymr/image/upload/v1747186449/logo2_jpzebf.png" alt="" className='h-30 w-48' />
               </div>
             </div>
 
@@ -60,7 +54,7 @@ export default function Footer() {
                 <div className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-purple-600"/>
               </h3>
               <ul className="space-y-2">
-                {['Shop', 'FAQs'].map((item) => (
+                {['shop'].map((item) => (
                   <li key={item}>
                     <Link 
                       to={`/${item.toLowerCase().replace(' ', '-')}`}
@@ -86,8 +80,6 @@ export default function Footer() {
                   'Shipping Policy',
                   'Privacy Policy',
                   'Terms of Service',
-                  'Payment Methods',
-                  'Order Tracking'
                 ].map((item) => (
                   <li key={item}>
                     <Link 

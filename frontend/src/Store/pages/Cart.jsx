@@ -12,7 +12,7 @@ export default function Cart() {
       useEffect(() => {
            ListCart();
 
-            ReactGA.event('begin_checkout', {
+    ReactGA.event('begin_checkout', {
     currency: 'USD',
     value: cart.reduce((sum, item) => sum + (item.price - item.discount) * item.quantity, 0),
     items: cart.map(item => ({

@@ -9,6 +9,7 @@ import { CartContext } from '../context/CartContext';
 import { useContext } from 'react';
 import Recommender from '../components/Recommender';
 import ReactGA from "react-ga4";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function ProductDetail() {
   const [product, setProduct] = useState([]);
@@ -50,7 +51,7 @@ export default function ProductDetail() {
       
     }
     catch(error){
-      alert('network error try again.');
+      toast.error('network error try again.');
       
     }
     finally{
@@ -60,7 +61,9 @@ export default function ProductDetail() {
 
   const handleAddToCart = async (productId, productName, price) => {
     try{
-      await AddtoCart(productId, 1)
+      const { message } = await AddtoCart(productId, 1);
+      
+      toast.success(message);
 
        ReactGA.event('add_to_cart', {
             currency: 'USD',
@@ -76,13 +79,17 @@ export default function ProductDetail() {
           });
     }
     catch(error){
-      console.error(error);
+      toast.error(error);
     }
   }
 
   return (
     <>
-      <Navbar />
+            <Toaster
+              position="top-right"
+              reverseOrder={false}
+            />
+      <Navbar logo={'https://res.cloudinary.com/dq9ucjymr/image/upload/v1747186449/logo2_jpzebf.png'} />
       <div className="font-sans bg-gray-50 min-h-screen py-8 px-4">
         <div className="container mx-auto mt-10">
           <div className="flex flex-col lg:flex-row gap-8">
@@ -175,13 +182,19 @@ export default function ProductDetail() {
                     </li>
                   </ul>
                   <div className="mt-5">
-                    {(product.quantity) > 5 ? (
-                      <span className=" text-purple-800 text-lg font-semibold px-1 py-1 rounded-full">
-                        In Stock
-                      </span>
-                    ) : (
-                      <span>Only {product.quantity} left</span>
-                    )}
+                   {product.quantity <= 0 ? (
+                    <span className="bg-gray-300 text-gray-600 text-lg font-semibold px-2 py-1 rounded-full">
+                      Out of Stock
+                    </span>
+                  ) : product.quantity > 5 ? (
+                    <span className="text-purple-800 text-lg font-semibold px-1 py-1 rounded-full">
+                      In Stock
+                    </span>
+                  ) : (
+                    <span className="bg-red-500 text-white py-1 px-2 rounded-lg">
+                      Only {product.quantity} left
+                    </span>
+                  )}
                       
                   </div>
                 </div>

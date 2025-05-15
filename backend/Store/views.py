@@ -218,7 +218,7 @@ class UserLoginView(APIView):
             access_token['email'] = user.email
             access_token['role'] = user.role
             
-            access_token.set_exp(lifetime=timedelta(minutes=15))
+            access_token.set_exp(lifetime=timedelta(hours=1))
             
             refresh_token = RefreshToken()
             refresh_token['user_id'] = user.id
@@ -301,33 +301,27 @@ class UserVerifyAuthView(APIView):
         
 class UserCookieTokenRefreshView(TokenRefreshView):
     permission_classes = [AllowAny]
+
     def post(self, request, *args, **kwargs):
-        # Retrieve the refresh token from the cookie.
         refresh_token = request.COOKIES.get('refresh_token')
         if not refresh_token:
-            return Response({'detail': 'Refresh token not provided'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Pass the refresh token to the serializer by placing it in the expected "refresh" field.
-        data = {'refresh': refresh_token}
-        serializer = self.get_serializer(data=data)
+            return Response({'detail': 'No refresh token'}, status=400)
+
+        serializer = self.get_serializer(data={'refresh': refresh_token})
         try:
             serializer.is_valid(raise_exception=True)
         except TokenError:
-            return Response({'detail': 'Invalid or expired refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
-        
-        new_access_token = serializer.validated_data.get('access')
-        response = Response({'access': new_access_token}, status=status.HTTP_200_OK)
-        
-        # Update the access token cookie with the new token.
-        response.set_cookie(
-            key='access_token',
-            value=new_access_token,
-            httponly=True,
-            secure=False,
-            samesite='Lax',
-            max_age=60 * 60  # 60 minutes
-        )
-        return response
+            # Clear them, forcing a real login next
+            resp = Response({'detail': 'Refresh token invalid'}, status=401)
+            resp.delete_cookie('access_token')
+            resp.delete_cookie('refresh_token')
+            return resp
+
+        new_access = serializer.validated_data['access']
+        resp = Response({'access': new_access}, status=200)
+        resp.set_cookie('access_token', new_access,
+                        httponly=True, samesite='Lax', max_age=3600)
+        return resp
 
 class UserLogoutView(APIView):
     permission_classes = [AllowAny]
@@ -431,7 +425,7 @@ class AddToCartView(APIView):
         cart_item = Cart.create_cart_item(user_id, product_data, quantity)
         
         cart_item_dict = {
-            "id": str(cart_item.id),
+            "id": str(cart_item._id),
             "user_id": cart_item.user_id,
             "product_id": cart_item.product_id,
             "product_name": cart_item.product_name,
@@ -445,7 +439,7 @@ class AddToCartView(APIView):
             "created_at": cart_item.created_at,
             "updated_at": cart_item.updated_at,
         }
-        return Response({"message": "Cart item created", "cart_item": cart_item_dict}, status=status.HTTP_201_CREATED)
+        return Response({"message": "Product added to Cart", "cart_item": cart_item_dict}, status=status.HTTP_201_CREATED)
 
 class UpdateCartView(APIView):
     authentication_classes = [UserCookieJWTAuthentication]

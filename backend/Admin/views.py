@@ -80,7 +80,7 @@ class AdminLoginView(APIView):
             access_token['email'] = user.email
             access_token['role'] = user.role
             
-            access_token.set_exp(lifetime=timedelta(minutes=15))
+            access_token.set_exp(lifetime=timedelta(hours=1))
             
             refresh_token = RefreshToken()
             refresh_token['user_id'] = user.id
@@ -510,6 +510,8 @@ class CarousalsListView(APIView):
                 {
                     "id": str(carousal.get("_id")), 
                      "image": carousal.get('image'),
+                     "image_type": carousal.get('image_type'),
+                     "category": carousal.get('category'),
                 }
                 for carousal in carousals
             ]

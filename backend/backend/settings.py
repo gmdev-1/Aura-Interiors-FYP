@@ -19,6 +19,7 @@ import cloudinary.api
 from datetime import timedelta
 
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -51,11 +52,14 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     'AUTH_COOKIE': 'access_token',
     'REFRESH_COOKIE': 'refresh_token',
+    'ROTATE_REFRESH_TOKENS': False,
     'AUTH_COOKIE_DOMAIN': None,
     'AUTH_COOKIE_SECURE': False,
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_SAMESITE': 'Lax',
     'BLACKLIST_AFTER_ROTATION': True,
+     'USER_ID_FIELD': 'name',
+    'USER_ID_CLAIM': 'user_id',
 }
 # settings.py
 SECURE_COOKIES = os.getenv('SECURE_COOKIES', 'False').lower() == 'true'
@@ -118,6 +122,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'cloudinary',
     'Store',
     'Admin',
     'Order',

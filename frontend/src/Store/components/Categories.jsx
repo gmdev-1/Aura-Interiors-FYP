@@ -32,8 +32,9 @@ export default function Categories() {
       {/* Masonry Grid Container */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-6">
+          <Link to='/shop'>
           {categories.map((category) => (
-            <a
+            <div
               key={category.id}
               className="group block mb-6 break-inside-avoid rounded-lg overflow-hidden shadow-lg transform transition hover:shadow-2xl"
             >
@@ -42,15 +43,16 @@ export default function Categories() {
                   src={category.image}
                   alt={category.name}
                   className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
+                  />
                 <div className="absolute inset-0 bg-black opacity-40 transition-opacity duration-300"></div>
                 <div className="absolute bottom-0 p-4 text-white">
                   <h3 className="text-2xl font-bold">{category.name}</h3>
                   <p className="mt-1 text-sm">{category.name}</p>
                 </div>
               </div>
-            </a>
+            </div>
           ))}
+          </Link>
         </div>
       </div>
     </div>

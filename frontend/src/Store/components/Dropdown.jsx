@@ -26,7 +26,7 @@ export default function Dropdown ({userData, Logout}) {
 
   return (
     <div
-      className="dropdown w-11 relative inline-flex rtl:[--placement:bottom-end] bg-white text-black px-1 py-0.5 border-purple-600 border-2 rounded-full"
+      className="dropdown relative inline-flex rtl:[--placement:bottom-end] bg-white text-black px-1 py-0.5 border-purple-600 border-2 rounded-full"
       ref={dropdownRef}
     >
       <button
@@ -41,6 +41,7 @@ export default function Dropdown ({userData, Logout}) {
         <div className="w-8 h-8 bg-purple-600 rounded-full mr-1 flex items-center justify-center">
             <FiUser className="text-white" size={18} />
         </div>
+        {userData.name}
         <span
           className={`icon-[tabler--chevron-down] size-4 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""

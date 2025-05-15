@@ -8,7 +8,7 @@ import { CartContext } from '../../Store/context/CartContext';
 import Spinner from "../../Store/components/Spinner";
 import Footer from "../../Store/components/Footer";
 import { FaStripe } from "react-icons/fa";
-import { loadStripe } from "@stripe/stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
 import ReactGA from "react-ga4";
 
 export default function Order(){
@@ -17,7 +17,7 @@ export default function Order(){
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
     const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL; 
-    const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_PUBLISHABLE_KEY);
+    // const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_PUBLISHABLE_KEY);
     
     useEffect(() => {
         ListCart();
@@ -48,7 +48,7 @@ export default function Order(){
         try{
             const payload = {
                 shipping_details: data,
-                payment_method: "Stripe"
+                payment_method: "Cash on Delivery"
             };
             const response = await axios.post(`${BASE_URL}/api/order/create-order/`, payload, { withCredentials: true });
             navigate('/order/order-history');
@@ -149,7 +149,7 @@ export default function Order(){
                   value="bank"
                   {...register('paymentMethod', { required: 'Please select payment method' })}
                 />
-                <span><FaStripe size={45} /></span>
+                <span>Cash on Delivery</span>
               </label>
               {errors.paymentMethod && (
                 <p className="text-red-500 text-sm">{errors.paymentMethod.message}</p>

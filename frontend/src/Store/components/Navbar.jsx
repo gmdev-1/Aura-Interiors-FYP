@@ -10,7 +10,7 @@ import { CartContext } from '../context/CartContext';
 import Spinner from './Spinner';
 import axios from 'axios';
 
-const Navbar = () => {
+export default function  Navbar({logo}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
   const { userData, isAuthenticated, loading, Logout} = useContext(UserAuthContext);
@@ -49,21 +49,15 @@ const Navbar = () => {
     <>
       {/* Desktop Navbar */}
       <div className="hidden sm:flex flex-col mb-5">
-        <div className="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 text-gray-800 h-20 flex items-center justify-between px-4 sm:px-6 shadow-sm">
+        <div className="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 text-gray-800 h-20 flex items-center justify-evenly px-4 sm:px-6 shadow-sm">
           {/* Logo */}
           <div className="flex flex-col items-center group cursor-pointer ml-10">
             <img src="logo2.png" alt="" className='h-30 w-48' />
-            {/* <span className="font-cinzel text-2xl md:text-3xl font-bold tracking-wider text-purple-600">
-              Aura 
-            </span>
-            <span className="font-playfair text-sm md:text-base tracking-[0.3em] text-gray-600">
-              Interiors
-            </span> */}
-            <div className="h-0.5 w-0 bg-purple-600 group-hover:w-full transition-all duration-300" />
+
           </div>
 
           {/* Desktop Search */}
-          <form onSubmit={handleSubmit} className="flex sm:w-full sm:max-w-md items-center">
+          <form onSubmit={handleSubmit} className="flex sm:w-full sm:max-w-xl items-center">
             <div className="relative w-full transition-all duration-300">
               <input
                 type="text"
@@ -91,7 +85,6 @@ const Navbar = () => {
               </div>
             </Link>
             {isAuthenticated ? (
-              loading ? <Spinner /> :
               <Dropdown userData={userData} Logout={Logout} />
             ) : (
             <Link to="/user/login" className="relative group">
@@ -132,13 +125,7 @@ const Navbar = () => {
 
           {/* Logo */}
           <div className="flex flex-col items-center group cursor-pointer">
-            {/* <span className="font-cinzel text-lg font-bold tracking-wider text-purple-600">
-              AURA
-            </span>
-            <span className="font-playfair text-sm tracking-[0.2em] text-gray-600">
-              INTERIORS
-            </span> */}
-              <img src="logo2.png" alt="" className='h-16 w-30' />
+              <img src={logo} alt="" className='h-16 w-30' />
           </div>
           
 
@@ -188,13 +175,7 @@ const Navbar = () => {
           <div className="w-64 bg-white h-full shadow-lg p-4">
              {/* Logo */}
       <div className="flex flex-col group mb-6 mr-28">
-        {/* <span className="font-cinzel ml-1 text-lg font-bold tracking-wider text-purple-600">
-          AURA
-        </span>
-        <span className="font-playfair text-sm tracking-[0.2em] text-gray-600">
-          INTERIORS
-        </span> */}
-         <img src="logo2.png" alt="" className='h-30 w-48' />
+         <img src={logo} alt="" className='h-30 w-48' />
       </div>
 
       {/* Close Button */}
@@ -233,4 +214,3 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
