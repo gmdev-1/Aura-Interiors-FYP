@@ -68,7 +68,6 @@ export default function Login() {
                 type: "server",
                 message: error.response.data.error || "Invalid email or password",
               });
-              console.log(error.response.data.error)
             }
             // Handle server errors (HTTP 500)
             else if (error.response.status === 500) {

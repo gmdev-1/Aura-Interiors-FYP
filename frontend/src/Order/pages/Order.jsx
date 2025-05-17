@@ -28,7 +28,7 @@ export default function Order(){
       currency: 'USD',
       value: cart.reduce((sum, item) => sum + (item.price - item.discount) * item.quantity, 0),
       tax: 0,
-      shipping: 0,
+      shipping: shipping,
       items: cart.map(item => ({
         item_id: item.id,
         item_name: item.product_name,
@@ -59,24 +59,40 @@ export default function Order(){
         setIsSubmitting(false);
     }  
     
+     const subTotal = cart.reduce(
+    (sum, cart) => sum + (cart.price) * cart.quantity, 0);
+
+     const totalDiscount = cart.reduce(
+    (sum, item) => sum + item.discount * item.quantity,
+    0
+  );
+
+    const shipping = 20;
+    const  total = subTotal - totalDiscount + shipping;;
     
     return(
         <>
         <Navbar />
-        <div className="container mx-auto p-6">
+      <div className="container mx-auto p-6">
       <div className="flex flex-col md:flex-row gap-4">
-        {/* Left Side: Shipping Form */}
         <div className="w-full md:w-2/8 p-6 border border-gray-200 rounded-md shadow-md">
           <h2 className="text-2xl font-semibold mb-6">Order Details</h2>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4">
-              <label className="block text-gray-700">First Name</label>
+              <label className="block text-gray-700">Name</label>
               <input
                 type="text"
                 placeholder="Enter your name"
-                {...register("name", { required: "Name is required" })}
-                className="mt-1 w-full border border-gray-300 rounded-md p-2"
-              />
+                {...register("name", {
+                          required: "Name is required",
+                          minLength: { value: 3, message: "Name must be at least 3 characters" },
+                          maxLength: { value: 50, message: "Name cannot be greater then 50 characters" },
+                          pattern: {
+                            value: /^[a-zA-Z]+(?:\s[a-zA-Z]+)*$/,
+                            message: "Name can only include letters and spaces",
+                          },
+                        })}
+                className="mt-1 w-full border border-gray-300 rounded-md p-2"/>
               {errors.name && (
                 <p className="text-red-500 text-sm">{errors.name.message}</p>
               )}
@@ -85,8 +101,14 @@ export default function Order(){
               <label className="block text-gray-700">Email</label>
               <input
                 type="email"
-                placeholder="Enter your email"
-                {...register("email", { required: "Email is required" })}
+                placeholder="example@gmail.com"
+                {...register("email", {
+                          required: "Email is required",
+                          pattern: {
+                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                            message: "Enter a valid email address",
+                          },
+                        })}
                 className="mt-1 w-full border border-gray-300 rounded-md p-2"
               />
               {errors.email && (
@@ -96,9 +118,17 @@ export default function Order(){
             <div className="mb-4">
               <label className="block text-gray-700">Phone</label>
               <input
-                type="text"
-                placeholder="Enter your phone"
-                {...register("phone", { required: "Phone is required" })}
+                type="tel"
+                min={13}
+                placeholder="924729282910"
+                {...register("phone", {
+                          required: "Phone is required",
+                           pattern: {
+                          value: /^\d{10,12}$/,
+                          message: 'Phone number must be between 10 and 15 digits'
+                        }
+                          
+                        })}
                 className="mt-1 w-full border border-gray-300 rounded-md p-2"
               />
               {errors.phone && (
@@ -110,7 +140,11 @@ export default function Order(){
               <input
                 type="text"
                 placeholder="Enter your address"
-                {...register("address", { required: "Address is required" })}
+                {...register("address", {
+                        required: "Address is required",
+                          minLength: { value: 10, message: 'Address must be at least 10 characters' },
+                          maxLength: { value: 250, message: 'Address must be at most 250 characters' }
+                        })}
                 className="mt-1 w-full border border-gray-300 rounded-md p-2"
               />
               {errors.address && (
@@ -120,9 +154,17 @@ export default function Order(){
             <div className="mb-4">
               <label className="block text-gray-700">Postal Code</label>
               <input
-                type="text"
+                type="number"
+                min={6}
+                
                 placeholder="Enter postal code"
-                {...register("postal_code", { required: "Postal code is required" })}
+                {...register("postal_code", {
+                          required: "Postal code is required",
+                          pattern: {
+                          value: /^\d{5,6}$/,
+                          message: 'Postal code must be 5 or 6 digits'
+                        }
+                        })}
                 className="mt-1 w-full border border-gray-300 rounded-md p-2"
               />
               {errors.postal_code && (
@@ -134,7 +176,15 @@ export default function Order(){
               <input
                 type="text"
                 placeholder="Enter your city"
-                {...register("city", { required: "City is required" })}
+                {...register("city", {
+                          required: "City is required",
+                          minLength: { value: 3, message: 'City must be at least 3 characters' },
+                          maxLength: { value: 50, message: 'City must be at most 50 characters' },
+                          pattern: {
+                            value: /^[a-zA-Z]+(?:\s[a-zA-Z]+)*$/,
+                            message: 'City can only include letters and spaces'
+                          }
+                        })}
                 className="mt-1 w-full border border-gray-300 rounded-md p-2"
               />
               {errors.city && (
@@ -146,7 +196,7 @@ export default function Order(){
               <label className="flex items-center space-x-2">
                 <input
                   type="radio"
-                  value="bank"
+                  value="cod"
                   {...register('paymentMethod', { required: 'Please select payment method' })}
                 />
                 <span>Cash on Delivery</span>
@@ -189,13 +239,35 @@ export default function Order(){
           </div>
         )}
          <div className="mt-6 border-t pt-4">
-            </div>
-            <p className="text-xl font-bold">
-                Total: $
-                {(
-                cart.reduce((total, item) => total + (item.price - item.discount) * item.quantity, 0)).toFixed(2)}
-            </p>
-            </div>
+           <div className="flex justify-between">
+                  <span className="text-base text-gray-700">Subtotal</span>
+                  <span className="text-base text-gray-700">
+                    {cart && `$${subTotal.toFixed(2)}`}
+                  </span>
+                </div>
+
+                <div className="flex justify-between mt-1">
+                  <span className="text-base text-gray-700">Total Discount</span>
+                  <span className="text-base text-gray-700">
+                    {cart && `-$${totalDiscount.toFixed(2)}`}
+                  </span>
+                </div>
+ 
+                <div className="flex justify-between mt-1">
+                  <span className="text-base text-gray-700">Shipping Fee</span>
+                  <span className="text-base text-gray-700">
+                    {cart && `$${shipping.toFixed(2)}`}
+                  </span>
+                </div>
+                
+                
+                <hr className="border-gray-300 mt-2" />
+                <div className="flex justify-between font-semibold text-xl text-gray-800 mt-2">
+                  <span>Total</span>
+                  <span>{cart && `$${total.toFixed(2)}`}</span>
+                </div>
+          </div>
+          </div>
         </div>
       </div>
       <Footer />

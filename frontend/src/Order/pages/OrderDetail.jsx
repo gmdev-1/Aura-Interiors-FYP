@@ -90,6 +90,7 @@ export default function OrderDetail() {
                     <p className="text-gray-800 font-semibold">{item.product_name}</p>
                     <p className="text-gray-600">Quantity: {item.quantity}</p>
                     <p className="text-gray-600">Price: ${item.price}</p>
+                    <p className="text-gray-600">Discount: ${item.discount}</p>
                   </div>
                 </div>
               ))

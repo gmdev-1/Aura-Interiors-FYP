@@ -46,22 +46,27 @@ class Order:
         if not cart_items:
             raise ValueError("Cart is empty. Cannot create order.")
 
-        # Convert cart items format
-        order_items = [
-            {
-                "product_id": item["product_id"],
-                "product_name": item["product_name"],
-                "price": float(item["price"]),
-                "quantity": item["quantity"],
-                "image": item["image"],
-                "size": item.get("size"),
-                "color": item.get("color"),
-            }
-            for item in cart_items
-        ]
-
         # Calculate total price
-        total = round(sum(float(item["price"]) * item["quantity"] for item in cart_items), 2)
+        subtotal = sum(
+            float(item["price"]) * int(item["quantity"]) - float(item.get("discount", 0))
+            for item in cart_items
+        )
+        shipping = 20.0  
+        total = round(subtotal + shipping, 2)
+
+        # Convert cart items format
+        order_items = []
+        for item in cart_items:
+            order_items.append({
+                "product_id":   item["product_id"],
+                "product_name": item["product_name"],
+                "price":        float(item["price"]),
+                "quantity":     int(item["quantity"]),
+                "image":        item["image"],
+                "size":         item.get("size"),
+                "color":        item.get("color"),
+                "discount":     float(item.get("discount", 0)),
+            })
 
         # Create and save order
         order = cls(
@@ -117,7 +122,6 @@ class Order:
     @classmethod
     def clear_cart(cls, user_id):
         result = cart_collection.delete_many({"user_id": user_id})
-        print("Deleted cart items count:", result.deleted_count)
         return result.deleted_count
     
     @classmethod

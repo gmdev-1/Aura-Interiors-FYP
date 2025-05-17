@@ -85,11 +85,11 @@ export default function ProductDetail() {
 
   return (
     <>
+      <Navbar />
             <Toaster
               position="top-right"
               reverseOrder={false}
             />
-      <Navbar logo={'https://res.cloudinary.com/dq9ucjymr/image/upload/v1747186449/logo2_jpzebf.png'} />
       <div className="font-sans bg-gray-50 min-h-screen py-8 px-4">
         <div className="container mx-auto mt-10">
           <div className="flex flex-col lg:flex-row gap-8">

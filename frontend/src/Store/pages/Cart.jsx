@@ -10,7 +10,7 @@ export default function Cart() {
    const { cart, ListCart, UpdateCart, DeleteCart } = useContext(CartContext);
 
       useEffect(() => {
-           ListCart();
+          ListCart();
 
     ReactGA.event('begin_checkout', {
     currency: 'USD',
@@ -59,11 +59,15 @@ export default function Cart() {
    }
 
   const subTotal = cart.reduce(
-    (sum, cart) => sum + (cart.price - cart.discount) * cart.quantity,
+    (sum, cart) => sum + (cart.price) * cart.quantity, 0);
+
+  const totalDiscount = cart.reduce(
+    (sum, item) => sum + item.discount * item.quantity,
     0
   );
-  const shipping = 0;
-  const total = subTotal + shipping;
+    
+  const shipping = cart.length > 0 ? 20 : 0;
+  const total = subTotal - totalDiscount + shipping;
 
   return (
     <>
@@ -111,18 +115,17 @@ export default function Cart() {
                         Quantity: {cart.quantity}
                       </p>
                     </div>
-                    <div>
+                    <div className='w-40'>
                       <span onClick={() => handleDecrease(cart.id, cart.quantity)} className='text-3xl mr-1 cursor-pointer'>-</span>
                         <span className='py-1 px-6 border-2 border-purple-600 rounded-full'>{cart.quantity}</span>
                       <span onClick={() => handleIncrease(cart.id, cart.quantity)} className='text-2xl ml-1 cursor-pointer'>+</span>
-
                     </div>
                     <div className="w-full sm:w-24 text-right sm:ml-4 flex flex-col items-end mt-4 sm:mt-0">
                       <span className="text-xl font-bold text-purple-600">
                         ${cart.price}
                       </span>
                       <button onClick={() => handleDeleteCart(cart.id)} className="mt-2 px-2 py-2 hover:bg-red-100 text-gray-800 text-sm rounded-full">
-                        <RiDeleteBin6Fill color='red'  size={20} />
+                        <RiDeleteBin6Fill color='red' size={20} />
                       </button>
                     </div>
                   </div>
@@ -146,13 +149,28 @@ export default function Cart() {
                     {cart && `$${subTotal.toFixed(2)}`}
                   </span>
                 </div>
+                <div className="flex justify-between">
+                  <span className="text-base text-gray-700">Total Discount</span>
+                  <span className="text-base text-gray-700">
+                    {cart && `-$${totalDiscount.toFixed(2)}`}
+                  </span>
+                </div>
+ 
+                <div className="flex justify-between">
+                  <span className="text-base text-gray-700">Shipping Fee</span>
+                  <span className="text-base text-gray-700">
+                    {cart && `$${shipping.toFixed(2)}`}
+                  </span>
+                </div>
+                
+                
                 <hr className="border-gray-300" />
-                <div className="flex justify-between font-semibold text-lg text-gray-800">
+                <div className="flex justify-between font-semibold text-xl text-gray-800">
                   <span>Total</span>
                   <span>{cart && `$${total.toFixed(2)}`}</span>
                 </div>
                 <Link to="/order">
-                <button className="w-full mt-6 py-2 px-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
+                <button disabled={!cart || cart.length == 0} className="w-full mt-6 py-2 px-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
                   Checkout
                 </button>
                 </Link>

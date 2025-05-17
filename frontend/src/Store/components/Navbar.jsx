@@ -52,8 +52,9 @@ export default function  Navbar({logo}) {
         <div className="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 text-gray-800 h-20 flex items-center justify-evenly px-4 sm:px-6 shadow-sm">
           {/* Logo */}
           <div className="flex flex-col items-center group cursor-pointer ml-10">
-            <img src="logo2.png" alt="" className='h-30 w-48' />
-
+            <Link to='/'>
+            <img src="https://res.cloudinary.com/dq9ucjymr/image/upload/v1747186449/logo2_jpzebf.png" alt="" className='h-30 w-48' />
+            </Link>
           </div>
 
           {/* Desktop Search */}
