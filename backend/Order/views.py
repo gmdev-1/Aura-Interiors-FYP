@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.conf import settings
 from rest_framework import status
+from django.core.mail import send_mail
+from datetime import datetime, timedelta
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -106,6 +108,40 @@ class CreateOrderView(APIView):
                 "created_at": order["created_at"].isoformat(),
                 "updated_at": order["updated_at"].isoformat(),
             }
+
+            subject = f"Your Aura Interiors Order #{order_data['order_id'][5:12]}"
+
+            lines = [
+                f"Hi {shipping_details['name']},",
+                "",
+                "Thanks for your order! Here are your order details:",
+                f"Order ID: {order_data['order_id'][5:12]}",
+                f"Total: ${order_data['total']}",
+                f"Payment Method: {order_data['payment_method']}",
+                "",
+                "Items:"
+            ]
+            for item in order_data["items"]:
+                lines.append(f" - {item['product_name']} x {item['quantity']} @ ${item['price']}")
+            lines += [
+                "",
+                "Shipping to:",
+                f"{shipping_details['address']}, {shipping_details['city']} {shipping_details['postal_code']}",
+                "",
+                "We’ll notify you when your order ships.",
+                "",
+                "Thanks,",
+                "Team Aura Interiors"
+            ]
+            message = "\n".join(lines)
+
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[shipping_details["email"]],
+                fail_silently=False,
+            )
             
             return Response({
                 "message": "Order created successfully", 

@@ -1,5 +1,6 @@
 import React, {  createContext, useState, useEffect, Children, useMemo} from "react";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
 
 export const CartContext = createContext({});
 
@@ -35,7 +36,7 @@ export const CartProvider = ({ children }) => {
             return response.data;
         }
         catch(error){
-            console.error('cart', error);
+            toast.error(error);
         }
     }
 
