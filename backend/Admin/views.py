@@ -87,18 +87,18 @@ class AdminLoginView(APIView):
             refresh_token.set_exp(lifetime=timedelta(days=7))
             
             response_data = {
-                'user': {
-                    'id': user.id,
-                    'name': user.name,
-                    'email': user.email,
-                    'role': user.role
-                },
+                # 'user': {
+                #     'id': user.id,
+                #     'name': user.name,
+                #     'email': user.email,
+                #     'role': user.role
+                # },
                 'message': 'Login Successful'
             }
             response = Response(response_data, status=status.HTTP_200_OK)
             
             response.set_cookie(
-                key='access_token',
+                key='admin_access_token',
                 value=str(access_token),
                 httponly=True,
                 secure=False,
@@ -107,7 +107,7 @@ class AdminLoginView(APIView):
             )
             
             response.set_cookie(
-                key='refresh_token',
+                key='admin_refresh_token',
                 value=str(refresh_token),
                 httponly=True,
                 secure=False,
@@ -124,7 +124,7 @@ class AdminLoginView(APIView):
 class CookieJWTAuthentication(JWTAuthentication):
     permission_classes = [AllowAny]
     def authenticate(self, request):
-        raw_token = request.COOKIES.get('access_token')
+        raw_token = request.COOKIES.get('admin_access_token')
         if raw_token is not None:
             try:
                 validated_token = self.get_validated_token(raw_token)
@@ -167,7 +167,7 @@ class CookieTokenRefreshView(TokenRefreshView):
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         # Retrieve the refresh token from the cookie.
-        refresh_token = request.COOKIES.get('refresh_token')
+        refresh_token = request.COOKIES.get('admin_refresh_token')
         if not refresh_token:
             return Response({'detail': 'Refresh token not provided'}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -184,7 +184,7 @@ class CookieTokenRefreshView(TokenRefreshView):
         
         # Update the access token cookie with the new token.
         response.set_cookie(
-            key='access_token',
+            key='admin_access_token',
             value=new_access_token,
             httponly=True,
             secure=False,
@@ -203,7 +203,7 @@ class AdminLogoutView(APIView):
         
         # Clear access token cookie
         response.set_cookie(
-            key='access_token',
+            key='admin_access_token',
             value='',
             httponly=True,
             secure=not settings.DEBUG,
@@ -213,7 +213,7 @@ class AdminLogoutView(APIView):
         
         # Clear refresh token cookie
         response.set_cookie(
-            key='refresh_token',
+            key='admin_refresh_token',
             value='',
             httponly=True,
             secure=not settings.DEBUG,

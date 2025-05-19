@@ -68,7 +68,7 @@ export default function Order(){
   );
 
     const shipping = cart.length > 0 ? 20 : 0;
-    const  total = subTotal - totalDiscount + shipping;;
+    const  total = subTotal - totalDiscount + shipping;
     
     return(
         <>
