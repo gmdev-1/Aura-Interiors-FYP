@@ -115,7 +115,7 @@ export default function  Navbar({logo}) {
       {/* Mobile Navbar */}
       <div className="sm:hidden">
         {/* Top Navbar */}
-        <div className="bg-gray-150 text-gray-800 shadow-sm flex justify-between items-center px-4 py-3">
+        <div className="bg-gray-150 text-gray-800 shadow-sm flex justify-between items-center px-4">
           {/* Mobile Menu Button */}
           <button
             className="text-gray-800 hover:text-purple-500"
@@ -126,7 +126,7 @@ export default function  Navbar({logo}) {
 
           {/* Logo */}
           <div className="flex flex-col items-center group cursor-pointer">
-              <img src={logo} alt="" className='h-16 w-30' />
+              <img src="https://res.cloudinary.com/dq9ucjymr/image/upload/v1747186449/logo2_jpzebf.png" alt="" className='h-24 w-40' />
           </div>
           
 
@@ -176,7 +176,7 @@ export default function  Navbar({logo}) {
           <div className="w-64 bg-white h-full shadow-lg p-4">
              {/* Logo */}
       <div className="flex flex-col group mb-6 mr-28">
-         <img src={logo} alt="" className='h-30 w-48' />
+         <img src="https://res.cloudinary.com/dq9ucjymr/image/upload/v1747186449/logo2_jpzebf.png" alt="" className='h-30 w-48' />
       </div>
 
       {/* Close Button */}
@@ -189,25 +189,43 @@ export default function  Navbar({logo}) {
 
       {/* Login Button */}
       <div className="mb-6 flex">
-        <Link to="/user/login">
-          <button className="px-4 py-2 bg-purple-600 rounded-lg text-white hover:bg-purple-700 transition-all duration-300 flex items-center space-x-2">
-            <span>Login</span>
-            <IoIosArrowRoundForward className="size-5" />
-          </button>
-        </Link>
+        {isAuthenticated ? (
+              <div className=''>
+                Logged in as, {userData.name}
+                  <Link
+                      className="dropdown-item block py-2"
+                        to="/order/order-history">
+                          <li className="mt-5 text-black hover:bg-gray-100 cursor-pointer">
+                              Orders
+                          </li>
+                  </Link>
+                <li onClick={Logout} className="mt-5 text-red-500 hover:bg-red-50 cursor-pointer">
+                    Logout
+                </li>
+              </div>
+            ) : (
+            <Link to="/user/login" className="relative group">
+                <button className="px-4 py-1.5 bg-purple-600 rounded-lg text-white hover:bg-purple-700 transition-all duration-300 flex items-center space-x-2">
+                  <span>Login</span>
+                  <IoIosArrowRoundForward className="size-5" />
+                </button>
+              </Link>
+            )}
       </div>
             <ul className="mt-7 space-y-5">
               {categories.map((category) => (
                 <li key={category.id}>
-                  <button
-                    onClick={() => toggleCategory(category.name)}
-                    className="w-full flex justify-between"
-                  >
-                    {category.name}
-                  </button>
+                      <Link
+                  to={`/category/${category.name}`}
+                  key={category.id}
+                  className="w-full flex justify-between"
+                >
+                  {category.name}
+                </Link>
                 </li>
               ))}
             </ul>
+            <Link to="/imagen" className=" border-t mt-10 bg-gradient-to-r from-purple-600 via-purple-600 to-pink-400 text-white px-5 py-1.5 rounded-lg inline-flex items-center justify-center whitespace-nowrap">Try AI <PiMagicWandFill size={20} className='ml-1' /></Link>
           </div>
         </div>
       )}
