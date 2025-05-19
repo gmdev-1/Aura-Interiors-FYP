@@ -24,6 +24,7 @@ export default function Recommender({ productName }) {
             { params: {product_name: productName } }
           );
           setProducts(response.data.recommendations);
+          
         } 
         catch (error) {
           toast(
@@ -91,7 +92,7 @@ export default function Recommender({ productName }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2 sm:px-4 max-w-screen-xl mx-auto">
               {products.map((product) => (
                 <div
-                  key={product._id}
+                  key={product.id}
                   className="bg-white w-58 rounded-lg shadow overflow-hidden transform transition duration-300"
                 >
                   <Link to={`/product-detail/${encodeURIComponent(product.name)}`} >
@@ -132,7 +133,7 @@ export default function Recommender({ productName }) {
                   </div>
 
                   <div className="px-4 pb-3">
-                    <button onClick={() => handleAddToCart(product._id.$oid)} className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
+                    <button onClick={() => handleAddToCart(product.id)} className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-full hover:from-purple-700 hover:to-purple-800">
                       Add to Cart
                     </button>
                   </div>

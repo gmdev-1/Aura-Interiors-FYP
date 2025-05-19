@@ -178,7 +178,7 @@ export default function Shop() {
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-gray-800 mb-2">Price Range</h3>
         <div className="flex flex-col space-y-1">
-        {["Under $25", "$25 - $50", "$50 - $100", "$100 - $200", "Above $200"].map((price) => (
+        {["$25 - $50", "$50 - $75", "$100 - $150", "Above $200"].map((price) => (
           <label key={price} className="inline-flex items-center">
             <input type="checkbox" value={price} name="priceRange"  className="form-checkbox" onChange={handleFilterChange}  />
             <span className="ml-2">{price}</span>
@@ -190,7 +190,7 @@ export default function Shop() {
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-gray-800 mb-2">Material</h3>
         <div className="flex flex-col space-y-1">
-        {["Wood", "Ceramic", "Metal", "Brass", "Marble"].map((material) => (
+        {["Wood", "Ceramic", "Glass"].map((material) => (
           <label key={material} className="inline-flex items-center">
             <input value={material} type="checkbox" name="material" className="form-checkbox" onChange={handleFilterChange}  />
             <span className="ml-2">{material}</span>
@@ -202,7 +202,7 @@ export default function Shop() {
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-gray-800 mb-2">Color</h3>
         <div className="flex flex-col space-y-1">
-        {["Black", "Dark Brown", "Brown", "Gold"].map((color) => (
+        {["Dark Brown", "Brown", "Gold"].map((color) => (
           <label  key={color} className="inline-flex items-center">
             <input value={color} type="checkbox" name="color" className="form-checkbox"  onChange={handleFilterChange} />
             <span className="ml-2">{color}</span>

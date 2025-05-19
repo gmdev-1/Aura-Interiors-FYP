@@ -76,7 +76,7 @@ def get_filtered_products(query_params):
         "$25 - $50": (25, 50),
         "$50 - $100": (50, 100),
         "$100 - $200": (100, 200),
-        "Above $200": (200, 10000)
+        "Above $200": (200, 1000)
     }
     price_range_param = query_params.get("priceRange")
     if price_range_param:

@@ -48,7 +48,6 @@ export default function ProductDetail() {
     try{
       const response = await axios.get(`${BASE_URL}/product-detail/${encodeURIComponent(name)}/`);
       setProduct(response.data[0]);
-      
     }
     catch(error){
       toast.error('network error try again.');
@@ -90,7 +89,7 @@ export default function ProductDetail() {
               position="top-right"
               reverseOrder={false}
             />
-      <div className="font-sans bg-gray-50 min-h-screen py-8 px-4">
+      <div key={product.id} className="font-sans bg-gray-50 min-h-screen py-8 px-4">
         <div className="container mx-auto mt-10">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Left side: Product Image */}
