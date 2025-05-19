@@ -9,6 +9,7 @@ import { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
 import Spinner from './Spinner';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function  Navbar({logo}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -34,7 +35,7 @@ export default function  Navbar({logo}) {
       setCategories(response.data);
       }
       catch (error) {
-        alert('An error occured')
+        toast.error('An error occured');
       }
     }
 
