@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
@@ -16,7 +17,7 @@ export default function Categories() {
     setCategories(response.data);
     }
     catch (error) {
-      alert('An error occured')
+      toast.error('An error occured')
     }
   }
 

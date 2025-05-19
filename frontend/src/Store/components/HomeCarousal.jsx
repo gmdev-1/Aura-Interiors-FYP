@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { RiArrowRightWideFill, RiArrowLeftWideFill } from "react-icons/ri";
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function HomeCarousal({ category }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -29,7 +30,7 @@ export default function HomeCarousal({ category }) {
       
     }
    catch (error) {
-      alert('An error occured');
+      toast.error('An error occured');
     }
   }
 
