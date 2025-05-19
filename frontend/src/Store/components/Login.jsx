@@ -90,7 +90,7 @@ export default function Login() {
       }
   return (
     <>
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-5">
+      <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-5">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
       <div className="flex flex-col items-center">
         <img src="https://res.cloudinary.com/dq9ucjymr/image/upload/v1747186449/logo2_jpzebf.png" alt="" className='h-30 w-48' />
