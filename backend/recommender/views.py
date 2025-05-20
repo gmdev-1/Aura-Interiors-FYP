@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from Store.models.models import User
-from recommender.recommender import recommend_by_name 
+from .recommender import recommend_by_name 
 
 
 

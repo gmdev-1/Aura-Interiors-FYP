@@ -1,0 +1,16 @@
+Django
+pymongo
+langchain
+pinecone-client
+pandas
+scikit-learn
+django-cors-headers
+cloudinary
+django-environ
+djangorest-framework
+corsheaders
+dotenv
+google-analytics
+huggingface-hub
+langchain
+langchain-pinecone
