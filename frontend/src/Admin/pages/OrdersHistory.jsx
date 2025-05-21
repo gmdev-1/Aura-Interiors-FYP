@@ -15,6 +15,7 @@ export default function OrdersHistory() {
         withCredentials: true,
       });
       setOrders(response.data.orders);
+      
     } catch (error) {
       console.log(error);
     }
