@@ -36,7 +36,7 @@ GA4_PROPERTY_ID = config("GA4_PROPERTY_ID")
 DEBUG = False
 
 # ALLOWED_HOSTS = ['.vercel.app', '.now.sh']
-ALLOWED_HOSTS = ['onrender.com']
+ALLOWED_HOSTS = ['.onrender.com']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
