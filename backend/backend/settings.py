@@ -33,10 +33,10 @@ GOOGLE_APPLICATION_CREDENTIALS = config("GOOGLE_APPLICATION_CREDENTIALS")
 GA4_PROPERTY_ID = config("GA4_PROPERTY_ID")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = ['.vercel.app', '.now.sh']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['onrender.com']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
